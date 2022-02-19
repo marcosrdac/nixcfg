@@ -1,0 +1,3 @@
+- v: "visual"
+- s: preselection
+- S: swap/move
