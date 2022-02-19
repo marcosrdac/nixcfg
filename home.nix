@@ -5,7 +5,7 @@
   home.homeDirectory = "/home/marcosrdac";
   home.stateVersion = "21.05";
   home.packages = with pkgs; [ ];
-  programs.home-manager.enable = true;
+  #programs.home-manager.enable = true;
 
   home.file."test".text = "a test";      # does not work
 
