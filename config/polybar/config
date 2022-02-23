@@ -1,0 +1,352 @@
+; polybar config file
+
+
+; --- general settings --- ;
+
+[colors]
+foreground     = ${xrdb:color15 : #ffffff}
+foreground-alt = ${xrdb:color7  : #aaaaaa}
+background     = ${xrdb:color0  : #000000}
+background-alt = ${xrdb:color8  : #555555}
+primary        = ${xrdb:color2  : #00ff00}
+secondary      = ${xrdb:color1  : #ff0000}
+alert          = ${xrdb:color3  : #ffff00}
+
+
+[bar/base]
+monitor = ${env:MONITOR:}
+; controling bar from the  outside
+enable-ipc = true
+; geometry
+dpi = ${xrdb:dpi : 100}
+width               = 100%
+height              = ${env:BAR_HEIGHT:22}
+padding-left        = 0
+padding-right       = 0
+module-margin-left  = 1
+module-margin-right = 1
+fixed-center        = true
+; style
+background = ${colors.background}
+foreground = ${colors.foreground}
+font-0     = ${xrdb:font:monospace}
+font-1     = ${xrdb:symbol_font:monospace}
+; window manager
+wm-restack = bspwm
+; cursors
+cursor-click  = default
+cursor-scroll = default
+
+
+; only monitor
+[bar/1]
+inherit = bar/base
+; modules position
+modules-left   = bspwm xkeyboard
+modules-center = mpd
+modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
+; tray position
+tray-position   = left
+tray-padding    = 2
+tray-background = ${colors.background}
+
+
+; two moonitors
+[bar/21]
+inherit = bar/base
+; modules position
+modules-left   = bspwm xkeyboard
+modules-center = mpd
+modules-right  =
+; tray position
+tray-position   = left
+tray-padding    = 2
+tray-background = ${colors.background}
+
+[bar/22]
+inherit = bar/base
+; modules position
+modules-left   = bspwm
+modules-center =
+modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
+
+
+; three moonitors
+[bar/31]
+inherit = bar/base
+; modules position
+modules-left   = bspwm
+modules-center =
+modules-right  =
+; tray position
+tray-position   = left
+tray-padding    = 2
+tray-background = ${colors.background}
+
+[bar/32]
+inherit = bar/base
+; modules position
+modules-left   = bspwm xkeyboard
+modules-center = mpd
+modules-right  =
+
+
+[bar/33]
+inherit = bar/base
+; modules position
+modules-left   = bspwm
+modules-center =
+modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
+
+
+; --- modules --- ;
+;
+[module/bspwm]
+type = internal/bspwm
+format = <label-state> <label-mode>
+label-focused = %index%
+label-occupied = %index%
+label-urgent = %index%
+label-empty =
+inline-mode = true
+scroll-up = bspwm-desknext
+scroll-down = bspwm-deskprev
+; label
+label-focused-padding  = 2
+label-occupied-padding = 2
+label-urgent-padding   = 2
+; modes
+label-monocle   = " %{T2}%{T-} "
+label-floating  = " %{T2}%{T-} "
+label-locked    = " %{T2}%{T-} "
+label-sticky    = " %{T2}%{T-} "
+label-private   = " %{T2}%{T-} "
+label-marked    = " %{T2}%{T-} "
+; states formating
+label-focused-background = ${colors.foreground}
+label-focused-foreground = ${colors.background}
+label-urgent-background  = ${colors.alert}
+label-urgent-foreground  = ${colors.background}
+; modes formating
+label-floating-background = ${colors.primary}
+label-floating-foreground = ${colors.background}
+label-monocle-background  = ${colors.secondary}
+label-monocle-foreground  = ${colors.background}
+; I see a separator in here :)
+label-locked-background  = ${colors.background-alt}
+label-locked-foreground  = ${colors.foreground-alt}
+label-sticky-background  = ${colors.background-alt}
+label-sticky-foreground  = ${colors.foreground-alt}
+label-private-background = ${colors.background-alt}
+label-private-foreground = ${colors.foreground-alt}
+label-marked-background  = ${colors.background-alt}
+label-marked-foreground  = ${colors.foreground-alt}
+
+
+[module/remainder]
+type = custom/script
+exec = polybar_read_remainder
+tail = true
+label = " %output% "
+label-background = ${colors.primary}
+label-foreground = ${colors.background}
+format = <label>
+click-left = dm_bar_write_remainder
+click-middle = polybar_write_remainder -r
+click-right = polybar_write_remainder ""
+
+
+[module/xkeyboard]
+type = internal/xkeyboard
+format = <label-indicator>
+format-prefix =
+label-layout =
+; general settings
+label-indicator-padding = 1
+label-indicator-margin  = 1
+; specific settings
+label-indicator-on-capslock-padding   = 1
+label-indicator-on-capslock-margin    = 1
+label-indicator-off-numlock-padding   = 1
+label-indicator-off-numlock-margin    = 1
+label-indicator-on-scrolllock-padding = 1
+label-indicator-on-scrolllock-margin  = 1
+; just showing on caps lock, off num lock and on scroll lock
+label-indicator-on-capslock    = " Caps Lock "
+label-indicator-off-capslock   =
+label-indicator-on-numlock     =
+label-indicator-off-numlock    = " Num Lock "
+label-indicator-on-scrolllock  = " Scroll Lock "
+label-indicator-off-scrolllock =
+; general formating
+label-indicator-background = ${colors.alert}
+label-indicator-foreground = ${colors.background}
+; specific formating
+label-indicator-on-capslock-background   = ${colors.alert}
+label-indicator-on-capslock-foreground   = ${colors.background}
+label-indicator-off-numlock-background   = ${colors.secondary}
+label-indicator-off-numlock-foreground   = ${colors.background}
+label-indicator-on-scrolllock-background = ${colors.alert}
+label-indicator-on-scrolllock-foreground = ${colors.background}
+
+
+[module/mpd]
+type = internal/mpd
+enable-scroll = true
+label-song-maxlen = 70
+label-song-ellipsis = true
+;label-song = " %{T2}%{T-} %title% - %artist% "
+label-song = " %{T2}%{T-} %title% "
+format-online  = %{A1:mpc toggle:}%{A6:mpc_show:}%{A2:mpc stop:}%{A3:bspwm_toggle_hidden dropdown_music_player:}%{A4:mpc prev:}%{A5:mpc next:} <label-song> %{A}%{A}%{A}%{A}%{A}%{A}
+format-stopped =
+
+
+[module/recording]
+type = custom/script
+exec = polybar_read_recording_label
+tail = true
+label = " %output% "
+label-background = ${colors.secondary}
+label-foreground = ${colors.background}
+format = %{T2}<label>%{T-}
+format-background = ${colors.foreground}
+format-foreground = ${colors.background}
+click-left = dm_recording_menu
+
+
+[module/wlan]
+type = internal/network
+interface = wlp3s0
+interval = 5.0
+
+label-disconnected-foreground = ${colors.alert}
+label-connected = "%{A1:networkmanager_dmenu &:}%essid%%{A}"
+label-disconnected = "%{A1:networkmanager_dmenu &:}%{T2} %{T-}%{A}"
+
+ramp-signal-0 = %{T2}%{T-}
+;ramp-signal-foreground = ${colors.foreground-alt}
+format-connected = <ramp-signal> <label-connected>
+format-disconnected = <label-disconnected>
+click-left = networkmanager_dmenu &
+click-right = networkmanager_dmenu &
+
+
+[module/timer]
+type = custom/script
+exec = show_timer
+tail = true
+label = "%output%"
+format-prefix = " %{T2}%{T-} "
+format = " <label> "
+;format-background = ${colors.secondary}
+;format-foreground = ${colors.foreground}
+format-background = ${colors.alert}
+format-foreground = ${colors.background}
+
+
+[module/eth]
+type = internal/network
+interval = 5.0
+interface = enp2s0f1
+format-connected-prefix = "%{T2}%{T-} "
+format-disconnected =
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+format-volume = <ramp-volume> <label-volume>
+;format-prefix-foreground = ${colors.foreground-alt}
+label-muted-foreground = ${colors.alert}
+ramp-volume-0 = %{T2}%{T-}
+ramp-volume-1 = %{T2}%{T-}
+ramp-volume-2 = %{T2}%{T-}
+ramp-volume-3 = %{T2}%{T-}
+ramp-volume-4 = %{T2}%{T-}
+ramp-volume-5 = %{T2}%{T-}
+ramp-volume-6 = %{T2}%{T-}
+ramp-volume-7 = %{T2}%{T-}
+ramp-volume-8 = %{T2}%{T-}
+ramp-volume-8-foreground = ${colors.secondary}
+label-volume = %percentage%
+label-muted = %{T2}%{T-} %percentage%
+
+
+[module/brightness]
+type = internal/backlight
+;ls -1 /sys/class/backlight/
+card = intel_backlight
+label = %percentage%
+format = %{A1:brightnessctl s 1%:}%{A2:brightnessctl s 30%:}%{A3:brightnessctl s 100%:}%{A4:brightnessctl s +5%:}%{A5:brightnessctl s 5%-:}<ramp> <label>%{A}%{A}%{A}%{A}%{A}
+ramp-0 = "%{T2}%{T-}"
+
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ACAD
+full-at = 98
+format-full        =
+format-discharging = <ramp-capacity> <label-discharging>
+format-charging    = <animation-charging> <label-charging>
+label-discharging = %percentage%
+label-charging    = %percentage%
+; ramp icons
+ramp-capacity-0 = "%{T2}%{T-}"
+ramp-capacity-1 = "%{T2}%{T-}"
+ramp-capacity-2 = "%{T2}%{T-}"
+ramp-capacity-3 = "%{T2}%{T-}"
+ramp-capacity-4 = "%{T2}%{T-}"
+; ramp formating
+ramp-capacity-1-foreground = ${colors.alert}
+ramp-capacity-0-foreground = ${colors.secondary}
+; animation
+animation-charging-framerate = 750
+animation-charging-0 = "%{T2}%{T-}"
+animation-charging-1 = "%{T2}%{T-}"
+animation-charging-2 = "%{T2}%{T-}"
+animation-charging-3 = "%{T2}%{T-}"
+animation-charging-4 = "%{T2}%{T-}"
+
+
+[module/date]
+type = custom/script
+interval = 1
+exec = ~/.local/bin/polybar/polybar_date_calendar
+format-prefix = "%{T2}%{T-} "
+click-left = ~/.local/bin/polybar/polybar_date_calendar --popup &
+
+
+[module/time]
+type = internal/date
+interval = 1
+time = "%H%M%S"
+;format-prefix-foreground = "${colors.foreground-alt}"
+format-prefix = "%{T2}%{T-} "
+label = "%time%"
+click-right = "st -e vim &"
+
+
+;[module/example]
+;type = custom/script
+;exec = show_timer
+;tail = true
+;;format-prefix-foreground = "${colors.foreground-alt}"
+;format-prefix = "%{T2}%{T-} "
+;label = "%output%"
+;label-background = ${colors.secondary}
+;label-foreground = ${colors.background}
+;format-background = ${colors.foreground}
+;format-foreground = ${colors.background}
+;format = "<label>"
+
+
+; --- other settings --- ;
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+; vim:ft=dosini
