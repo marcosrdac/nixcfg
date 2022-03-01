@@ -1,0 +1,113 @@
+{
+  "id": 1,
+  "position": "top",
+  "layer": "bottom",
+  "height": 25, // TODO: read from ENV (BAR_HEIGHT)
+  "modules-left": ["river/tags", "tray","keyboard-state"],
+  "modules-center": ["custom/spotify"],
+  "modules-right": ["pulseaudio",
+                    "custom/separator",
+                    "network",
+                    "custom/separator",
+                    "battery",
+                    "custom/separator",
+                    "custom/date",
+                    "custom/separator",
+                    "custom/time",],
+  "tray": {
+    "icon-size": 21,
+    "spacing": 10
+  },
+  "keyboard-state": {
+    "numlock": true,
+    "capslock": true,
+    "format": "{icon} {name}",
+    "format-icons": {
+      "locked": "",
+      "unlocked": ""
+    }
+  },
+  "battery": {
+    //"bat": "BAT0",
+    "states": {
+      "good": 95,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}",
+    //"format-good": "",
+    //"format-full": "",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "network": {
+    //"interface": "wlp2s0",
+    "format-wifi": " {essid} {signalStrength}",
+    "format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+    "format-disconnected": "⚠ Disconnected"
+  },
+  "pulseaudio": {
+    "scroll-step": 5,
+    "format": "{icon} {volume}",
+    "format-bluetooth": "{icon}{volume}",
+    "format-muted": "",
+    "format-icons": {
+      "headphones": "",
+      "handsfree": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["", ""]
+    },
+    "on-click": "pavucontrol"
+  },
+  "custom/spotify": {
+    "format": " {}",
+    "max-length": 40,
+    "interval": 30,
+    "exec": "$HOME/.config/waybar/mediaplayer.sh 2> /dev/null",
+    "exec-if": "pgrep spotify"
+  },
+  "custom/pacman": {
+    "exec": "${XDG_BIN_HOME:-$HOME/.local/bin}/waybar/waybar_pacman",
+    "return-type": "json",
+    "interval": 3600,
+    "signal": 2,
+    "tooltip": false
+  },
+
+  "custom/date": {
+    "exec": "${XDG_BIN_HOME:-$HOME/.local/bin}/waybar/waybar_date",
+    "signal": 1,
+    "return-type": "",
+    "tooltip": false,
+    "interval": 0,
+    "format": "<span>D {}</span>", 
+    "tooltip": false
+  },
+  "custom/time": {
+    "exec": "${XDG_BIN_HOME:-$HOME/.local/bin}/waybar/waybar_time",
+    "signal": 1,
+    "return-type": "",
+    "tooltip": false,
+    "interval": 0,
+    "format": "<span>T {}</span>", 
+    "tooltip": false
+  },
+
+  "custom/separator": {
+      "format": "  ",
+      "interval": "once",
+      "tooltip": false
+  },
+
+  "custom/testfifo": {
+    "exec": "${XDG_BIN_HOME:-$HOME/.local/bin}/readfifo /tmp/testfifo",
+    "return-type": "",
+    "tooltip": false,
+    "interval": 0,
+    "format": "{}",
+    "tooltip": false,
+    "icon": "",
+  },
+}

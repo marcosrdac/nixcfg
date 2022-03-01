@@ -1,14 +1,68 @@
 { config, pkgs, ... }:
 
+let
+  binHome = "${config.home.homeDirectory}/.local/bin";
+in
 {
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    lf
+    htop
 
-    dmenu
-    brightnessctl  # adjust lights
+    ripgrep
+
+    #bash
+    fzy
+    ydotool
+    xdotool
+
+    brightnessctl  # light control
   ];
+
+  home.sessionPath = [ binHome ];
+
+  home.sessionVariables = {
+    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
+    BROWSER = "${pkgs.qutebrowser}/bin/qutebrowser";
+    FILEMANAGER = "${pkgs.lf}/bin/lf";
+  };
+
+  home.file = rec {
+    # general
+    "${binHome}/tchoice" = {
+      source = ./bin/tchoice;
+      executable = true;
+    };
+    "${binHome}/menu" = {
+      source = ./bin/tchoice;
+      executable = true;
+    };
+
+    "${binHome}/tlauncher" = {
+      source = ./bin/tlauncher;
+      executable = true;
+    };
+    "${binHome}/menu-run" = {
+      source = ./bin/tlauncher;
+      executable = true;
+    };
+
+    "${binHome}/test-script" = {
+      source = ./bin/test-script;
+      executable = true;
+    };
+
+    # bspwm
+    "${binHome}/bspwm_window_move" = {
+      source = ./config/bspwm/bin/bspwm_window_move;
+      executable = true;
+    };
+    "${binHome}/bspwm_toggle_state" = {
+      source = ./config/bspwm/bin/bspwm_toggle_state;
+      executable = true;
+    };
+  };
+
 
   #home.language.base = "us";
 
@@ -17,27 +71,42 @@
     variant = "intl";
     options = [ "caps:swapescape" ];
   };
-
+  
   #home.shellAliases = { };  # not yet valid
 
   xsession = {
     enable = true;
-    scriptPath = ".xsession-hm";
+    scriptPath = ".hm-xsession";
 
     windowManager.bspwm = {
       enable = true;
       extraConfig = builtins.readFile ./config/bspwm/bspwmrc;
+      startupPrograms = [
+        "${pkgs.sxhkd}/bin/sxhkd -c ${config.xdg.configHome}/nixpkgs/config/sxhkd/sxhkdrc"
+      ];
     };
   };
-  services.sxhkd = {
-    enable = true;
-    extraConfig = builtins.readFile ./config/sxhkd/sxhkdrc;
+
+  #services.polybar = {
+  #  enable = true;
+  #  config = ./config/polybar/config;
+  #  script = ''
+  #    polybar 1
+  #  '';
+  #};
+
+  xdg.userDirs = {
+    documents = "$HOME/tmp/dox";
+    pictures = "$HOME/tmp/pix";
+    music = "$HOME/mus";
+    videos = "$HOME/vid";
+    templates = "$HOME/tpt";
+    publicShare = "$HOME/pub";
+    desktop = "$HOME/tmp";
+    download = "$HOME/tmp/dld";
+    extraConfig = { };
   };
 
-  services.polybar = {
-    enable = true;
-    script = builtins.readFile ./config/polybar/config;
-  };
 
   programs.alacritty.enable = true;
   programs.neovim = {
@@ -86,13 +155,6 @@
     ];
   };
   
-  home.sessionVariables = {
-    TERMINAL = "alacritty";
-    BROWSER = "qutebrowser";
-
-
-  };
-
   # home.file.".vimrc".text = " ...";
   # xdg.configFile."sxhkd/sxhkdrc".source = ./config/sxhkd/sxhkdrc;
   

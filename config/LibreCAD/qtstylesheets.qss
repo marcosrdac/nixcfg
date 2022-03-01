@@ -1,0 +1,18 @@
+* {
+  background-color: #030303;
+  color: #f2ebdd;
+  selection-background-color: #f2ebdd;
+  selection-color: #030303;
+  invertedColorTable: true;
+}
+
+QPushButton,
+QToolButton {
+    /*background-color: #f2ebdd;*/
+    /*color: #030303;*/
+    selection-background-color: #030303;
+    selection-color: #f2ebdd;
+}
+
+/*QWidget*/
+/*QMenu*/

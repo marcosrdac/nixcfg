@@ -1,0 +1,2 @@
+#*/30 * * * * /usr/bin/updatedb
+#20 */8 * * * /usr/bin/pacman -Syuw --noconfirm && pkill -RTMIN+16 i3blocks

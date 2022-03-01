@@ -1,0 +1,227 @@
+#!/bin/sh
+
+# default programs
+
+export OPENER="xdg-open"
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PAGER="less"
+export TERMINAL="st"
+export FILEBROWSER="lfrun"
+export VIDEOPLAYER="mpv"
+export BROWSER="qutebrowser"
+export ALTBROWSER="firefox"
+export TRUEBROWSER="qutebrowser"
+export READER="zathura"
+export XIMAGEVIEWER="sxiv"
+export WEBCAM="/dev/video0"
+export XMENU="menu"
+export WMENU="bemenu"
+export MENU="menu"
+export MENURUN="menurun"
+
+export TASK="task"
+export AURMANAGER="yay"
+
+# default keyboard
+export XKB_DEFAULT_LAYOUT='us'
+export XKB_DEFAULT_VARIANT='intl'
+export XKB_DEFAULT_OPTIONS='caps:swapescape'
+
+# user defined variables
+
+export PERSONALMAIL="marcosrdac@gmail.com"
+export PUBKEYID="FEBD0BDE418119F66D48C6A989B7DF5E14172055"
+export CAMOBI="10.129.64.41"
+
+mkxprt() {
+  if [ "$1" = '-f' ]
+    then shift && mkdir -p `dirname "$2"` && touch "$2"
+  elif [ "$1" = '-d' ]
+    then shift && mkdir -p `dirname "$2"`
+  else
+    mkdir -p "$2"
+  fi
+  export "$1"="$2"
+}
+
+
+# XDG directory defaults
+
+mkxprt XDG_DATA_HOME "$HOME/.local/share"           # XDG
+mkxprt XDG_CONFIG_HOME "$HOME/.config"              # XDG
+export XDG_BIN_HOME="$HOME/.local/bin"              # custom
+export XDG_DATA_DIRS="/usr/local/share:/usr/share"  # XDG
+export XDG_CONFIG_DIRS="/etc/xdg"                   # XDG
+mkxprt XDG_CACHE_HOME "$HOME/.cache"                # XDG
+mkxprt XDG_RUNTIME_DIR "/run/user/$UID"             # XDG
+#chmod 0700 "$XDG_RUNTIME_DIR"                      # do if XDG_RUNTIME_DIR is not system defined
+mkxprt XDG_RESOURCES_DIR "$HOME/res"                # custom
+mkxprt XDG_WALLPAPER_DIR "$XDG_RESOURCES_DIR/wal"   # custom
+mkxprt XDG_TMP_DIR "$HOME/tmp"                      # custom
+#mkxprt XDG_DOCUMENTS_DIR "$HOME/dox"                # XDG
+#mkxprt XDG_MUSIC_DIR "$HOME/mus"                    # XDG
+#mkxprt XDG_PICTURES_DIR "$HOME/pix"                 # XDG
+#mkxprt XDG_PROJECTS_DIR "$HOME/pro"                 # custom
+#mkxprt XDG_PUBLICSHARE_DIR "$HOME/pub"              # XDG
+#mkxprt XDG_TEMPLATES_DIR "$XDG_RESOURCES_DIR/tpt"   # XDG
+#mkxprt XDG_VIDEOS_DIR "$HOME/vid"                   # XDG
+export XDG_DOCUMENTS_DIR="$HOME/dox"                # XDG
+export XDG_DOCUMENTS_DATA="$XDG_DOCUMENTS_DIR/h/dat"  # custom
+export XDG_MUSIC_DIR="$HOME/mus"                    # XDG
+export XDG_PICTURES_DIR="$HOME/pix"                 # XDG
+export XDG_PROJECTS_DIR="$HOME/pro"                 # custom
+export XDG_PUBLICSHARE_DIR="$HOME/pub"              # XDG
+export XDG_TEMPLATES_DIR="$XDG_RESOURCES_DIR/tpt"   # XDG
+export XDG_VIDEOS_DIR="$HOME/vid"                   # XDG
+mkxprt XDG_DOWNLOAD_DIR "$XDG_TMP_DIR/tmp"          # XDG
+mkxprt XDG_DESKTOP_DIR "$XDG_TMP_DIR/tmp"           # XDG
+mkxprt XDG_SCREENSHOT_DIR "$XDG_PICTURES_DIR/scr"  # custom
+mkxprt XDG_MAIL_DIR "$XDG_DATA_HOME/mail"           # custom
+
+
+# SAVED CONFIGS
+export WALLPAPER="$XDG_DATA_HOME/wallpaper"
+
+addpath() {
+  # adds directories to PATH: -a for appending, -p for prepending
+  mode="$1" && shift
+  [ "$mode" != '-a' ] && [ "$mode" != '-p' ] && exit 1
+
+  if [ "$mode" = '-p' ] # reverse args if preppending
+  then
+    i=$#; while [ $i -gt 0 ]
+    do
+      ordered="${ordered} \"\$$i\""
+      i=$((i-1))
+    done
+    eval "set -- $ordered"
+  fi
+
+  # adds folder to path it it isn't yet already there
+  for folder in "$@"
+  do
+    [ -d "$folder" ] || continue
+    case ":$PATH:" in
+      *:"$folder":*) ;;
+      *) [ "$mode" = '-p' ] &&
+           PATH="$folder${PATH:+:$PATH}" ||
+           PATH="${PATH:+$PATH:}$folder" ;;
+    esac
+  done
+  export PATH
+}
+
+addpathsin () {
+  for folder in "$@"
+  do
+    for subfolder in "$folder"/*
+    do
+      [ -d "$subfolder" ] && addpath -a "$subfolder"
+    done
+  done
+}
+
+trysource() {  # used in other scripts
+  [ -f "$1" ] && . "$1" || return 1
+}
+
+# specifics
+## PATH
+addpath -p "$HOME/.local/bin" "$HOME/.local/bin/tintedbin" "$HOME/.local/bin/polybar" "$HOME/.local/bin/bspwm" "$HOME/.local/bin/menu"
+addpath -a  "$HOME/.local/bin/cp-p" 
+addpathsin "$HOME/.local/bin" 
+## /usr/lib to library path
+export LD_LIBRARY_PATH="/usr/lib/:$LD_LIBRARY_PATH"
+## bspwm
+export WINDOW_GAP=22
+## polybar
+export BAR_HEIGHT=$WINDOW_GAP
+## lf
+LF_ICONS_FILE="$XDG_CONFIG_HOME/lf/icons"
+trysource $LF_ICONS_FILE
+# isync
+export MBSYNC_CONFIG="$XDG_CONFIG_HOME/isync/mbsyncrc"
+## mutt
+export MAIN_MAIL_DIR="$XDG_MAIL_DIR/main"
+## vim
+export MYVIMRC="$HOME/.config/vim/vimrc"
+## neovim
+export INIT=$XDG_CONFIG_HOME/nvim/init.vim
+## calibre
+export CALIBRE_USE_SYSTEM_THEME=1
+## rss2playlist
+# export PODCASTS_RSS_FILE="$XDG_CONFIG_HOME/mpd/podcasts_rss"
+## flutter
+addpath -a "/opt/flutter/bin"
+## android sdk (flutter)
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export ANDROID_HOME=$ANDROID_SDK_ROOT
+export CHROME_EXECUTABLE=google-chrome-stable
+## go (go env tels you important things)
+mkxprt GOPATH "$HOME/.cache/go"
+## less
+export LESSHISTFILE="$HOME/.cache/lesshst"
+## javascript
+mkxprt npm_config_cache "$HOME/.cache/npm"
+## Xresources
+export XRESOURCES=$HOME/.config/Xresources/main
+## Xauthority
+#export XAUTHORITY="$HOME/.config/Xauthority"  # seems not to work with lightdm
+## python
+export PYTHONSTARTUP="$HOME/.config/pythonstartup.py"
+mkxprt WORKON_HOME "$XDG_DATA_HOME/python_envs"
+export PIP_REQUIRE_VIRTUALENV=false
+# matplotlib
+#export MPLBACKEND=module://my_backend
+## tensorflow
+#
+# julia
+export JULIA_NUM_THREADS=4
+mkxprt JULIA_DEPOT_PATH "$XDG_DATA_HOME/julia_depot"
+# Seimic Unix
+export CWPROOT=/opt/SeisUnix
+addpath -a "$CWPROOT/bin"
+## sqlite
+export SQLITE_HISTFILE="$HOME/.cache/sqlite_history"
+## wine
+mkxprt WINEPREFIX "$HOME/.local/share/wineprefix/default"
+## task
+export TASKRC="$XDG_CONFIG_HOME/task/taskrc"
+mkxprt TASKDATA "$XDG_DOCUMENTS_DATA/taskwarrior"
+mkxprt TIMEWARRIORDB "$XDG_DOCUMENTS_DATA/timewarrior"
+## ccache
+mkxprt CCACHE_BASEDIR "$HOME/.cache/ccache"
+export CCACHE_CONFIGPATH="$HOME/.config/ccache.conf"
+## gnupg
+mkxprt GNUPGHOME "$HOME/.config/gnupg"
+export INPUTRC="$HOME/.config/inputrc"
+## vim-gnupg
+export GPG_TTY=`tty`
+## bookmark
+export BOOKMARKFILE="$XDG_DOCUMENTS_DATA/bookmark/urls_v0.1.json"
+## PostgreSQL
+mkxprt -f PSQL_HISTORY "$XDG_CACHE_HOME/postgres/history"
+mkxprt -f PSQLRC "$XDG_CONFIG_HOME/postgres/psqlrc"
+## tmsu
+mkxprt -d TMSU_DB "$XDG_DATA_HOME/tmsu/tags.db"
+## java options
+_JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on $_JAVA_OPTIONS"
+_JAVA_OPTIONS="-Dswing.aatext=true $_JAVA_OPTIONS"
+_JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel $_JAVA_OPTIONS"
+_JAVA_OPTIONS="-Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel $_JAVA_OPTIONS"
+export _JAVA_OPTIONS
+### ESA SNAP: correcting blank menus
+export _JAVA_AWT_WM_NONREPARENTING=1
+## man (colors)
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+## setting a basement for messy software... (you better behave!)
+mkxprt JUNKHOME "$HOME/.cache/junkhome"
+## nix
+. /etc/profile.d/nix{,-daemon}.sh

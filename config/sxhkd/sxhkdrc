@@ -35,7 +35,7 @@ alt + shift + s
 # resize window
 #alt + ctrl + {h,j,k,l}
 #	bspwm_resize {west,south,north,east} 20
-# expand a window by moving one of its side outward
+# expand a window by moving one of its sides outward
 alt + ctrl + {h,j,k,l}
 	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 # contract a window by moving one of its sides inward
@@ -94,9 +94,11 @@ alt + s; {_,shift + } s
 {_,alt + v : } alt + {Return,o}
 	{ ,pkill -ALRM sxhkd;} \
 		{$TERMINAL   , \
-		 $MENURUN    }
+		 menu-run }
+		 #alacritty --class launcher -e menu-run }
+		 #term-with-class dropdown_opener menu-run }
 
-# opeinig default software (w for window)
+# opeining default software (w for window)
 {_,alt + v : } alt + w ; {w,s,v,b,shift+b,n,shift+n,m,g,j,shift+j,k,shift+k}
 	{ ,pkill -ALRM sxhkd;} \
 	{wal_choose, \
@@ -149,9 +151,10 @@ alt + x ; w ; {w,f,j;l,l;j,j;h,h;j,k;l,l;k,k;h,h;k}
 alt + {shift + g}
 	{dm_bspwm_set_monocle_gaps}
 # running any scripts
+#{$XDG_CONFIG_HOME/sxhkd/sxhkdrc && kill -USR1 $(pidof sxhkd) , \
 alt + e ; {s,e,r,t,u,p,l,c,v,b,n}
 	$TERMINAL -e $EDITOR \
-	{$XDG_CONFIG_HOME/sxhkd/sxhkdrc && kill -USR1 $(pidof sxhkd) , \
+	{$XDG_CONFIG_HOME/nixpkgs/config/sxhkd/sxhkdrc && kill -USR1 $(pidof sxhkd) , \
 	$XDG_CONFIG_HOME/shell/shenv , \
 	$XDG_CONFIG_HOME/shell/shrc , \
 	$XDG_DOCUMENTS_DIR/tmp/todo/index.md , \

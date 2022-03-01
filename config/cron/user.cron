@@ -1,0 +1,24 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+DISPLAY=:0
+
+
+# user crontab
+# m h dom mon dow   command
+
+
+## health
+* * * * *      . $HOME/.config/shell/shenv && polybar_straighten_up
+#0 */2 * * *      . $HOME/.profile && notify-send "emolog" "Logging human emotions in 3 secconds..." && sleep 3 && emolog
+#25,55 * * * *     notify-send "Stretch out!"       "Get up and elongate your body." -u critical
+15,35,55 * * * *     notify-send "Stretch out!"       "Get up and elongate your body." -u critical
+*/30 * * * *   notify-send "Hydrate yourself!"  "Your body needs a sip of water!"
+30 13 * * 1-6  notify-send "Put the trash out"  "Now is a very good time to put trash in front of your door." -u critical
+
+
+## checkers
+#*/10 * * * *   . $HOME/.config/shell/shenv && mbsync -c "$MBSYNC_CONFIG" psn
+* * * * *   . $HOME/.config/shell/shenv && mbsync -c "$MBSYNC_CONFIG" psn
+5 */7 * * *    . $HOME/.config/shell/shenv && mbsync -c "$MBSYNC_CONFIG" -a
+#17 */2 * * *   . $HOME/.config/shell/shenv && rss2playlist

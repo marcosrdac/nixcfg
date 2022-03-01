@@ -1,0 +1,122 @@
+colors:
+    statusbar:
+        caret:
+            bg: "{background}"
+            fg: "{foreground}"
+        passthrough:
+            bg: "{background}"
+            fg: "{foreground}"
+        command:
+            bg: "{foreground}"
+            fg: "{background}"
+            private:
+                bg: "white"
+                fg: "black"
+        insert:
+            bg: "{foreground}"
+            fg: "{background}"
+        normal:
+            bg: "{background}"
+            fg: "{foreground}"
+        private:
+            bg: "black"
+            fg: "white"
+        progress:
+            bg: "{foreground}"
+        url:
+            fg: "{color5}"
+            error:
+                fg: "{color3}"
+            hover:
+                fg: "{foreground}"
+            success:
+                http:
+                    fg: "{foreground}"
+                https:
+                    fg: "{color2}"
+            warn:
+                fg: "{color3}"
+    tabs:
+        bar:
+            bg: "{background}"
+        even:
+            fg: "{foreground}"
+            bg: "{background}"
+        odd:
+            fg: "{foreground}"
+            bg: "{background}"
+        selected:
+            even:
+                fg: "{background}"
+                bg: "{foreground}"
+            odd:
+                fg: "{background}"
+                bg: "{foreground}"
+    completion:
+        category:
+            bg: "{foreground}"
+            fg: "{background}"
+            border:
+                bottom: "{foreground}"
+                top: "{foreground}"
+        even:
+            bg: "{background}"
+        odd:
+            bg: "{background}"
+        item:
+            selected:
+                bg: "{foreground}"
+                fg: "{background}"
+                border:
+                    bottom: "{background}"
+                    top:    "{background}"
+        match:
+            fg: "{color2}"
+        scrollbar:
+            bg: "{foreground}"
+            fg: "{background}"
+    downloads:
+        bar:
+            bg: "{background}"
+        error:
+            fg: "{foreground}"
+            bg: "{color2}"
+        start:
+            fg: "{foreground}"
+            bg: "{background}"
+        stop:
+            fg: "{foreground}"
+            bg: "{color3}"
+    hints:
+        fg: "{foreground}"
+        bg: "{background}"
+        match:
+            fg: "{color2}"
+    keyhint:
+        fg: "{foreground}"
+        bg: "{background}"
+        suffix:
+            fg: "{color3}"
+    messages:
+        error:
+            fg: "{background}"
+            bg: "{color3}"
+            border: "{color3}"
+        info:
+            fg: "{background}"
+            bg: "{foreground}"
+            border: "{foreground}"
+        warning:
+            fg: "{foreground}"
+            bg: "{color3}"
+            border: "{color3}"
+    prompts:
+        fg: "{foreground}"
+        bg: "{background}"
+        border: "{background}"
+        selected:
+            bg: "{color3}"
+    webpage:
+        bg: "{foreground}"
+hints:
+    border: "1px solid {foreground}"

@@ -1,0 +1,157 @@
+#!/usr/bin/env sh
+
+#
+# Shell common aliases and customizations
+#
+
+## COMMAND CONFIGURATION
+
+# Completion for existing commands
+#alias cdf='cd $(find -H * .* 2>/dev/null -maxdepth 1 -type d | fzy -p "cd " | (read f && echo ${f:-'.'}))' maybe awk if . as arg to find
+alias ls='ls -h --color=auto'
+alias mkdir='mkdir -v'
+alias rmdir='rmdir -v'
+alias cp="cp -i"
+alias mv="mv -iv"
+alias free='free -h'
+alias df='df -h'
+alias du='du -h'
+alias duh="du -Sh | sort -h -r | more"
+alias shutdown='sudo shutdown'
+alias reboot='sudo reboot'
+alias poweroff='sudo poweroff'
+alias suspend='sudo systemctl suspend'
+alias mount='sudo mount'
+alias umount='sudo umount'
+alias unmount='sudo umount'
+alias halt='sudo halt'
+
+alias ffmpeg='ffmpeg -hide_banner'
+alias ffprobe='ffprobe -hide_banner'
+alias ffplay='ffplay -hide_banner'
+alias activate='source bin/activate'
+alias m='. $WORKON_HOME/m/bin/activate'
+alias mbsync='mbsync -c "$MBSYNC_CONFIG"'
+
+
+# ALIASES
+
+# Frequent mistakes
+alias please=sudo
+
+# Shortcuts for commonly used commands
+alias ll="ls -l"
+alias la="ls -la"
+alias s='sudo -s -E'
+alias x='startx'
+alias nx='nvidia-xrun'
+
+alias v="$EDITOR"
+alias n="$FILEBROWSER"
+alias t="$TASK"
+alias ta="$TASK add"
+alias tbd="$TASK burndown.daily"
+alias tbw="$TASK burndown.weekly"
+alias tbm="$TASK burndown.monthly"
+
+# For programs that think $HOME is a reasonable place to put their junk
+# and don't allow the user to change those questionable choices
+alias adb='HOME=$JUNKHOME adb'
+alias audacity='HOME=$JUNKHOME audacity'
+alias binwalk='HOME=$JUNKHOME binwalk' # Should use .config according to the GitHub code though
+alias cabal='HOME=$JUNKHOME cabal' # TODO May have options but last time I tried it it crashed
+alias cmake='HOME=$JUNKHOME cmake'
+alias ddd='HOME=$JUNKHOME ddd'
+alias ghidra='HOME=$JUNKHOME ghidra'
+alias itch='HOME=$JUNKHOME itch'
+alias vd='HOME=$JUNKHOME vd'
+alias wpa_cli='HOME=$JUNKHOME wpa_cli'
+# TODO Maybe we can do something about node-gyp
+
+alias bower='bower --config.storage.packages=~/.cache/bower/packages --config.storage.registry=~/.cache/bower/registry --config.storage.links=~/.cache/bower/links'
+alias gdb='gdb -x $HOME/.config/gdbinit'
+alias iftop='iftop -c $HOME/.config/iftoprc'
+alias lmms='lmms --config $XDG_CONFIG_HOME/lmmsrc.xml'
+alias tmux='tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# TODO ruby's gem when I find a use for it
+
+# FUNCTIONS
+trysource() {
+    [ -f "$1" ] && . "$1" || return 1
+}
+
+
+_i_prefer() { # executables...
+    for candidate in "$@"
+    do
+        if [ -x "$(command -v "$candidate")" ]
+        then
+            choice="$candidate"
+            break
+        fi
+    done
+    if [ -z "$choice" ]
+    then
+        return
+    fi
+    for candidate in "$@"
+    do
+        if [ "$candidate" != "$choice" ]
+        then
+            alias "$candidate"="$choice"
+        fi
+    done
+}
+
+_i_prefer v nvim vim vi
+_i_prefer gopass pass
+_i_prefer wakeonlan wol
+_i_prefer neomutt mutt
+unset _i_prefer
+
+
+# Replace every cd with cd+ls
+echo "$-" | grep -q "i" && cd() {
+    builtin cd "$@" && ls
+}
+
+#fortune 2>/dev/null
+
+mkcd() {
+  mkdir "$1" && cd "$1"
+}
+
+cdf() {  # needs adjusting
+  cd $(find -H * 2>/dev/null -maxdepth 1 -type d | fzy -p "cd " | (read f && echo ${f:-'.'}))
+}
+
+short_pwd() {
+  echo "${PWD/$HOME/~}" | perl -F/ -ane 'print join( "/", map { $i++ < @F - 2 ? substr $_,0,1 : $_ } @F)'
+}
+
+if `which task 1>/dev/null 2>&1`
+then
+  task_indicator() {
+    # symbols: ×○·‼
+    if [ `task +READY +OVERDUE count` -gt 0 ]
+      then echo ' ×'
+    elif [ `task +READY +DUETODAY count` -gt 0 ]
+      then echo ' ○'
+    elif [ `task +READY +TOMORROW count` -gt 0 ]
+      then echo ''
+    elif [ `task +READY +URGENT count` -gt 0 ]
+      then echo ' ‼'
+    else
+      echo '$'
+    fi
+  }
+else
+  task_indicator() {
+      echo '$'
+  }
+fi

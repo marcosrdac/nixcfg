@@ -1,0 +1,14 @@
+# vim:filetype=msmtp
+defaults
+protocol smtp
+auth on
+tls on
+tls_nocertcheck
+
+account psn
+from marcosrdac@gmail.com
+user marcosrdac@gmail.com
+auth oauthbearer
+passwordeval "oauth2get isync marcosrdac@gmail.com"
+host smtp.gmail.com
+port 587

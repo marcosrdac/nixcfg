@@ -1,0 +1,62 @@
+Create Both
+Expunge Both
+SyncState *
+
+IMAPStore psn-remote
+Host imap.gmail.com
+Port 993
+User marcosrdac@gmail.com
+#Pass 
+AuthMechs XOAUTH2
+PassCmd "oauth2get isync marcosrdac@gmail.com"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+MaildirStore psn-local
+Path ~/.local/share/mail/psn/
+Inbox ~/.local/share/mail/psn/INBOX
+Subfolders Verbatim
+
+Channel psn-inbox
+Far :psn-remote:
+Near :psn-local:
+Patterns "INBOX"
+
+Channel psn-draft
+Far :psn-remote:"[Gmail]/Drafts"
+Near :psn-local:draft
+
+Channel psn-sent
+Far :psn-remote:"[Gmail]/Sent Mail"
+Near :psn-local:sent
+
+Channel psn-trash
+Far :psn-remote:"[Gmail]/Trash"
+Near :psn-local:trash
+
+Channel psn-spam
+Far :psn-remote:"[Gmail]/Spam"
+Near :psn-local:spam
+
+Group psn
+Channel psn-inbox
+Channel psn-draft
+Channel psn-sent
+Channel psn-trash
+
+Group psn-all
+Channel psn-inbox
+Channel psn-draft
+Channel psn-sent
+Channel psn-trash
+Channel psn-spam
+
+
+# Gmail mailboxes:
+# "All Mail"
+# "Drafts"
+# "Important"
+# "Sent Mail"
+# "Spam"
+# "Starred"
+# "Trash"

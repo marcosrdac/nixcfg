@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+# script by Marcos Conceicao (marcosrdac)
+#
+# function: set bspwm monocle gaps accordingly
+
+if test $1 -eq 0
+then
+  bspc config borderless_monocle true
+else
+  bspc config borderless_monocle false
+fi
+
+border=${1:-'0'}
+normal=${2:-'0'}
+lateral_extra=${3:-'0'}
+
+bspc config left_monocle_padding   "$(( $normal + $lateral_extra - $border ))"
+bspc config right_monocle_padding  "$(( $normal + $lateral_extra - $border ))"
+bspc config top_monocle_padding    "$(( $normal - $border ))"
+bspc config bottom_monocle_padding "$(( $normal - $border ))"

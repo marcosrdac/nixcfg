@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+#
+# Bash / ZSH aliases and customizations
+#
+
+## COMMAND CONFIGURATION
+
+# Completion for existing commands
+
+alias cp="cp -i --reflink=auto"
+alias grep="grep --color=auto"
+alias dd='dd status=progress'
+alias rm='rm -v --one-file-system'
+alias free='free -m'
+alias diff='diff --color=auto'
+alias dmesg='dmesg --ctime'
+alias wget='wget --hsts-file $HOME/.cache/wget-hsts'
+
+
+## FUNCTIONS
+
+## MISC

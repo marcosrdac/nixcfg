@@ -1,0 +1,39 @@
+# zathurarc (zathura configuration file)
+
+# general configs
+set guioptions "s"
+set adjust-open width
+set pages-per-row 1
+set scroll-page-aware true
+set scroll-step 50
+set zoom-min 10
+set render-loading false
+set selection-clipboard clipboard
+set window-title-basename true
+set statusbar-basename false
+set statusbar-home-tilde true
+set window-title-page true
+set show-directories true
+set show-hidden true
+set link-zoom true
+
+# aesthetics
+#set font "Fira Mono 11"
+include "zathura_dark"
+set recolor "true"
+set recolor-reverse-video "true"
+set recolor-keephue "false"
+
+## mappings
+map i recolor
+map W adjust_window width
+map H adjust_window best-fit
+map R rotate
+unmap t
+#map t toggle_status_bar
+map m mark_add
+map ' mark_evaluate
+map p print
+map r reload
+map f follow
+map Space scroll half-down

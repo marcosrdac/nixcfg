@@ -1,0 +1,18 @@
+* {{
+  background-color: {background};
+  color: {foreground};
+  selection-background-color: {foreground};
+  selection-color: {background};
+  invertedColorTable: true;
+}}
+
+QPushButton,
+QToolButton {{
+    /*background-color: {foreground};*/
+    /*color: {background};*/
+    selection-background-color: {background};
+    selection-color: {foreground};
+}}
+
+/*QWidget*/
+/*QMenu*/

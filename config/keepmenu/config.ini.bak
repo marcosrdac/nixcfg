@@ -1,0 +1,16 @@
+[dmenu]
+dmenu_command = menu
+
+[dmenu_passphrase]
+#nf = #222222
+#nb = #222222
+#rofi_obscure = True
+
+[database]
+database_1 = /home/marcosrdac/.config/keepassx/marcosrdac.kdbx
+
+keyfile_1 =
+pw_cache_period_min = 360
+autotype_default = {USERNAME}{TAB}{PASSWORD}{ENTER}
+
+type_library = xdotool

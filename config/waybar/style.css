@@ -1,0 +1,126 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: DinaRemaster II, Hack, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    min-height: 0;
+    background: transparent;
+    color: white;
+}
+
+window#waybar {
+  /*background-color: black;*/
+  background-image: linear-gradient(to bottom, rgba(0,0,0,.6), rgba(0,0,0,.2), rgba(0,0,0,0));
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+}
+
+#custom-separator {
+  /*padding: 0 1em;*/
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#tags button {
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#tags button:hover {
+  background-image: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.2), rgba(0,0,0,0));
+}
+
+#tags button.occupied {
+  background-image: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.2), rgba(0,0,0,0));
+}
+
+#tags button.focused {
+  background-image: linear-gradient(to right, rgba(0,0,0,.8), rgba(0,0,0,.2), rgba(0,0,0,.8));
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #tags {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #tags {
+    margin-right: 0;
+}
+
+#clock,
+#battery {
+}
+
+#battery.charging, #battery.plugged {
+}
+
+/*
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+*/
+
+#battery.critical:not(.charging) {
+    background-color: red;
+    color: white;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+label:focus {
+}
+
+#cpu,
+#memory,
+#disk,
+#backlight,
+#network,
+#network.disconnected,
+#pulseaudio,
+#pulseaudio.muted,
+#custom-media,
+#custom-media.custom-spotify,
+#custom-media.custom-vlc,
+#temperature,
+#temperature.critical,
+#tray,
+#tray > .passive,
+#tray > .needs-attention,
+#idle_inhibitor,
+#idle_inhibitor.activated,
+#mpd,
+#mpd.disconnected,
+#mpd.stopped,
+#mpd.paused,
+#language,
+#keyboard-state,
+#keyboard-state > label,
+#mode,
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#mpd,
+#window,
+#keyboard-state > label.locked {
+}

@@ -1,0 +1,52 @@
+#show-read-feeds no
+auto-reload yes
+
+external-url-viewer "urlscan -dc -r 'link_handler {}'"
+download-path "$XDG_CACHE_HOME/pod/%n"
+max-downloads 3
+player "mpv"
+
+bind-key j down
+bind-key k up
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key e enqueue
+bind-key G end
+bind-key g home
+bind-key d pagedown
+bind-key u pageup
+bind-key l open
+unbind-key q feedlist
+bind-key h quit
+unbind-key h feedlist podbeuter
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key ^t next-unread
+bind-key U show-urls
+bind-key d pb-download
+bind-key D pb-toggle-download-all
+bind-key x pb-delete
+bind-key c pb-cancel
+
+color listnormal white default
+color listnormal_unread blue default
+color listfocus yellow default bold
+color listfocus_unread yellow default bold
+color info red black bold
+color article cyan default
+
+html-renderer "w3m -dump -T text/html"
+notify-format "%d new articles (%n unread articles, %f unread feeds)"
+notify-program "/usr/bin/notify-send"
+
+browser link_handler
+macro , open-in-browser
+macro t set browser "tsp youtube-dl --add-metadata -ic"; open-in-browser ; set browser link_handler
+macro a set browser "tsp youtube-dl --add-metadata -xic -f bestaudio/best"; open-in-browser ; set browser link_handler
+macro v set browser "setsid nohup mpv"; open-in-browser ; set browser link_handler
+macro w set browser "w3m"; open-in-browser ; set browser link_handler
+macro p set browser "dmenuhandler"; open-in-browser ; set browser link_handler
+macro c set browser "xsel -b <<<" ; open-in-browser ; set browser linkandler

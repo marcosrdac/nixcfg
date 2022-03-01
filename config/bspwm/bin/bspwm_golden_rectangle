@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+we=${1:-'1'}
+he=${2:-'1'}
+wo=${3:-'0'}
+ho=${4:-'0'}
+echo $(xrandr | grep '*' | awk -F' ' '{print $1}' | \
+  awk -F'x' '{print int(($1*.618**'$we'))"x"int(($2*.618**'$he'))}')+$wo+$ho
+

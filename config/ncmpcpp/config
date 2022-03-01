@@ -1,0 +1,158 @@
+[mpd]
+ncmpcpp_directory = ~/.config/ncmpcpp
+mpd_music_dir = ~/audios
+mpd_host = localhost
+mpd_port = 6600
+mpd_connection_timeout = 5
+lyrics_directory = ~/.cache/ncmpcpp/lyrics
+mpd_crossfade_time = 5
+
+
+[visualizer]
+visualizer_fifo_path = /tmp/mpd.fifo
+visualizer_output_name = mpd_fifo
+visualizer_in_stereo = yes
+visualizer_sync_interval = 30
+visualizer_type = spectrum
+#spectrum, wave, wave_filled, ellipse.
+visualizer_look = ▋▋
+visualizer_color = blue, cyan, green, yellow, magenta, red
+
+
+[playlist]
+playlist_disable_highlight_delay = 0
+# 0 = always on
+message_delay_time = 1
+
+
+# various settings
+execute_on_song_change = "pkill -RTMIN+30 i3blocks"
+execute_on_player_state_change = "pkill -RTMIN+30 i3blocks"
+
+playlist_show_mpd_host = no
+playlist_show_remaining_time = no
+playlist_shorten_total_times = no
+playlist_separate_albums = no
+
+playlist_display_mode = "columns" (classic/columns)
+browser_display_mode = "classic" (classic/columns)
+# classic, columns.
+
+search_engine_display_mode = classic
+playlist_editor_display_mode = classic
+discard_colors_if_item_is_selected = no
+show_duplicate_tags = yes
+incremental_seeking = yes
+seek_time = 1
+volume_change_step = 2
+autocenter_mode = no
+centered_cursor = no
+progressbar_look = "━■" (─>─/━■/━╋━)
+
+default_place_to_search_in = database
+#database_playlist
+user_interface = "classic" (classic/alternative)
+
+
+data_fetching_delay = no
+media_library_primary_tag = "artist" (artist/album_artist/date/genre/composer/performer)
+media_library_albums_split_by_date = yes
+default_find_mode = "wrapped" (wrapped/normal)
+default_tag_editor_pattern = %n - %t
+header_visibility = no
+statusbar_visibility = yes
+titles_visibility = no
+header_text_scrolling = yes
+cyclic_scrolling = no
+lines_scrolled = 2
+
+[lyrics]
+lyrics_fetchers = azlyrics, genius, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, internet
+follow_now_playing_lyrics = yes
+fetch_lyrics_for_current_song_in_background = no
+store_lyrics_in_song_dir = no
+
+generate_win32_compatible_filenames = yes
+allow_for_physical_item_deletion = no
+lastfm_preferred_language = en
+space_add_mode = add_remove
+show_hidden_files_in_local_browser = no
+
+screen_switcher_mode = "playlist,media_library" (previous/help, playlist, browser, search_engine, media_library, playlist_editor, tag_editor, outputs, visualizer, clock, lyrics, last_fm)
+startup_screen = playlist
+startup_slave_screen = ""
+startup_slave_screen_focus = yes
+locked_screen_width_part = 50
+
+ask_for_locked_screen_width_part = yes
+jump_to_now_playing_song_at_start = yes
+ask_before_clearing_playlists = yes
+
+clock_display_seconds = no
+display_volume_level = yes
+display_bitrate = no
+display_remaining_time = no
+regular_expressions = perl
+ignore_leading_the = yes
+ignore_diacritics = yes
+block_search_constraints_change_if_items_found = yes
+mouse_support = yes
+mouse_list_scroll_whole_page = yes
+empty_tag_marker="" ( -- ‼ -- )
+tags_separator = " | "
+tag_editor_extended_numeration = no
+media_library_sort_by_mtime = no
+enable_window_title = yes
+search_engine_default_search_mode = 2
+use_console_editor = yes
+external_editor = nvim
+
+# │
+
+[formating]
+song_window_title_format = {%a - }{%t}|{%f}
+
+song_status_format = {{$b$(red)%t$9$/b}{  ■  $(green)%a$9{ - $(magenta)%b$9}{ ($(yellow)%y$9)}}}|{$b$(red)%30f$9$/b}
+alternative_header_first_line_format = $b$(red) {%t}|{%30f} $/b
+alternative_header_second_line_format = {{$(green)$b%a$/b$9}{ - $(magenta)%b$9}{ ($(yellow)%y$9)}}|{$(magenta)%D}
+
+# expressing as percentages: 41                    25                 23
+song_columns_list_format = "(41)[blue]{t|f:Title} (30f)[magenta]{br} (28f)[green]{a} (4f)[blue]{NEr: } (8f)[blue]{lr}"
+song_list_format = {$(green) %a }$(blue) {%t}|{%30f}$R{(%l)}
+now_playing_prefix = "$(blue) $(red)$b > $(blue) " ($(green)$/b$b > )
+now_playing_suffix = "$/b"
+
+song_library_format = "{%n  }{%t}|{%30f}"
+
+current_item_inactive_column_prefix = "$b"
+current_item_inactive_column_suffix = "$/b"
+current_item_prefix = "$r$b"
+current_item_suffix = "$/b$/r"
+
+
+browser_playlist_prefix = "$(red) ♥  $9 "
+selected_item_prefix = "$u"
+selected_item_suffix = "$/u"
+modified_item_prefix = "$(green)> $9"
+browser_sort_mode = name
+browser_sort_format = "{$(green) %a }$(blue) {%t}|{%30f} {(%l)}"
+
+
+[colors]
+colors_enabled = yes
+empty_tag_color = default
+header_window_color = default
+volume_color = default
+state_line_color = default
+state_flags_color = default:b
+main_window_color = default
+color1 = red
+color2 = white
+progressbar_color = default:b
+progressbar_elapsed_color = red:b
+statusbar_color = default
+statusbar_time_color = blue:b
+player_state_color = default:b
+alternative_ui_separator_color = black:b
+window_border_color = black
+active_window_border = black

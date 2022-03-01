@@ -1,0 +1,15 @@
+[dmenu]
+dmenu_command = menu
+
+[dmenu_passphrase]
+nf = {background}
+nb = {background}
+
+[database]
+database_1 = /home/marcosrdac/.config/keepassx/marcosrdac.kdbx
+
+keyfile_1 =
+pw_cache_period_min = 360
+autotype_default = {{USERNAME}}{{TAB}}{{PASSWORD}}{{ENTER}}
+
+type_library = xdotool

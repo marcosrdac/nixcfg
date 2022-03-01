@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+resp=$(echo "a b\nc d\en f" | tchoice launcher)
+echo $resp

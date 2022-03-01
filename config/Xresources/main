@@ -1,0 +1,42 @@
+! font
+#define FONT_NAME DinaRemasterII
+#define FONT_SIZE 12
+
+#define SYMBOL_FONT_NAME Font Awesome 5 Free Solid
+#define SYMBOL_FONT_SIZE 9
+
+*font_name: FONT_NAME
+*font_size: FONT_SIZE
+*font: FONT_NAME:size=FONT_SIZE:antialias=true:autohint=true;2
+
+*symbol_font_name: SYMBOL_FONT_NAME
+*symbol_font_size: SYMBOL_FONT_SIZE
+*symbol_font: SYMBOL_FONT_NAME:size=SYMBOL_FONT_SIZE:antialias=true:autohint=true;1
+
+! some will use 96, idk
+*dpi: 100
+Xft.dpi: 100
+
+
+! X colors
+*.foreground:  #CCCCCC
+*.background:  #000000
+*.cursorColor: #CCCCCC
+
+*.color0:      #000000
+*.color1:      #CC0000
+*.color2:      #00CC00
+*.color3:      #CCCC00
+*.color4:      #0000CC
+*.color5:      #CC00CC
+*.color6:      #00CC00
+*.color7:      #CCCCCC
+
+*.color8:      #555555
+*.color9:      #FF5555
+*.color10:     #55FF55
+*.color11:     #FFFF55
+*.color12:     #5555FF
+*.color13:     #FF55FF
+*.color14:     #55FF55
+*.color15:     #FFFFFF

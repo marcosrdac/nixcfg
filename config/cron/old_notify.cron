@@ -1,0 +1,14 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# health
+* * * * *     . $HOME/.profile && sleep 30 && polybar_straighten_up
+0 * * * *     . $HOME/.profile && sudo -u $USER DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus DISPLAY=:0 emocron
+* * * * *     sudo -u $USER DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send "Stretch out!" "Get up and strech your body."
+*/30 * * * *  sudo -u $USER DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send "Hydrate yourself!" "Your body needs a sip of water!"
+30 13 * * 1-6 sudo -u $USER DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send "Put the trash out" "Now is a very good time to put trash in front of your door."
+
+# checkers
+*/10 * * * *  . $HOME/.profile && check_mail -u quiet -q -f 'INBOX,Drafts,Spam,Trash,Sent Mail,Notes'
+5 */7 * * *   . $HOME/.profile && check_mail -u quiet
+17 */2 * * *  . $HOME/.profile && rss2playlist

@@ -1,0 +1,41 @@
+highlight clear
+
+highlight  SuggestBox  cterm=bold               ctermfg=white    ctermbg=default
+highlight  Win         cterm=none               ctermfg=white  ctermbg=default
+highlight  Directory   cterm=bold               ctermfg=blue     ctermbg=default
+highlight  Link        cterm=bold               ctermfg=cyan     ctermbg=default
+
+highlight  BrokenLink  cterm=none               ctermfg=red      ctermbg=black
+highlight  Socket      cterm=bold               ctermfg=magenta  ctermbg=default
+highlight  Device      cterm=bold               ctermfg=yellow   ctermbg=black
+
+highlight  Fifo        cterm=none               ctermfg=yellow   ctermbg=black
+highlight  Executable  cterm=bold               ctermfg=green    ctermbg=default
+highlight  Selected    cterm=none,reverse       ctermfg=default  ctermbg=default
+
+highlight  CurrLine    cterm=none,reverse       ctermfg=default  ctermbg=default
+highlight  TopLine     cterm=none               ctermfg=white    ctermbg=default
+highlight  TopLineSel  cterm=bold               ctermfg=white    ctermbg=default
+
+highlight  StatusLine  cterm=bold               ctermfg=white    ctermbg=default
+highlight  WildMenu    cterm=none,reverse       ctermfg=white    ctermbg=default
+highlight  CmdLine     cterm=none               ctermfg=white    ctermbg=default
+
+highlight  ErrorMsg    cterm=bold               ctermfg=red      ctermbg=default
+highlight  Border      cterm=none               ctermfg=default  ctermbg=default
+
+"highlight JobLine cterm=bold,reverse ctermfg=white ctermbg=black
+"highlight CmpMismatch cterm=bold ctermfg=white ctermbg=red
+"highlight AuxWin cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+"highlight TabLine cterm=none ctermfg=white ctermbg=black
+"highlight TabLineSel cterm=bold,reverse ctermfg=default ctermbg=default
+
+highlight User1 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User2 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User3 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User4 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User5 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User6 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User7 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User8 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default
+highlight User9 cterm=bold,underline,reverse,standout,italic ctermfg=default ctermbg=default

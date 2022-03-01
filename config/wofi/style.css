@@ -1,0 +1,44 @@
+* {
+  border-radius: 0px;
+  border-color: inherit;
+}
+
+window {
+  margin: 3px;
+  /*border: 3px solid #030303;*/
+  background-color: #030303;
+}
+
+#outer-box {
+  margin: 5px;
+  border: 2px solid #030303;
+  background-color: #030303;
+}
+
+#input {
+  background-color: #030303;
+  color: #f2ebdd;
+}
+
+#scroll {
+}
+
+#inner-box {
+  background-color: #030303;
+}
+
+#text {
+  color: #f2ebdd;
+}       
+
+#entry:{
+  display: block;
+}
+
+#entry:selected {
+  background-color: #f2ebdd;
+}
+
+#text:selected {
+  color: #030303;
+}

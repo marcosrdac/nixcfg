@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+        blank
+    </title>
+
+    <style>
+      body {{
+        background-color: {foreground};
+      }}
+    </style>
+  </head>
+
+
+  <body>
+  </body>
+</html>

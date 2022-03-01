@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<map>
+  <int name="applyPenToSel" value="1" />
+  <int name="autoHideClippings" value="1" />
+  <int name="growDown" value="0" />
+  <int name="inputSimplify" value="20" />
+  <int name="lastUpdateCheck" value="1630674697" />
+  <int name="mouseMode" value="1" />
+  <int name="penButtonMode" value="13" />
+  <int name="penType" value="11" />
+  <int name="ruleColor" value="2130706432" />
+  <int name="showAdvPrefs" value="1" />
+  <int name="singleTouchMode" value="1" />
+  <int name="strokeCounter" value="1111" />
+  <float name="marginLeft" value="80" />
+  <float name="pageHeight" value="1755" />
+  <float name="pageWidth" value="1240" />
+  <float name="xRuling" value="40" />
+  <string name="clippingDoc" value="/home/marcosrdac/.config/styluslabs/saved/clippings.html" />
+  <string name="currFolder" value="/home/marcosrdac/dox/y/aca/ufba/subjects/seismic_processing/wrk/" />
+  <string name="docFileExt" value="svgz" />
+  <string name="newDocTitleFmt" value="%b %e %Hh%M" />
+  <string name="recentDocs" value="/home/marcosrdac/dox/y/aca/ufba/subjects/seismic_processing/wrk/Sep  3 10h12.svgz:::/home/marcosrdac/pro/lxl/storage_folders.svgz:::/home/marcosrdac/dox/y/aca/bft/eig_pca_svd_dmd.svgz:::/home/marcosrdac/Jun 23 16h53.svgz:::/home/marcosrdac/Jul 16 14h46.svgz:::/home/marcosrdac/Jul 12 10h24.svgz:::/home/marcosrdac/organize/svgz/la.svgz:::/home/marcosrdac/organize/svgz/permissions.svgz:::/home/marcosrdac/organize/svgz/resumo_kirsch_8.svgz:::/home/marcosrdac/organize/svgz/te_tm.svgz:::/home/marcosrdac/organize/svgz/test.svgz" />
+  <string name="savedColors" value="#FF000000,#FFFF0000,#FF008000,#FF0000FF" />
+  <string name="savedWidths" value="1.400,2.400,4.000,8.000" />
+  <string name="toolBars2" value="docTitle,stretch,actionSave,separator,tools,separator,undoRedoBtn,separator,seltools,separator,actionShow_Bookmarks,actionShow_Clippings,actionSplitView,separator,actionOverflow_Menu" />
+  <string name="toolModes" value="16 18 27 22" />
+  <string name="windowState" value="0 0 1366 768 0 0" />
+  <pen color="4278190080" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="512" />
+  <pen color="4278190335" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="512" />
+  <pen color="4278222848" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="512" />
+  <pen color="4294901760" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="512" />
+  <pen color="3405840383" width="25" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="513" />
+  <pen color="4278190080" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="0" gap="0" flags="516" />
+  <pen color="4278190080" width="2.5" wRatio="0" pressure="0" speed="0" direction="0" dash="10" gap="0" flags="516" />
+  <pen color="4278190080" width="6" wRatio="1" pressure="1" speed="0" direction="0" dash="0" gap="0" flags="528" />
+</map>

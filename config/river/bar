@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pgrep waybar || waybar --bar 1

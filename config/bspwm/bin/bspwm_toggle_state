@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+prev=tiled
+new=$1
+
+if [ $(bspc query -N -n focused.$new) ]
+then
+  bspc node -t $prev
+else
+  bspc node -t $new
+fi

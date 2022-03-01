@@ -1,0 +1,44 @@
+* {{
+  border-radius: 0px;
+  border-color: inherit;
+}}
+
+window {{
+  margin: 3px;
+  /*border: 3px solid {background};*/
+  background-color: {background};
+}}
+
+#outer-box {{
+  margin: 5px;
+  border: 2px solid {background};
+  background-color: {background};
+}}
+
+#input {{
+  background-color: {background};
+  color: {foreground};
+}}
+
+#scroll {{
+}}
+
+#inner-box {{
+  background-color: {background};
+}}
+
+#text {{
+  color: {foreground};
+}}       
+
+#entry:{{
+  display: block;
+}}
+
+#entry:selected {{
+  background-color: {foreground};
+}}
+
+#text:selected {{
+  color: {background};
+}}

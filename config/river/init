@@ -1,0 +1,198 @@
+#!/bin/sh
+
+M='Mod1'
+N='None'
+S='Shift'
+C='Control'
+OUTER_GAP=${WINDOW_GAP:=22}
+INNER_GAP=$((OUTER_GAP/2))
+
+normalmap () {
+  riverctl map normal "$@"
+}
+
+defquickmode () {
+  riverctl declare-mode $3
+  riverctl map normal $1 $2 enter-mode $3
+  riverctl map $3 None Escape enter-mode normal
+}
+
+quickmodemap () {
+  riverctl map $1 $2 $3 spawn "$4 & riverctl enter-mode normal"
+}
+
+defquickmode $M w window
+defquickmode $M e edit
+defquickmode $M x execute
+defquickmode $M c see
+defquickmode $M z toggle
+defquickmode $M+$S z movetoggle
+
+makehiddentag () {
+  quickmodemap toggle $1 $2 "riverctl toggle-focused-tags $3"
+  quickmodemap movetoggle $1 $2 "riverctl set-view-tags $3"
+}
+
+# tags
+all_tags=$(((1 << 32) - 1))
+for i in 1 2 3 4 5 6 7 8 9 0
+do  focused_tags=$((1 << (i - 1)))
+    normalmap $M $i       set-focused-tags $focused_tags
+    normalmap $M+$S $i    set-view-tags $focused_tags
+    normalmap $M+$C $i    toggle-focused-tags $focused_tags
+    normalmap $M+$C+$S $i toggle-view-tags $focused_tags
+done
+# hidden
+hidden_tag=$((1 << 31))
+term_tag=$((1 << 30))
+mail_tag=$((1 << 29))
+makehiddentag $N h $hidden_tag
+makehiddentag $N z $term_tag
+makehiddentag $N x $mail_tag
+# viewable and default tags
+viewable_tags=$(( ((1 << 32) - 1) ^ hidden_tag ^ term_tag ^ mail_tag))
+riverctl map normal $M 0 set-focused-tags $viewable_tags
+riverctl map normal $M+$S 0 set-view-tags $viewable_tags
+riverctl spawn-tagmask $viewable_tags
+
+# mapptings
+normalmap $M p focus-view previous
+normalmap $M h focus-view previous
+normalmap $M k focus-view previous
+normalmap $M n focus-view next
+normalmap $M l focus-view next
+normalmap $M j focus-view next
+normalmap $M+$S h swap previous
+normalmap $M+$S k swap previous
+#normalmap $M+$S j swap next
+#normalmap $M+$S l swap next
+
+
+# mouse
+riverctl map-pointer normal $M BTN_LEFT move-view
+riverctl map-pointer normal $M BTN_RIGHT resize-view
+
+normalmap $M dead_grave zoom
+#normalmap $M Tab # CHANGE TO PREVIOUS VIEW
+normalmap $M Space toggle-float
+normalmap $M f toggle-fullscreen
+
+normalmap $M+$S Return spawn foot
+normalmap $M+$S q exit
+normalmap $M+$S q close
+
+# running stuff
+normalmap $M o spawn $MENURUN
+normalmap $M Return spawn $TERMINAL
+# oppening windows
+quickmodemap window $N Return "$TERMINAL"
+quickmodemap window $M Return "$TERMINAL"
+quickmodemap window $N b      "$BROWSER"
+quickmodemap window $S b      "$ALTBROWSER"
+quickmodemap window $N e      "$TERMINAL -e $EDITOR"
+# editing files
+quickmodemap edit $N n "$TERMINAL -e $EDITOR -c 'VimwikiIndex' -c ':lcd %:p:h'"
+quickmodemap edit $N r "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/river/init -c ':lcd %:p:h' && $0"
+quickmodemap edit $N e "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/shell/shenv -c ':lcd %:p:h'"
+quickmodemap edit $N b "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/waybar/config -c ':lcd %:p:h'"
+quickmodemap edit $N v "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/nvim/init.vim -c ':lcd %:p:h'"
+quickmodemap edit $N l "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/lf/lfrc -c ':lcd %:p:h'"
+quickmodemap edit $N c "$TERMINAL -e $EDITOR $XDG_CONFIG_HOME/cron/user.cron -c ':lcd %:p:h'"
+
+quickmodemap see $N p "show_selections"
+quickmodemap see $S p "swap_selections"
+quickmodemap see $N w "toggle_webcam"
+quickmodemap see $N e "$TERMINAL -e nmtui"
+quickmodemap see $N m "mpc_show"
+
+riverctl map execute $S q exit
+
+
+#normalmap $M Period focus-output next
+#normalmap $M Comma focus-output previous
+#normalmap $M+$S Period send-to-output next
+#normalmap $M+$S Comma send-to-output previous
+#normalmap $M+$C h resize horizontal -100
+#normalmap $M+$C j resize vertical 100
+#normalmap $M+$C k resize vertical -100
+#normalmap $M+$C l resize horizontal 100
+normalmap $M+$C+$S h     move left  100
+normalmap $M+$C+$S j     move down  100
+normalmap $M+$C+$S k     move up    100
+normalmap $M+$C+$S l     move right 100
+#normalmap $M+$C+$S Down  snap down
+#normalmap $M+$C+$S Up    snap up
+#normalmap $M+$C+$S Left  snap left
+#normalmap $M+$C+$S Right snap right
+
+# rivertile layout
+normalmap $M Up    set-layout-value rivertile string main_location top
+normalmap $M Right set-layout-value rivertile string main_location right
+normalmap $M Down  set-layout-value rivertile string main_location bottom
+normalmap $M Left  set-layout-value rivertile string main_location left
+normalmap $M+$S j  mod-layout-value rivertile int main_count +1
+normalmap $M+$S k  mod-layout-value rivertile int main_count -1
+normalmap $M+$S h  mod-layout-value rivertile fixed main_factor -0.05
+normalmap $M+$S l  mod-layout-value rivertile fixed main_factor +0.05
+
+#riverctl mod-layout-value rivertile pixels
+
+
+for mode in normal locked
+do
+    riverctl map $mode $N XF86AudioMute         spawn pamixer --toggle-mute
+    riverctl map $mode $N XF86AudioLowerVolume  spawn pamixer -d 5
+    riverctl map $mode $N XF86AudioRaiseVolume  spawn pamixer -i 5
+    riverctl map $mode $M+$S Down               spawn pamixer -d 5
+    riverctl map $mode $M+$S Up                 spawn pamixer -i 5
+    riverctl map $mode $N XF86AudioMedia        spawn playerctl play-pause
+    riverctl map $mode $N XF86AudioPlay         spawn playerctl play-pause
+    riverctl map $mode $N XF86AudioPrev         spawn playerctl previous
+    riverctl map $mode $N XF86AudioNext         spawn playerctl next
+    riverctl map $mode $N XF86MonBrightnessDown spawn light -U 5
+    riverctl map $mode $N XF86MonBrightnessUp   spawn light -A 5
+    riverctl map $mode $M+$S Left               spawn light -U 5
+    riverctl map $mode $M+$S Right              spawn light -A 5
+    riverctl map $mode $N XF86Eject             spawn eject -T
+done
+
+riverctl map normal $N Print spawn "wayland_screenshot"
+riverctl map normal $S Print spawn "wayland_screenshot --select"
+
+riverctl map normal $C Prior spawn "dunstctl history-pop"
+riverctl map normal $C Next spawn "dunstctl close"
+riverctl map normal $C End spawn "dunstctl close-all"
+
+# filters
+## allow client decoration
+#riverctl csd-filter-add "gedit"
+## make float
+riverctl float-filter-add "float"
+riverctl float-filter-add "popup"
+
+# style
+riverctl opacity 1.0 0.80 0.0 0.1 20
+riverctl border-width 3
+
+# keyboard repeat rate
+riverctl set-repeat 50 300
+
+# setting up touchpads
+for touchpad in `riverctl list-inputs | grep -i touchpad`
+do
+  riverctl input $touchpad tap enabled
+  riverctl input $touchpad tap-button-map left-right-middle
+done
+
+# setting layout
+riverctl default-layout rivertile
+
+#exec rivertile
+exec rivertile -outer-padding $OUTER_GAP -view-padding $INNER_GAP
+
+sleep 3
+riverctl spawn dunst_start
+riverctl spawn waybar
+#riverctl spawn "[ -f "$XRESOURCES" ] && xrdb "$XRESOURCES""
+#riverctl spawn "[ -f "$XDG_CACHE_HOME/wal/colors.Xresources" ] && xrdb -merge "$XDG_CACHE_HOME/wal/colors.Xresources""
+#riverctl spawn "dunst_start"
