@@ -4,6 +4,7 @@ wid=$1
 class=$2
 instance=$3
 
+
 # Debug
 #notify-send "new window" "id: $wid\nclass: $class\ninstance: $instance\nname: $name"
 
@@ -36,6 +37,9 @@ case "$class" in
   Yad) echo "state=floating border=off" ;;
 
   # dropdown terminals
+  tchoice)
+    #echo "state=floating sticky=on locked=on private=on border=on center=true rectangle=$(bspwm_golden_rectangle 0 2 0 22)" ;;
+    echo "state=floating sticky=on locked=on private=on border=on center=true" ;;
   dropdown_terminal)
     echo "state=floating sticky=on locked=on private=on hidden=on border=off center=false rectangle=$(bspwm_golden_rectangle 0 2 0 22)" ;;
   dropdown_calculator)

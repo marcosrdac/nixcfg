@@ -1,30 +1,35 @@
 #!/usr/bin/env sh
 
-ID=$1
+CLASS=`basename $0`
+ID=${1}
 RUNDIR="/run/user/$UID/tchoice"
-PIDFILE="$RUNDIR/$ID.pid"
 CHOICEFILE="$RUNDIR/$ID.txt"
-
 [ -d "$RUNDIR" ] || mkdir "$RUNDIR"
-trap 'rm "$PIDFILE" 2>/dev/null && exit 1' SIGHUP SIGINT
-[ -e "$PIDFILE" ] && exit 1 || echo $$ > "$PIDFILE"
 
+[ -z "$WAYLAND_DISPLAY" ] && DOTOOL=xdotool || DOTOOL=ydotool
+
+# closing old windows
+oldpids=`$DOTOOL search --class "$CLASS" search --classname "$ID" getwindowpid %@`
+for pid in $oldpids
+do
+  kill $pid
+done
+
+# specific options
 case `basename $TERMINAL` in
-  alacritty) extra='--option window.dimensions.columns=40 --option window.dimensions.lines=10' ;;
-  st) set_class='-c' ;;
+  alacritty)
+    class="--class $ID,$CLASS"
+    extra='--option window.dimensions.columns=40 --option window.dimensions.lines=10' ;;
+  st)
+    class="-c $CLASS";;
 esac
+class=${class:-''}
 run=${run:-'-e'}
-set_class=${set_class:-'--class'}
 
-$TERMINAL $set_class $0 $extra $run sh -c \
+# run terminal
+$TERMINAL $class $extra $run sh -c \
   "printf '`</dev/stdin`' | fzy > $CHOICEFILE"
 
-echo `<$CHOICEFILE`
-
-rm $PIDFILE 2>/dev/null
-echo -n "" > $CHOICEFILE
-
-
-# possible future with xdotool/ydotool
-#[ -n "$WAYLAND_DISPLAY" ] && DOTOOL=ydotool
-#[ -n "$DISPLAY" ] && DOTOOL=xdotool
+# print choice
+printf `<$CHOICEFILE`
+printf '' > $CHOICEFILE

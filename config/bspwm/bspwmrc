@@ -27,7 +27,7 @@ bspc config presel_feedback_color  $color15
 
 # --- rules --- #
 
-bspc config external_rules_command ~/.local/bin/bspwm/bspwm_external_rules
+bspc config external_rules_command $HOME/.config/nixpkgs/config/bspwm/bin/bspwm_external_rules
 
 
 # --- dropdown terminals --- #

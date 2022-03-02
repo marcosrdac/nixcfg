@@ -61,6 +61,10 @@ in
       source = ./config/bspwm/bin/bspwm_toggle_state;
       executable = true;
     };
+    "${binHome}/bspwm_external_rules" = {
+      source = ./config/bspwm/bin/bspwm_external_rules;
+      executable = true;
+    };
   };
 
 
@@ -166,6 +170,8 @@ in
       hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`";
       ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
 
+      # making it easy
+      n = "lf";
       ll = "ls -l";
     };
 
