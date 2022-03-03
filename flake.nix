@@ -30,12 +30,15 @@
           configuration = { config, pkgs, ... }:
             let
               overlay-unstable = final: prev: {
-                unstable = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux;
+                unstable = import inputs.nixpkgs-unstable {
+                  system = prev.system;
+                  config.allowUnfree = true;
+		};
               };
-	      nur-overlay = nur.overlay;
+	      overlay-nur = nur.overlay;
             in
               {
-                nixpkgs.overlays = [ overlay-unstable nur-overlay ];
+                nixpkgs.overlays = [ overlay-unstable overlay-nur ];
                 nixpkgs.config = {
                   allowUnfree = true;
                   allowBroken = true;

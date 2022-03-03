@@ -208,7 +208,7 @@ XF86MonBrightness{Down,Up}
 
 # screenshots
 {_,shift + ,alt +} @Print
-	xorg_screenshot {_, --slice, --slice}
+	xorg-screenshot {_, --slice, --slice}
 
 # power button
 XF86PowerOff

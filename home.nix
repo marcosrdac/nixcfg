@@ -2,71 +2,114 @@
 
 let
   binHome = "${config.home.homeDirectory}/.local/bin";
+  dotDir = "${config.xdg.configHome}/nixpkgs";
+  dotConfig = "${dotDir}/config";
+  dotBin = "${dotDir}/bin";
 in
 {
+  imports = [
+    ./modules/git
+    ./modules/polybar
+  ];
+  
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    nox
+    starship
     htop
+    scrot
+    xclip xsel
+
+    ueberzug
+
+    pywal
 
     ripgrep
 
-    #bash
-    fzy
-    ydotool
-    xdotool
+    unstable.spotify
+    tdesktop
+    write_stylus
 
+    inkscape gimp
+
+    fzy ydotool xdotool
+
+    libnotify  #=: notify-send
     brightnessctl  # light control
+    pamixer  # sound control
   ];
+
+
+  services.dunst = {
+    enable = true;
+  };
+
+  services.picom = {
+    enable = true;
+    package = pkgs.unstable.picom;
+    activeOpacity = "1.0";
+    menuOpacity = "1.0";
+    inactiveOpacity = "1.0";
+    inactiveDim = "0.2";
+    blur = true;
+    backend = "glx";
+    refreshRate = 0;
+    experimentalBackends = true;
+    fade = false;
+    fadeDelta = 10;
+    fadeSteps = [ "0.028" "0.03" ];
+    shadow = false;
+    shadowOpacity = "0.75";
+    shadowOffsets = [ (-15) (-15) ];  # H&V
+    opacityRule = [ 
+      "90:class_g = 'St' && focused"
+      "90:class_g = 'Alacritty' && focused"
+      "90:class_g = 'dmenu' && focused"
+      "90:class_g = 'Polybar'"
+      "90:class_g = 'Spotify' && focused"
+      #"90:class_g = 'Zathura' && focused"
+      "90:class_g = 'tchoice' && focused"
+      "90:class_g = 'dropdown_terminal' && focused"
+      "90:class_g = 'dropdown_calculator' && focused"
+      "90:class_g = 'dropdown_mail' && focused"
+      "90:class_g = 'dropdown_music_player' && focused"
+      #"90:class_g = 'qutebrowser' && focused"
+      "80:class_g = 'St' && !focused"
+      "80:class_g = 'Alacritty' && !focused"
+      "80:class_g = 'dmenu' && !focused"
+      "80:class_g = 'Spotify' && !focused"
+      #"80:class_g = 'Zathura' && !focused"
+      "80:class_g = 'tchoice' && !focused"
+      "80:class_g = 'dropdown_terminal' && !focused"
+      "80:class_g = 'dropdown_calculator' && !focused"
+      "80:class_g = 'dropdown_mail' && !focused"
+      "80:class_g = 'dropdown_music_player' && !focused"
+      #"80:class_g = 'qutebrowser' && !focused"
+    ];
+    blurExclude = [ ];
+    fadeExclude = [ ];
+    shadowExclude = [ ];
+    noDockShadow = true;
+    extraOptions = ''
+      blur-method = "dual_kawase"
+      #blur-strength = 3
+      #blur-method = "gaussian"
+      #blur-size = 9
+      #blur-deviation = 10
+      #corner-radius = 1
+    '';
+  };
 
   home.sessionPath = [ binHome ];
 
   home.sessionVariables = {
     TERMINAL = "${pkgs.alacritty}/bin/alacritty";
     BROWSER = "${pkgs.qutebrowser}/bin/qutebrowser";
+    ALTBROWSER = "${pkgs.firefox}/bin/firefox";
+    ALTALTBROWSER = "${pkgs.google-chrome}/bin/google-chrome-stable";
     FILEMANAGER = "${pkgs.lf}/bin/lf";
   };
-
-  home.file = rec {
-    # general
-    "${binHome}/tchoice" = {
-      source = ./bin/tchoice;
-      executable = true;
-    };
-    "${binHome}/menu" = {
-      source = ./bin/tchoice;
-      executable = true;
-    };
-
-    "${binHome}/tlauncher" = {
-      source = ./bin/tlauncher;
-      executable = true;
-    };
-    "${binHome}/menu-run" = {
-      source = ./bin/tlauncher;
-      executable = true;
-    };
-
-    "${binHome}/test-script" = {
-      source = ./bin/test-script;
-      executable = true;
-    };
-
-    # bspwm
-    "${binHome}/bspwm_window_move" = {
-      source = ./config/bspwm/bin/bspwm_window_move;
-      executable = true;
-    };
-    "${binHome}/bspwm_toggle_state" = {
-      source = ./config/bspwm/bin/bspwm_toggle_state;
-      executable = true;
-    };
-    "${binHome}/bspwm_external_rules" = {
-      source = ./config/bspwm/bin/bspwm_external_rules;
-      executable = true;
-    };
-  };
-
 
   #home.language.base = "us";
 
@@ -90,27 +133,6 @@ in
       ];
     };
   };
-
-  #services.polybar = {
-  #  enable = true;
-  #  config = ./config/polybar/config;
-  #  script = ''
-  #    polybar 1
-  #  '';
-  #};
-
-  xdg.userDirs = {
-    documents = "$HOME/tmp/dox";
-    pictures = "$HOME/tmp/pix";
-    music = "$HOME/mus";
-    videos = "$HOME/vid";
-    templates = "$HOME/tpt";
-    publicShare = "$HOME/pub";
-    desktop = "$HOME/tmp";
-    download = "$HOME/tmp/dld";
-    extraConfig = { };
-  };
-
 
   programs.alacritty.enable = true;
   programs.neovim = {
@@ -159,8 +181,79 @@ in
     ];
   };
   
-  # home.file.".vimrc".text = " ...";
-  # xdg.configFile."sxhkd/sxhkdrc".source = ./config/sxhkd/sxhkdrc;
+
+  xdg.enable = true;
+
+  xdg.userDirs = {
+    documents = "$HOME/tmp/dox";
+    pictures = "$HOME/tmp/pix";
+    music = "$HOME/mus";
+    videos = "$HOME/vid";
+    templates = "$HOME/tpt";
+    publicShare = "$HOME/pub";
+    desktop = "$HOME/tmp";
+    download = "$HOME/tmp/dld";
+    extraConfig = { };
+  };
+
+  home.file = with config.lib.file; {
+    # terminal menu / launcher
+    "${binHome}/tchoice".source = mkOutOfStoreSymlink "${dotBin}/tchoice";
+    "${binHome}/menu".source = mkOutOfStoreSymlink "${dotBin}/tchoice";
+    "${binHome}/tlauncher".source = mkOutOfStoreSymlink "${dotBin}/tlauncher";
+    "${binHome}/menu-run".source = mkOutOfStoreSymlink "${dotBin}/tlauncher";
+    "${binHome}/test-script".source = mkOutOfStoreSymlink "${dotBin}/test-script";
+
+    "${binHome}/xorg-screenshot".source = mkOutOfStoreSymlink "${dotBin}/xorg-screenshot";
+    "${binHome}/wayland-screenshot".source = mkOutOfStoreSymlink "${dotBin}/wayland-screenshot";
+
+    # bspwm
+    "${binHome}/bspwm_window_move".source = mkOutOfStoreSymlink "${dotConfig}/bspwm/bin/bspwm_window_move";
+    "${binHome}/bspwm_toggle_state".source = mkOutOfStoreSymlink "${dotConfig}/bspwm/bin/bspwm_toggle_state";
+    # default example
+    #"${binHome}/bspwm_toggle_state" = {
+    #  source = ./config/bspwm/bin/bspwm_toggle_state;
+    #  executable = true;
+    #};
+  };
+
+  xdg.configFile = with config.lib.file; {
+    "qutebrowser" = {
+      source = ./config/qutebrowser;
+      recursive = true;
+    };
+    "GIMP" = {
+      source = ./config/GIMP;
+      recursive = true;
+    };
+
+    #"lf/lfrc".text = builtins.concatStringsSep "\n" [
+    #  (builtins.readFile ./config/lf/lfrc)
+    #  "# Image previews need ${pkgs.ueberzug}"
+    #];
+    "lf".source = mkOutOfStoreSymlink "${dotConfig}/lf";
+    #"lf/icons" = {
+    #  source = ./config/lf/icons;
+    #  executable = true;
+    #};
+    #"lf/lfimg/previer" = {
+    #  source = ./config/lf/lfimg/preview;
+    #  executable = true;
+    #};
+    #"lf/lfimg/cleaner" = {
+    #  source = ./config/lf/lfimg/cleaner;
+    #  executable = true;
+    #};
+
+
+    "dunst/dunstrc.base" = {
+      source = ./config/dunst/dunstrc.base;
+    };
+    "wal" = {
+      source = ./config/wal;
+      recursive = true;
+    };
+  };
   
   programs.zsh = {
     enable = true;
@@ -173,20 +266,12 @@ in
       # making it easy
       n = "lf";
       ll = "ls -l";
+      lf = "${dotConfig}/lf/bin/lf-ueberzug";
     };
 
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
-    };
-  };
-
-  programs.git = {
-    enable = true;
-    userName = "marcosrdac";
-    userEmail = "marcosrdac@gmail.com";
-    aliases = {
-      s = "status";
     };
   };
 
