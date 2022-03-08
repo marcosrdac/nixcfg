@@ -10,6 +10,7 @@ in
   imports = [
     ./modules/git
     ./modules/polybar
+    ./modules/nvim
   ];
   
   programs.home-manager.enable = true;
@@ -21,6 +22,10 @@ in
     scrot
     xclip xsel
 
+    polybar
+
+    zathura
+    evince
     ueberzug
 
     pywal
@@ -35,9 +40,9 @@ in
 
     fzy ydotool xdotool
 
-    libnotify  #=: notify-send
+    libnotify      #=: notify-send
     brightnessctl  # light control
-    pamixer  # sound control
+    pamixer        # sound control
   ];
 
 
@@ -47,7 +52,8 @@ in
 
   services.picom = {
     enable = true;
-    package = pkgs.unstable.picom;
+    #package = pkgs.unstable.picom;
+    package = pkgs.picom;
     activeOpacity = "1.0";
     menuOpacity = "1.0";
     inactiveOpacity = "1.0";
@@ -92,11 +98,12 @@ in
     shadowExclude = [ ];
     noDockShadow = true;
     extraOptions = ''
-      blur-method = "dual_kawase"
+      #blur-method = "dual_kawase"
       #blur-strength = 3
-      #blur-method = "gaussian"
-      #blur-size = 9
-      #blur-deviation = 10
+      blur-method = "gaussian"
+      blur-size = 9
+      blur-deviation = 10
+
       #corner-radius = 1
     '';
   };
@@ -109,6 +116,7 @@ in
     ALTBROWSER = "${pkgs.firefox}/bin/firefox";
     ALTALTBROWSER = "${pkgs.google-chrome}/bin/google-chrome-stable";
     FILEMANAGER = "${pkgs.lf}/bin/lf";
+    PDFREADER = "${pkgs.zathura}/bin/zathura";
   };
 
   #home.language.base = "us";
@@ -138,6 +146,7 @@ in
   programs.neovim = {
     enable = true;
     viAlias = true;
+    vimAlias = true;
     extraConfig = builtins.concatStringsSep "\n" [
     #  (lib.strings.fileContents ./base.vim)
     #  (lib.strings.fileContents ./plugins.vim)
@@ -151,9 +160,7 @@ in
     #  ''
     ];
     extraPackages = with pkgs; [
-      # used to compile tree-sitter grammar
-      #tree-sitter
-
+      tree-sitter  # compile tree-sitter grammar
       # installs different langauge servers for neovim-lsp
       # have a look on the link below to figure out the ones for your languages
       # https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md
@@ -162,19 +169,78 @@ in
       #nodePackages.pyright
       #rust-analyzer
     ];
+
+    #package = pkgs.neovim.override {
+    #  configure = {
+    #    plugins = with pkgs.vimPlugins; [
+    #      ale
+    #      goyo
+    #    ];
+    #  };
+    #};
+
     plugins = with pkgs.vimPlugins; [
-      # you can use plugins from the pkgs
+      # navigation
+      quick-scope
+      vim-tmux-navigator
+
+      # crypting
+      vim-gnupg
+
+      # vimwiki
+      vimwiki
+      # calendar-vim integration
+      calendar-vim
+
+      # viewing colors
+      nvim-colorizer-lua
+      vim-hexokinase
+      #nvim-treesitter
+
+      # computer language syntax checkers
+      ale  # async syntax checking
+
+      # natural language checkers
+      LanguageTool-nvim
+
+      # focused writing
+      goyo-vim           # center text
+      limelight-vim  # focused writing
+
+      # File managing
+      nerdtree                       # file system explorer
+      nerdtree-git-plugin            # NERDTree git marks
+      vim-devicons                   # NERDTree file icons
+      vim-nerdtree-syntax-highlight  # highlights filetypes
+      ctrlp-vim                      # file fuzyfinder
+
+      # easy-writting
+      # bracketting
+      auto-pairs               # closing brackets
+      vim-surround vim-repeat  # changing brackets + dot repetion
+      nerdcommenter            # (un)comments text
+      # completions
+      deoplete-nvim
+      deoplete-tabnine  # tabnine
+      deoplete-jedi     # python
+      emmet-vim         # html
+
+      # syntax highlighting for different filetypes
+      vim-nix          # nix
+      lf-vim           # lfrc
+      vim-markdown     # markdown + latex
+      dart-vim-plugin  # dart syntax highlighting
+      vim-flutter      # flutter tools
+      julia-vim        # julia syntax highlighting
+      #vim-cython       # cython filetype and syntax
+
+      # under tests
       vim-which-key
       #vim-quick-scope
-
-      ## or you can use our function to directly fetch plugins from git
+      ## this installs from git
       #(plugin "neovim/nvim-lspconfig")
-      #(plugin "hrsh7th/nvim-compe") # completion
-      #(plugin "Raimondi/delimitMate") # auto bracket
-
       ## this installs the plugin from 'lua' branch
       #(pluginGit "lua" "lukas-reineke/indent-blankline.nvim")
-
       ## syntax highlighting
       #(plugin "nvim-treesitter/nvim-treesitter")
       #(plugin "p00f/nvim-ts-rainbow") # bracket highlighting
@@ -226,6 +292,7 @@ in
       source = ./config/GIMP;
       recursive = true;
     };
+    "polybar/config".source = mkOutOfStoreSymlink "${dotConfig}/polybar/config";
 
     #"lf/lfrc".text = builtins.concatStringsSep "\n" [
     #  (builtins.readFile ./config/lf/lfrc)
@@ -245,7 +312,6 @@ in
     #  executable = true;
     #};
 
-
     "dunst/dunstrc.base" = {
       source = ./config/dunst/dunstrc.base;
     };
@@ -257,6 +323,8 @@ in
   
   programs.zsh = {
     enable = true;
+    #dotDir = ".config/zsh";
+    enableAutosuggestions = true;
     shellAliases = {
       # home-manager
       hm = "home-manager";

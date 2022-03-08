@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+monitors=`polybar --list-monitors | cut -d":" -f1`
+for monitor in $monitors
+do
+  polybar --reload 1 &
+done
