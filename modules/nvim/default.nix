@@ -1,21 +1,45 @@
 { config, pkgs, ... }:
 
+let
+  binHome = "${config.home.homeDirectory}/.local/bin";
+  dotDir = "${config.xdg.configHome}/nixpkgs";
+  dotConfig = "${dotDir}/config";
+  dotBin = "${dotDir}/bin";
+  nvimConfig = "${config.xdg.configHome}/nvim";
+in
 {
+  xdg.configFile = with config.lib.file; {
+    "nvim/base.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/base.vim";
+    "nvim/mappings.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/base.vim";
+    "nvim/scripts.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/scripts.vim";
+    "nvim/abbreviations.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/abbreviations.vim";
+    "nvim/variables.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/variables.vim";
+    "nvim/automation.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/automation.vim";
+    "nvim/plugins.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/plugins.vim";
+    "nvim/autoload".source = mkOutOfStoreSymlink "${dotConfig}/nvim/autoload";
+    "nvim/spell".source = mkOutOfStoreSymlink "${dotConfig}/nvim/spell";
+    "nvim/colors".source = mkOutOfStoreSymlink "${dotConfig}/nvim/colors";
+    "nvim/ftplugin".source = mkOutOfStoreSymlink "${dotConfig}/nvim/ftplugin";
+  };
+
   programs.neovim = {
     enable = true;
     viAlias = true;
     vimAlias = true;
     extraConfig = builtins.concatStringsSep "\n" [
-    #  (lib.strings.fileContents ./base.vim)
-    #  (lib.strings.fileContents ./plugins.vim)
-    #  (lib.strings.fileContents ./lsp.vim)
-    #  # this allows you to add lua config files
-    #  ''
-    #    lua << EOF
-    #    ${lib.strings.fileContents ./config.lua}
-    #    ${lib.strings.fileContents ./lsp.lua}
-    #    EOF
-    #  ''
+      ''
+        " source config files
+        let g:vimpath = expand('$XDG_CONFIG_HOME/nvim')
+        exec 'source '.g:vimpath.'/base.vim'
+        exec 'source '.g:vimpath.'/mappings.vim'
+        exec 'source '.g:vimpath.'/scripts.vim'
+        exec 'source '.g:vimpath.'/variables.vim'
+        exec 'source '.g:vimpath.'/plugins.vim'
+        exec 'source '.g:vimpath.'/abbreviations.vim'
+        exec 'source '.g:vimpath.'/automation.vim'
+      ''
+      # TODO add if extraconfig then load it (by computer)
+      #(lib.strings.fileContents ./base.vim)
     ];
     extraPackages = with pkgs; [
       tree-sitter  # compile tree-sitter grammar

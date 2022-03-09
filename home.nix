@@ -16,8 +16,8 @@ in
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    st
     nox
-    starship
     htop
     scrot
     xclip xsel
@@ -43,6 +43,11 @@ in
     libnotify      #=: notify-send
     brightnessctl  # light control
     pamixer        # sound control
+
+    pandoc
+    texlive.combined.scheme-full
+
+    julia_16-bin
   ];
 
 
@@ -318,6 +323,58 @@ in
     "wal" = {
       source = ./config/wal;
       recursive = true;
+    };
+  };
+
+  programs.starship = {
+    package = pkgs.unstable.starship;
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      character = {
+        success_symbol = "[\\$](bold green)";
+        error_symbol = "[\\$](bold red)";
+      };
+      add_newline = true;
+      format = ''
+        $directory$git_branch $git_status$git_metrics
+        ($username)($hostname )$character
+      '';
+      directory = {
+        style = "bold cyan";
+        read_only = " [w]";
+        read_only_style	= "red";
+        truncation_length = 8;
+        truncation_symbol = "*/";
+      };
+      git_branch = {
+        symbol = "";
+        format = "[$symbol$branch](purple)";
+        truncation_symbol = "…";
+      };
+      git_state = { };
+      git_status = {
+        style = "dimmed purple";
+        format = "([$all_status]($style) )";
+      };
+      git_metrics = {
+        disabled = false;
+        added_style = "bold green";
+        deleted_style = "bold red";
+        format = "([+$added]($added_style))([-$deleted]($deleted_style)) ";
+      };
+      hostname = {
+        style = "bold green";
+        format = "[@](dimmed green)[$hostname]($style)";
+      };
+      username = {
+        style_root = "bold red";
+        style_user = "bold yellow";
+        format = "[$user]($style)";
+        show_always = false;
+      };
+
+      package.disabled = true;
     };
   };
   
