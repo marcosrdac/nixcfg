@@ -8,6 +8,7 @@ let
 in
 {
   imports = [
+    ./modules/shell
     ./modules/git
     ./modules/polybar
     ./modules/nvim
@@ -22,7 +23,7 @@ in
     scrot
     xclip xsel
 
-    polybar
+    #polybar
 
     zathura
     evince
@@ -147,111 +148,19 @@ in
     };
   };
 
+  programs.zsh.shellAliases = {
+      # home-manager
+      hm = "home-manager";
+      hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`";
+      ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
+
+      # making it easy
+      n = "lf";
+      ll = "ls -l";
+      lf = "${dotConfig}/lf/bin/lf-ueberzug";
+    };
+
   programs.alacritty.enable = true;
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-    extraConfig = builtins.concatStringsSep "\n" [
-    #  (lib.strings.fileContents ./base.vim)
-    #  (lib.strings.fileContents ./plugins.vim)
-    #  (lib.strings.fileContents ./lsp.vim)
-    #  # this allows you to add lua config files
-    #  ''
-    #    lua << EOF
-    #    ${lib.strings.fileContents ./config.lua}
-    #    ${lib.strings.fileContents ./lsp.lua}
-    #    EOF
-    #  ''
-    ];
-    extraPackages = with pkgs; [
-      tree-sitter  # compile tree-sitter grammar
-      # installs different langauge servers for neovim-lsp
-      # have a look on the link below to figure out the ones for your languages
-      # https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md
-      #nodePackages.typescript nodePackages.typescript-language-server
-      #gopls
-      #nodePackages.pyright
-      #rust-analyzer
-    ];
-
-    #package = pkgs.neovim.override {
-    #  configure = {
-    #    plugins = with pkgs.vimPlugins; [
-    #      ale
-    #      goyo
-    #    ];
-    #  };
-    #};
-
-    plugins = with pkgs.vimPlugins; [
-      # navigation
-      quick-scope
-      vim-tmux-navigator
-
-      # crypting
-      vim-gnupg
-
-      # vimwiki
-      vimwiki
-      # calendar-vim integration
-      calendar-vim
-
-      # viewing colors
-      nvim-colorizer-lua
-      vim-hexokinase
-      #nvim-treesitter
-
-      # computer language syntax checkers
-      ale  # async syntax checking
-
-      # natural language checkers
-      LanguageTool-nvim
-
-      # focused writing
-      goyo-vim           # center text
-      limelight-vim  # focused writing
-
-      # File managing
-      nerdtree                       # file system explorer
-      nerdtree-git-plugin            # NERDTree git marks
-      vim-devicons                   # NERDTree file icons
-      vim-nerdtree-syntax-highlight  # highlights filetypes
-      ctrlp-vim                      # file fuzyfinder
-
-      # easy-writting
-      # bracketting
-      auto-pairs               # closing brackets
-      vim-surround vim-repeat  # changing brackets + dot repetion
-      nerdcommenter            # (un)comments text
-      # completions
-      deoplete-nvim
-      deoplete-tabnine  # tabnine
-      deoplete-jedi     # python
-      emmet-vim         # html
-
-      # syntax highlighting for different filetypes
-      vim-nix          # nix
-      lf-vim           # lfrc
-      vim-markdown     # markdown + latex
-      dart-vim-plugin  # dart syntax highlighting
-      vim-flutter      # flutter tools
-      julia-vim        # julia syntax highlighting
-      #vim-cython       # cython filetype and syntax
-
-      # under tests
-      vim-which-key
-      #vim-quick-scope
-      ## this installs from git
-      #(plugin "neovim/nvim-lspconfig")
-      ## this installs the plugin from 'lua' branch
-      #(pluginGit "lua" "lukas-reineke/indent-blankline.nvim")
-      ## syntax highlighting
-      #(plugin "nvim-treesitter/nvim-treesitter")
-      #(plugin "p00f/nvim-ts-rainbow") # bracket highlighting
-    ];
-  };
-  
 
   xdg.enable = true;
 
@@ -297,25 +206,9 @@ in
       source = ./config/GIMP;
       recursive = true;
     };
-    "polybar/config".source = mkOutOfStoreSymlink "${dotConfig}/polybar/config";
+    #"polybar/config".source = mkOutOfStoreSymlink "${dotConfig}/polybar/config";
 
-    #"lf/lfrc".text = builtins.concatStringsSep "\n" [
-    #  (builtins.readFile ./config/lf/lfrc)
-    #  "# Image previews need ${pkgs.ueberzug}"
-    #];
     "lf".source = mkOutOfStoreSymlink "${dotConfig}/lf";
-    #"lf/icons" = {
-    #  source = ./config/lf/icons;
-    #  executable = true;
-    #};
-    #"lf/lfimg/previer" = {
-    #  source = ./config/lf/lfimg/preview;
-    #  executable = true;
-    #};
-    #"lf/lfimg/cleaner" = {
-    #  source = ./config/lf/lfimg/cleaner;
-    #  executable = true;
-    #};
 
     "dunst/dunstrc.base" = {
       source = ./config/dunst/dunstrc.base;
@@ -326,78 +219,5 @@ in
     };
   };
 
-  programs.starship = {
-    package = pkgs.unstable.starship;
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      character = {
-        success_symbol = "[\\$](bold green)";
-        error_symbol = "[\\$](bold red)";
-      };
-      add_newline = true;
-      format = ''
-        $directory$git_branch $git_status$git_metrics
-        ($username)($hostname )$character
-      '';
-      directory = {
-        style = "bold cyan";
-        read_only = " [w]";
-        read_only_style	= "red";
-        truncation_length = 8;
-        truncation_symbol = "*/";
-      };
-      git_branch = {
-        symbol = "";
-        format = "[$symbol$branch](purple)";
-        truncation_symbol = "…";
-      };
-      git_state = { };
-      git_status = {
-        style = "dimmed purple";
-        format = "([$all_status]($style) )";
-      };
-      git_metrics = {
-        disabled = false;
-        added_style = "bold green";
-        deleted_style = "bold red";
-        format = "([+$added]($added_style))([-$deleted]($deleted_style)) ";
-      };
-      hostname = {
-        style = "bold green";
-        format = "[@](dimmed green)[$hostname]($style)";
-      };
-      username = {
-        style_root = "bold red";
-        style_user = "bold yellow";
-        format = "[$user]($style)";
-        show_always = false;
-      };
-
-      package.disabled = true;
-    };
-  };
-  
-  programs.zsh = {
-    enable = true;
-    #dotDir = ".config/zsh";
-    enableAutosuggestions = true;
-    shellAliases = {
-      # home-manager
-      hm = "home-manager";
-      hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`";
-      ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
-
-      # making it easy
-      n = "lf";
-      ll = "ls -l";
-      lf = "${dotConfig}/lf/bin/lf-ueberzug";
-    };
-
-    history = {
-      size = 10000;
-      path = "${config.xdg.dataHome}/zsh/history";
-    };
-  };
 
 }

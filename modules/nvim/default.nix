@@ -102,7 +102,7 @@ in
       vim-surround vim-repeat  # changing brackets + dot repetion
       nerdcommenter            # (un)comments text
       # completions
-      deoplete-nvim
+      deoplete-nvim     # base deoplete
       deoplete-tabnine  # tabnine
       deoplete-jedi     # python
       emmet-vim         # html
