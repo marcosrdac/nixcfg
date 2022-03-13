@@ -94,7 +94,7 @@ alt + s; {_,shift + } s
 {_,alt + v : } alt + {Return,o}
 	{ ,pkill -ALRM sxhkd;} \
 		{$TERMINAL   , \
-		 menu-run }
+		 tlauncher }
 		 #alacritty --class launcher -e menu-run }
 		 #term-with-class dropdown_opener menu-run }
 

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+remainder_file="/tmp/remainder"
+
+message="Straighten up!"
+
+trap "polybar_write_remainder -r; exit 0" INT TERM
+
+polybar_write_remainder -n "$message"
+sleep 10
+
+kill -TERM $$

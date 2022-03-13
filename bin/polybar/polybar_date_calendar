@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# marcosrdac modified script from
+# https://github.com/polybar/polybar-scripts/tree/master/polybar-scripts/popup-calendar
+
+bar_height=22  # polybar height
+yad_width=222  # 222 is minimum possible value
+yad_height=193 # 193 is minimum possible value
+date=$(date "+%Y%m%d")
+
+ordered_monitors=$(<$HOME/.config/unique/ordered_monitors)
+
+monitor=$(echo $ordered_monitors | awk '{ print $NF }')
+#echo $monitor
+resolution=$(xrandr | grep -w connected | awk '$1~/'$monitor'/ { if ($3 == "primary") print $4; else print $3 }')
+monitor_width=$(echo $resolution | awk -F 'x' '{ print $1 }')
+#echo $monitor_width
+
+case $1 in
+  --popup)
+    pos_x=$(( monitor_width - yad_width +6 ))
+    pos_y=$(( bar_height ))
+
+    yad --calendar --undecorated --fixed --close-on-unfocus --no-buttons \
+        --width=$yad_width --height=$yad_height \
+        --posx=$pos_x --posy=$pos_y \
+        --title="yad-calendar" --borders=0 --notebook \
+        | xclip -i -selection clipboard -f | xclip -i -selection primary && sleep .1 && show_clip_prim & ;;
+  *) echo $date ;;
+esac

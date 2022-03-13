@@ -1,0 +1,21 @@
+#!/bin/sh
+
+pidfile=/tmp/$(basename $0)${XDG_VTNR}.pid
+test -f $pidfile && kill -TERM "$(cat $pidfile)" || echo $$ > $pidfile
+
+echo_brightness ()
+{
+    brightness=$(brightnessctl -m | awk -F ',' '{print $4}')
+    echo "${brightness%\%*}"
+}
+
+echo_brightness
+
+trap "rm -f $pidfile" EXIT QUIT TERM KILL
+trap "echo_brightness" USR1
+
+
+while true
+do
+    exec tail -f /dev/null & wait $!
+done

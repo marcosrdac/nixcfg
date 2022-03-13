@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+fifo="/tmp/$(basename $0).fifo"
+remainder="/tmp/remainder"
+
+[ -p $fifo ] || mkfifo $fifo
+(sleep 1 && echo "$(cat $remainder)" > $fifo) &
+tail -f $fifo

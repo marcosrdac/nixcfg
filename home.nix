@@ -5,6 +5,37 @@ let
   dotDir = "${config.xdg.configHome}/nixpkgs";
   dotConfig = "${dotDir}/config";
   dotBin = "${dotDir}/bin";
+  linkChildren = (
+    dir: linkdir: builtins.listToAttrs (
+    map (filename: {
+      name = "${linkdir}/${filename}";
+      value = with config.lib.file; {
+        source = mkOutOfStoreSymlink ("${dir}/${filename}");
+      };
+    }) (builtins.attrNames (builtins.readDir dir)))
+  );
+  userDirs = rec {
+    # xdg
+    XDG_DOCUMENTS_DIR = "$HOME/dox";
+    XDG_MUSIC_DIR = "$HOME/mus";
+    XDG_PICTURES_DIR = "$HOME/pix";
+    XDG_PUBLICSHARE_DIR = "$HOME/pub";
+    XDG_TEMPLATES_DIR = "${XDG_RESOURCES_DIR}/tpt";
+    XDG_VIDEOS_DIR = "$HOME/vid";
+    XDG_DOWNLOAD_DIR = "${XDG_TMP_DIR}/dld";
+    XDG_DESKTOP_DIR = "${XDG_TMP_DIR}/dkt";
+    XDG_CONFIG_HOME  =  "$HOME/.config";
+    XDG_DATA_HOME  =  "$HOME/.local/share";
+    # custom
+    XDG_PROJECTS_DIR = "$HOME/pro";
+    XDG_BIN_HOME  = "$HOME/.local/bin";
+    XDG_RESOURCES_DIR  = "$HOME/res";
+    XDG_TMP_DIR  = "$HOME/tmp";
+    XDG_WALLPAPER_DIR  = "${XDG_RESOURCES_DIR}/wal";
+    XDG_SCREENSHOT_DIR  = "${XDG_PICTURES_DIR}/scr";
+    XDG_MAIL_DIR  = "${XDG_DATA_HOME}/mail";
+    XDG_DOCUMENTS_DATA ="${XDG_DOCUMENTS_DIR}/h/dat";
+  };
 in
 {
   imports = [
@@ -12,8 +43,9 @@ in
     ./modules/git
     ./modules/polybar
     ./modules/nvim
+    ./modules/bspwm
   ];
-  
+
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
@@ -25,8 +57,8 @@ in
 
     #polybar
 
-    zathura
-    evince
+    zathura evince
+    qutebrowser firefox google-chrome
     ueberzug
 
     pywal
@@ -74,7 +106,7 @@ in
     shadow = false;
     shadowOpacity = "0.75";
     shadowOffsets = [ (-15) (-15) ];  # H&V
-    opacityRule = [ 
+    opacityRule = [
       "90:class_g = 'St' && focused"
       "90:class_g = 'Alacritty' && focused"
       "90:class_g = 'dmenu' && focused"
@@ -114,16 +146,35 @@ in
     '';
   };
 
-  home.sessionPath = [ binHome ];
+  home.sessionPath = [
+    binHome
+  ] ++ (builtins.attrNames (linkChildren ./bin binHome));
 
-  home.sessionVariables = {
-    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
-    BROWSER = "${pkgs.qutebrowser}/bin/qutebrowser";
-    ALTBROWSER = "${pkgs.firefox}/bin/firefox";
-    ALTALTBROWSER = "${pkgs.google-chrome}/bin/google-chrome-stable";
-    FILEMANAGER = "${pkgs.lf}/bin/lf";
-    PDFREADER = "${pkgs.zathura}/bin/zathura";
-  };
+  home.sessionVariables = let
+    myscript = pkgs.writeShellScriptBin "myscpt" ''
+      #!/usr/bin/env sh
+      echo hello world
+    '';
+    in (
+      userDirs // {
+      MYSCRIPT = "${myscript}/bin/myscpt";
+
+      OPENER = "xdg-open";
+      EDITOR = "nvim";
+      VISUAL = "nvim";
+      TERMINAL = "alacritty";
+      FILEBROWSER = "lfrun";
+      BROWSER = "qutebrowser";
+      ALTBROWSER = "$firefox";
+      ALTALTBROWSER = "google-chrome-stable";
+      READER = "zathura";
+      PAGER = "less";
+      VIDEOPLAYER = "mpv";
+      TRUEBROWSER = "qutebrowser";
+      XIMAGEVIEWER = "sxiv";
+      MENU = "menu";
+      MENURUN = "menurun";
+    });
 
   #home.language.base = "us";
 
@@ -132,12 +183,14 @@ in
     variant = "intl";
     options = [ "caps:swapescape" ];
   };
-  
+
   #home.shellAliases = { };  # not yet valid
 
   xsession = {
     enable = true;
     scriptPath = ".hm-xsession";
+    #profilePath = ".hm-profile";
+    profileExtra = "${pkgs.pywal}/bin/wal -i $HOME/tmp &";
 
     windowManager.bspwm = {
       enable = true;
@@ -162,42 +215,29 @@ in
 
   programs.alacritty.enable = true;
 
-  xdg.enable = true;
-
-  xdg.userDirs = {
-    documents = "$HOME/tmp/dox";
-    pictures = "$HOME/tmp/pix";
-    music = "$HOME/mus";
-    videos = "$HOME/vid";
-    templates = "$HOME/tpt";
-    publicShare = "$HOME/pub";
-    desktop = "$HOME/tmp";
-    download = "$HOME/tmp/dld";
-    extraConfig = { };
+  xdg.userDirs = rec {
+    enable = true;
+    createDirectories = true;
+    extraConfig = userDirs;
   };
 
-  home.file = with config.lib.file; {
-    # terminal menu / launcher
-    "${binHome}/tchoice".source = mkOutOfStoreSymlink "${dotBin}/tchoice";
-    "${binHome}/menu".source = mkOutOfStoreSymlink "${dotBin}/tchoice";
-    "${binHome}/tlauncher".source = mkOutOfStoreSymlink "${dotBin}/tlauncher";
-    "${binHome}/menu-run".source = mkOutOfStoreSymlink "${dotBin}/tlauncher";
-    "${binHome}/test-script".source = mkOutOfStoreSymlink "${dotBin}/test-script";
+  home.file = let
+      mkLink = config.lib.file.mkOutOfStoreSymlink;
+    in {
+      # bspwm
+      "${binHome}/bspwm_window_move".source = mkLink "${dotConfig}/bspwm/bin/bspwm_window_move";
+      "${binHome}/bspwm_toggle_state".source = mkLink "${dotConfig}/bspwm/bin/bspwm_toggle_state";
+      # default example
+      #"${binHome}/bspwm_toggle_state" = {
+      #  source = ./config/bspwm/bin/bspwm_toggle_state;
+      #  executable = true;
+      #};
+    }
+    // linkChildren ./bin binHome;
 
-    "${binHome}/xorg-screenshot".source = mkOutOfStoreSymlink "${dotBin}/xorg-screenshot";
-    "${binHome}/wayland-screenshot".source = mkOutOfStoreSymlink "${dotBin}/wayland-screenshot";
-
-    # bspwm
-    "${binHome}/bspwm_window_move".source = mkOutOfStoreSymlink "${dotConfig}/bspwm/bin/bspwm_window_move";
-    "${binHome}/bspwm_toggle_state".source = mkOutOfStoreSymlink "${dotConfig}/bspwm/bin/bspwm_toggle_state";
-    # default example
-    #"${binHome}/bspwm_toggle_state" = {
-    #  source = ./config/bspwm/bin/bspwm_toggle_state;
-    #  executable = true;
-    #};
-  };
-
-  xdg.configFile = with config.lib.file; {
+  xdg.configFile = let
+      mkLink = config.lib.file.mkOutOfStoreSymlink;
+    in {
     "qutebrowser" = {
       source = ./config/qutebrowser;
       recursive = true;
@@ -206,9 +246,8 @@ in
       source = ./config/GIMP;
       recursive = true;
     };
-    #"polybar/config".source = mkOutOfStoreSymlink "${dotConfig}/polybar/config";
 
-    "lf".source = mkOutOfStoreSymlink "${dotConfig}/lf";
+    "lf".source = mkLink "${dotConfig}/lf";
 
     "dunst/dunstrc.base" = {
       source = ./config/dunst/dunstrc.base;
@@ -218,6 +257,5 @@ in
       recursive = true;
     };
   };
-
 
 }

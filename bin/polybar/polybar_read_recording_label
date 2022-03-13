@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+fifo=$(record --get-labelfifo)
+
+[ -p $fifo ] || mkfifo $fifo && tail -f $fifo

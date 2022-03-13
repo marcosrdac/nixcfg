@@ -1,0 +1,37 @@
+#!/bin/sh
+
+pidfile=/tmp/$(basename $0).pid
+echo $$ > $pidfile
+
+first_day=$(date "+%d")
+
+show_date ()
+{
+    label=$(date "+%H%M%S")
+    day=$(date "+%d")
+    if test ! $day=$first_day
+    then
+        first_day=$day
+    #kill -USR1
+    fi
+    echo $label
+}
+
+trap "rm -f $pidfile" EXIT KILL
+trap "show_date" USR1
+
+while true
+do
+    exec tail -f /dev/null & wait $!
+done
+
+#time (                                  [130]
+#        i=0
+#        d=$(date "+%S")
+#        while [[ i -lt 3600 ]]
+#        do
+#        nd=$(date "+%S %H%M%S")
+#        test "${nd% *}" = d || echo as || echo a
+#        let i+=1
+#        done
+#)

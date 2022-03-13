@@ -8,19 +8,21 @@ let
   nvimConfig = "${config.xdg.configHome}/nvim";
 in
 {
-  xdg.configFile = with config.lib.file; {
-    "nvim/base.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/base.vim";
-    "nvim/mappings.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/base.vim";
-    "nvim/scripts.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/scripts.vim";
-    "nvim/abbreviations.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/abbreviations.vim";
-    "nvim/variables.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/variables.vim";
-    "nvim/automation.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/automation.vim";
-    "nvim/plugins.vim".source = mkOutOfStoreSymlink "${dotConfig}/nvim/plugins.vim";
-    "nvim/autoload".source = mkOutOfStoreSymlink "${dotConfig}/nvim/autoload";
-    "nvim/spell".source = mkOutOfStoreSymlink "${dotConfig}/nvim/spell";
-    "nvim/colors".source = mkOutOfStoreSymlink "${dotConfig}/nvim/colors";
-    "nvim/ftplugin".source = mkOutOfStoreSymlink "${dotConfig}/nvim/ftplugin";
-  };
+  xdg.configFile = let
+      mkLink = config.lib.file.mkOutOfStoreSymlink;
+    in {
+      "nvim/base.vim".source = mkLink "${dotConfig}/nvim/base.vim";
+      "nvim/mappings.vim".source = mkLink "${dotConfig}/nvim/base.vim";
+      "nvim/scripts.vim".source = mkLink "${dotConfig}/nvim/scripts.vim";
+      "nvim/abbreviations.vim".source = mkLink "${dotConfig}/nvim/abbreviations.vim";
+      "nvim/variables.vim".source = mkLink "${dotConfig}/nvim/variables.vim";
+      "nvim/automation.vim".source = mkLink "${dotConfig}/nvim/automation.vim";
+      "nvim/plugins.vim".source = mkLink "${dotConfig}/nvim/plugins.vim";
+      "nvim/autoload".source = mkLink "${dotConfig}/nvim/autoload";
+      "nvim/spell".source = mkLink "${dotConfig}/nvim/spell";
+      "nvim/colors".source = mkLink "${dotConfig}/nvim/colors";
+      "nvim/ftplugin".source = mkLink "${dotConfig}/nvim/ftplugin";
+    };
 
   programs.neovim = {
     enable = true;

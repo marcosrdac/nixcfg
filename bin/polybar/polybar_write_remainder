@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+fifo="/tmp/polybar_read_remainder.fifo"
+remainder="/tmp/remainder"
+
+if [ -p $fifo ]
+then
+  case "$1" in
+    -r|--recover)
+      echo "$(<$remainder)" > $fifo ;;
+    -n|--no-remainder)
+      echo "$2" > $fifo ;;
+    *)
+      echo "$1" > $remainder
+      echo "$1" > $fifo ;;
+  esac
+fi

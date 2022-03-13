@@ -44,7 +44,8 @@ inherit = bar/base
 ; modules position
 modules-left   = bspwm xkeyboard
 modules-center = mpd
-modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
+modules-right  = wlan eth pulseaudio brightness battery timer time
+;modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
 ; tray position
 tray-position   = left
 tray-padding    = 2
@@ -323,7 +324,7 @@ time = "%H%M%S"
 ;format-prefix-foreground = "${colors.foreground-alt}"
 format-prefix = "%{T2}%{T-} "
 label = "%time%"
-click-right = "st -e vim &"
+click-right = "alacritty -e vim &"
 
 
 ;[module/example]

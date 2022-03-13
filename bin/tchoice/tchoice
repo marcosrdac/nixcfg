@@ -3,7 +3,7 @@
 CLASS=`basename $0`
 [ $# -gt 1 ] && CHOICENAME=${1} && shift || CHOICENAME=$CLASS
 PROMPT=${1}
-RUNDIR="/run/user/$UID/tchoice"
+RUNDIR="${XDG_RUNTIME_DIR:-"/run/user/$UID"}/tchoice"
 CHOICEFILE="$RUNDIR/$CHOICENAME"
 [ -d "$RUNDIR" ] || mkdir "$RUNDIR"
 
