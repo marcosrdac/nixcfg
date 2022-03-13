@@ -41,7 +41,7 @@
           [$up_to_date$conflicted$untracked$modified$renamed$staged$deleted$stashed](bold yellow)[$ahead_behind](bold purple)
         '';  # [!?n+-*](bold yellow)[A](bold purple)
         up_to_date = "";
-        conflicted = "!";
+        conflicted = "=";
         untracked = "?";
         modified = "";  # already using git_metrics
         renamed = "n";
