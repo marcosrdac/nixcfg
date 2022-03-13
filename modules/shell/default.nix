@@ -36,21 +36,21 @@
       };
       git_state = { };
       git_status = {
-        style = "bold yellow";
+        
         format = ''
-          [$conflicted$untracked$staged$modified$renamed$deleted$stashed$ahead_behind]($style)
-          '';
-        modified = "";  # already using git_metrics
+          [$up_to_date$conflicted$untracked$modified$renamed$staged$deleted$stashed](bold yellow)[$ahead_behind](bold purple)
+        '';  # [!?n+-*](bold yellow)[A](bold purple)
         up_to_date = "";
+        conflicted = "!";
+        untracked = "?";
+        modified = "";  # already using git_metrics
+        renamed = "n";
+        staged = "+";
+        deleted = "-";
+        stashed = "*";
         ahead = "A";
         behind = "B";
         diverged = "D";
-        conflicted = "!";
-        untracked = "?";
-        stashed = "*";
-        deleted = "d";
-        renamed = "m";
-        staged = "s";
       };
       git_metrics = {
         disabled = false;
