@@ -77,14 +77,14 @@ let g:ale_python_pylint_executable = 'pylint'
 " deoplete
 "   setting python hosts
 " tell deoplete where to search right binarys
-let g:deoplete#sources#jedi#python_path=expand('$VIRTUAL_ENV/bin/python')
+"let g:deoplete#sources#jedi#python_path=expand('$VIRTUAL_ENV/bin/python')
 "   fallback
-let g:deoplete#sources#jedi#extra_path='/bin/python'
+"let g:deoplete#sources#jedi#extra_path='/bin/python'
 let g:jedi#auto_initialization = 0
 " Use deoplete.
-let g:deoplete#enable_at_startup = 1
 let g:deoplete#auto_completion_start_length = 0
 let g:deoplete#enable_camel_case = 1
+let g:deoplete#enable_at_startup = 1
 " setting a little delay for windows to appear
 "call deoplete#custom#option('auto_complete_delay', 50)
 

@@ -9,39 +9,42 @@ let
 in
 {
   xdg.configFile = let
-      mkLink = config.lib.file.mkOutOfStoreSymlink;
+      mkLink = pkgs.lib.file.mkOutOfStoreSymlink;
     in {
-      "nvim/base.vim".source = mkLink "${dotConfig}/nvim/base.vim";
-      "nvim/mappings.vim".source = mkLink "${dotConfig}/nvim/base.vim";
-      "nvim/scripts.vim".source = mkLink "${dotConfig}/nvim/scripts.vim";
-      "nvim/abbreviations.vim".source = mkLink "${dotConfig}/nvim/abbreviations.vim";
-      "nvim/variables.vim".source = mkLink "${dotConfig}/nvim/variables.vim";
-      "nvim/automation.vim".source = mkLink "${dotConfig}/nvim/automation.vim";
-      "nvim/plugins.vim".source = mkLink "${dotConfig}/nvim/plugins.vim";
-      "nvim/autoload".source = mkLink "${dotConfig}/nvim/autoload";
-      "nvim/spell".source = mkLink "${dotConfig}/nvim/spell";
-      "nvim/colors".source = mkLink "${dotConfig}/nvim/colors";
-      "nvim/ftplugin".source = mkLink "${dotConfig}/nvim/ftplugin";
+    "nvim/autoload" = {
+      source = ./autoload;
+      recursive = true;
     };
+    "nvim/colors" = {
+      source = ./colors;
+      recursive = true;
+    };
+    "nvim/ftplugin" = {
+      source = ./ftplugin;
+      recursive = true;
+    };
+    "nvim/spell" = {
+      source = ./spell;
+      recursive = true;
+    };
+  };
 
   programs.neovim = {
     enable = true;
     viAlias = true;
     vimAlias = true;
     extraConfig = builtins.concatStringsSep "\n" [
-      ''
-        " source config files
-        let g:vimpath = expand('$XDG_CONFIG_HOME/nvim')
-        exec 'source '.g:vimpath.'/base.vim'
-        exec 'source '.g:vimpath.'/mappings.vim'
-        exec 'source '.g:vimpath.'/scripts.vim'
-        exec 'source '.g:vimpath.'/variables.vim'
-        exec 'source '.g:vimpath.'/plugins.vim'
-        exec 'source '.g:vimpath.'/abbreviations.vim'
-        exec 'source '.g:vimpath.'/automation.vim'
-      ''
       # TODO add if extraconfig then load it (by computer)
-      #(lib.strings.fileContents ./base.vim)
+      (pkgs.lib.strings.fileContents ./base.vim)
+      (pkgs.lib.strings.fileContents ./mappings.vim)
+      (pkgs.lib.strings.fileContents ./scripts.vim)
+      (pkgs.lib.strings.fileContents ./variables.vim)
+      (pkgs.lib.strings.fileContents ./plugins.vim)
+      (pkgs.lib.strings.fileContents ./abbreviations.vim)
+      (pkgs.lib.strings.fileContents ./automation.vim)
+      ''
+        " other configs
+      ''
     ];
     extraPackages = with pkgs; [
       tree-sitter  # compile tree-sitter grammar
@@ -63,7 +66,8 @@ in
     #  };
     #};
   
-    plugins = with pkgs.vimPlugins; [
+    plugins = with pkgs.vimPlugins; let
+      unstable = pkgs.unstable.vimPlugins; in[
       # navigation
       quick-scope
       vim-tmux-navigator
@@ -104,12 +108,17 @@ in
       vim-surround vim-repeat  # changing brackets + dot repetion
       nerdcommenter            # (un)comments text
       # completions
-      deoplete-nvim     # base deoplete
-      deoplete-tabnine  # tabnine
-      deoplete-jedi     # python
-      emmet-vim         # html
+      {
+        plugin = deoplete-nvim;
+        config = ''
+          let g:deoplete#enable_at_startup = 1
+        '';
+      }
+      #unstable.deoplete-tabnine        # tabnine
+      deoplete-jedi           # python
+      emmet-vim               # html
   
-      # syntax highlighting for different filetypes
+      # syntax highlighting specifics
       vim-nix          # nix
       lf-vim           # lfrc
       vim-markdown     # markdown + latex

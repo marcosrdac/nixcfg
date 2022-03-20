@@ -14,7 +14,7 @@ let
       };
     }) (builtins.attrNames (builtins.readDir dir)))
   );
-  userDirs = rec {
+  defaultDirs = rec {
     # xdg
     XDG_DOCUMENTS_DIR = "$HOME/dox";
     XDG_MUSIC_DIR = "$HOME/mus";
@@ -24,8 +24,8 @@ let
     XDG_VIDEOS_DIR = "$HOME/vid";
     XDG_DOWNLOAD_DIR = "${XDG_TMP_DIR}/dld";
     XDG_DESKTOP_DIR = "${XDG_TMP_DIR}/dkt";
-    XDG_CONFIG_HOME  =  "$HOME/.config";
-    XDG_DATA_HOME  =  "$HOME/.local/share";
+    XDG_CONFIG_HOME  =  "${config.xdg.configHome}";
+    XDG_DATA_HOME  =  "${config.xdg.dataHome}";
     # custom
     XDG_PROJECTS_DIR = "$HOME/pro";
     XDG_BIN_HOME  = "$HOME/.local/bin";
@@ -40,6 +40,7 @@ in
 {
   imports = [
     ./modules/shell
+    ./modules/graphics
     ./modules/git
     ./modules/polybar
     ./modules/nvim
@@ -55,15 +56,23 @@ in
     scrot
     xclip xsel
 
+    ripgrep
+    #xpdf  #=: pdftotext, pdfimages - tagged insecure (?)
+
     #polybar
 
-    zathura evince
+    lf xfce.thunar
+
+    # browsers
     qutebrowser firefox google-chrome
+    # pdf readers
+    zathura evince
+
+    pacman
     ueberzug
 
     pywal
-
-    ripgrep
+    flavours
 
     unstable.spotify
     tdesktop
@@ -81,6 +90,8 @@ in
     texlive.combined.scheme-full
 
     julia_16-bin
+
+    tmatrix
   ];
 
 
@@ -156,14 +167,14 @@ in
       echo hello world
     '';
     in (
-      userDirs // {
+      defaultDirs // {
       MYSCRIPT = "${myscript}/bin/myscpt";
 
       OPENER = "xdg-open";
       EDITOR = "nvim";
       VISUAL = "nvim";
       TERMINAL = "alacritty";
-      FILEBROWSER = "lfrun";
+      FILEBROWSER = "${dotConfig}/lf/bin/lf-ueberzug";
       BROWSER = "qutebrowser";
       ALTBROWSER = "$firefox";
       ALTALTBROWSER = "google-chrome-stable";
@@ -179,46 +190,32 @@ in
   #home.language.base = "us";
 
   home.keyboard = {
+    #layout = "br";
     layout = "us";
     variant = "intl";
     options = [ "caps:swapescape" ];
   };
 
-  #home.shellAliases = { };  # not yet valid
+  home.shellAliases = {
+    # home-manager
+    hm = "home-manager";
+    hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`";
+    ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
 
-  xsession = {
-    enable = true;
-    scriptPath = ".hm-xsession";
-    #profilePath = ".hm-profile";
-    profileExtra = "${pkgs.pywal}/bin/wal -i $HOME/tmp &";
+    # making it easy
+    n = "$FILEBROWSER";
+    ll = "ls -l";
+    lf = "$FILEBROWSER";
+  };  # not yet valid
 
-    windowManager.bspwm = {
-      enable = true;
-      extraConfig = builtins.readFile ./config/bspwm/bspwmrc;
-      startupPrograms = [
-        "${pkgs.sxhkd}/bin/sxhkd -c ${config.xdg.configHome}/nixpkgs/config/sxhkd/sxhkdrc"
-      ];
-    };
-  };
-
-  programs.zsh.shellAliases = {
-      # home-manager
-      hm = "home-manager";
-      hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`";
-      ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
-
-      # making it easy
-      n = "lf";
-      ll = "ls -l";
-      lf = "${dotConfig}/lf/bin/lf-ueberzug";
-    };
+  services.network-manager-applet.enable = true;
 
   programs.alacritty.enable = true;
 
   xdg.userDirs = rec {
     enable = true;
     createDirectories = true;
-    extraConfig = userDirs;
+    extraConfig = defaultDirs;
   };
 
   home.file = let
@@ -238,6 +235,9 @@ in
   xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
+    "sxhkd".source = mkLink "${dotConfig}/sxhkd";
+    "flavours".source = mkLink "${dotConfig}/flavours";
+    "lf".source = mkLink "${dotConfig}/lf";
     "qutebrowser" = {
       source = ./config/qutebrowser;
       recursive = true;
@@ -246,9 +246,6 @@ in
       source = ./config/GIMP;
       recursive = true;
     };
-
-    "lf".source = mkLink "${dotConfig}/lf";
-
     "dunst/dunstrc.base" = {
       source = ./config/dunst/dunstrc.base;
     };
@@ -256,6 +253,7 @@ in
       source = ./config/wal;
       recursive = true;
     };
+
   };
 
 }
