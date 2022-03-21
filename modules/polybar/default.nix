@@ -12,10 +12,9 @@
   #config = {
     services.polybar = {
       enable = true;
-      package = pkgs.polybar;
-      #script = config.lib.strings.fileContents ./script;
+      package = pkgs.unstable.polybar;
+      script = pkgs.lib.strings.fileContents ./polybar-start;
       extraConfig = builtins.readFile ./config;
-      script = builtins.readFile ./polybar-start;
     };
   #};
 }

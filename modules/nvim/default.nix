@@ -11,10 +11,10 @@ in
   xdg.configFile = let
       mkLink = pkgs.lib.file.mkOutOfStoreSymlink;
     in {
-    "nvim/autoload" = {
-      source = ./autoload;
-      recursive = true;
-    };
+    #"nvim/autoload" = {
+    #  source = ./autoload;
+    #  recursive = true;
+    #};
     "nvim/colors" = {
       source = ./colors;
       recursive = true;

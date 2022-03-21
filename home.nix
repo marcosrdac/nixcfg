@@ -5,15 +5,13 @@ let
   dotDir = "${config.xdg.configHome}/nixpkgs";
   dotConfig = "${dotDir}/config";
   dotBin = "${dotDir}/bin";
-  linkChildren = (
-    dir: linkdir: builtins.listToAttrs (
+  linkChildren = dir: linkdir: builtins.listToAttrs (
     map (filename: {
       name = "${linkdir}/${filename}";
       value = with config.lib.file; {
-        source = mkOutOfStoreSymlink ("${dir}/${filename}");
+        source = mkOutOfStoreSymlink "${dir}/${filename}";
       };
-    }) (builtins.attrNames (builtins.readDir dir)))
-  );
+    }) (builtins.attrNames (builtins.readDir dir)));
   defaultDirs = rec {
     # xdg
     XDG_DOCUMENTS_DIR = "$HOME/dox";
@@ -44,7 +42,6 @@ in
     ./modules/git
     ./modules/polybar
     ./modules/nvim
-    ./modules/bspwm
   ];
 
   programs.home-manager.enable = true;
@@ -68,19 +65,20 @@ in
     # pdf readers
     zathura evince
 
-    pacman
     ueberzug
 
-    pywal
-    flavours
+    feh flavours pywal
 
     unstable.spotify
     tdesktop
-    write_stylus
+    unstable.write_stylus
 
     inkscape gimp
+    imagemagick
 
     fzy ydotool xdotool
+
+    discord teams zoom-us
 
     libnotify      #=: notify-send
     brightnessctl  # light control
@@ -95,67 +93,7 @@ in
   ];
 
 
-  services.dunst = {
-    enable = true;
-  };
-
-  services.picom = {
-    enable = true;
-    #package = pkgs.unstable.picom;
-    package = pkgs.picom;
-    activeOpacity = "1.0";
-    menuOpacity = "1.0";
-    inactiveOpacity = "1.0";
-    inactiveDim = "0.2";
-    blur = true;
-    backend = "glx";
-    refreshRate = 0;
-    experimentalBackends = true;
-    fade = false;
-    fadeDelta = 10;
-    fadeSteps = [ "0.028" "0.03" ];
-    shadow = false;
-    shadowOpacity = "0.75";
-    shadowOffsets = [ (-15) (-15) ];  # H&V
-    opacityRule = [
-      "90:class_g = 'St' && focused"
-      "90:class_g = 'Alacritty' && focused"
-      "90:class_g = 'dmenu' && focused"
-      "90:class_g = 'Polybar'"
-      "90:class_g = 'Spotify' && focused"
-      #"90:class_g = 'Zathura' && focused"
-      "90:class_g = 'tchoice' && focused"
-      "90:class_g = 'dropdown_terminal' && focused"
-      "90:class_g = 'dropdown_calculator' && focused"
-      "90:class_g = 'dropdown_mail' && focused"
-      "90:class_g = 'dropdown_music_player' && focused"
-      #"90:class_g = 'qutebrowser' && focused"
-      "80:class_g = 'St' && !focused"
-      "80:class_g = 'Alacritty' && !focused"
-      "80:class_g = 'dmenu' && !focused"
-      "80:class_g = 'Spotify' && !focused"
-      #"80:class_g = 'Zathura' && !focused"
-      "80:class_g = 'tchoice' && !focused"
-      "80:class_g = 'dropdown_terminal' && !focused"
-      "80:class_g = 'dropdown_calculator' && !focused"
-      "80:class_g = 'dropdown_mail' && !focused"
-      "80:class_g = 'dropdown_music_player' && !focused"
-      #"80:class_g = 'qutebrowser' && !focused"
-    ];
-    blurExclude = [ ];
-    fadeExclude = [ ];
-    shadowExclude = [ ];
-    noDockShadow = true;
-    extraOptions = ''
-      #blur-method = "dual_kawase"
-      #blur-strength = 3
-      blur-method = "gaussian"
-      blur-size = 9
-      blur-deviation = 10
-
-      #corner-radius = 1
-    '';
-  };
+  services.dunst.enable = true;
 
   home.sessionPath = [
     binHome
@@ -176,7 +114,7 @@ in
       TERMINAL = "alacritty";
       FILEBROWSER = "${dotConfig}/lf/bin/lf-ueberzug";
       BROWSER = "qutebrowser";
-      ALTBROWSER = "$firefox";
+      ALTBROWSER = "firefox";
       ALTALTBROWSER = "google-chrome-stable";
       READER = "zathura";
       PAGER = "less";
@@ -186,8 +124,6 @@ in
       MENU = "menu";
       MENURUN = "menurun";
     });
-
-  #home.language.base = "us";
 
   home.keyboard = {
     #layout = "br";
@@ -221,23 +157,20 @@ in
   home.file = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
-      # bspwm
-      "${binHome}/bspwm_window_move".source = mkLink "${dotConfig}/bspwm/bin/bspwm_window_move";
-      "${binHome}/bspwm_toggle_state".source = mkLink "${dotConfig}/bspwm/bin/bspwm_toggle_state";
-      # default example
-      #"${binHome}/bspwm_toggle_state" = {
-      #  source = ./config/bspwm/bin/bspwm_toggle_state;
-      #  executable = true;
-      #};
-    }
-    // linkChildren ./bin binHome;
+      "${config.xdg.dataHome}/flavours/base16/templates" = {
+        source = ./config/flavours/templates;
+        recursive = true;
+      };
+    } // linkChildren ./bin binHome;
 
   xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
     "sxhkd".source = mkLink "${dotConfig}/sxhkd";
     "flavours".source = mkLink "${dotConfig}/flavours";
+    "zathura/zathurarc".source = mkLink "${dotConfig}/zathura/zathurarc";
     "lf".source = mkLink "${dotConfig}/lf";
+
     "qutebrowser" = {
       source = ./config/qutebrowser;
       recursive = true;
@@ -254,6 +187,7 @@ in
       recursive = true;
     };
 
-  };
+  }
+    // (linkChildren ./config/alacritty "${config.xdg.configHome}/alacritty");
 
 }

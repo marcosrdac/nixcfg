@@ -1,0 +1,16 @@
+shell = "bash -c '{}'"
+
+[[items]]
+file = "~/.config/zathura/colors"
+template = "zathura"
+rewrite = true
+
+[[items]]
+file = "~/.config/alacritty/colors.yml"
+template = "alacritty"
+rewrite = true
+
+[[items]]
+file = "~/.config/polybar/colors"
+template = "_polybar"
+rewrite = true

@@ -4,13 +4,17 @@
 ; --- general settings --- ;
 
 [colors]
-foreground     = ${xrdb:color15 : #ffffff}
-foreground-alt = ${xrdb:color7  : #aaaaaa}
-background     = ${xrdb:color0  : #000000}
-background-alt = ${xrdb:color8  : #555555}
-primary        = ${xrdb:color2  : #00ff00}
-secondary      = ${xrdb:color1  : #ff0000}
-alert          = ${xrdb:color3  : #ffff00}
+; when in polybar 3.6, just do:
+;include-file = "colors"
+include-file = "$XDG_CONFIG_HOME/polybar/colors"
+background     = ${colors.base00}
+background-alt = ${colors.base01}
+foreground-alt = ${colors.base03}
+foreground     = ${colors.base05}
+primary        = ${colors.base11}
+secondary      = ${colors.base08}
+alert          = ${colors.base10}
+
 
 
 [bar/base]

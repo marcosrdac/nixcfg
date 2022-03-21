@@ -19,7 +19,7 @@ set link-zoom true
 
 # aesthetics
 #set font "Fira Mono 11"
-include "zathura_dark"
+include "colors"
 set recolor "true"
 set recolor-reverse-video "true"
 set recolor-keephue "false"
