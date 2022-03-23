@@ -5,7 +5,7 @@ self: pkgs: {
 
     configure = {
 
-      customRC = let 
+      customRC = let  # find a way to add these to runtime path :S
         en-ascii-spl = builtins.fetchurl {
           url = "http://ftp.vim.org/vim/runtime/spell/en.ascii.spl";
           sha256 = "0j94g27g0wz8icbcrya4rp6mxqqcwa10ad0gjiak7nj5km4bmg6f";

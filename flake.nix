@@ -1,7 +1,6 @@
 {
   description = "Home Manager NixOS configuration";
 
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -10,10 +9,10 @@
       url = "github:nix-community/home-manager/release-21.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-colors.url = "github:misterio77/nix-colors";
   };
 
-
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nur, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
       importChildren = (
         dir: map (mod: import (dir + "/${mod}"))
@@ -40,7 +39,7 @@
                   config.allowUnfree = true;
 		};
               };
-              external-overlays = [ unstable-overlay nur.overlay ];
+              external-overlays = [ unstable-overlay inputs.nur.overlay ];
               internal-overlays = importChildren ./overlays;
             in
               {

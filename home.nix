@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nix-colors, ... }:
 
 let
   binHome = "${config.home.homeDirectory}/.local/bin";
@@ -38,11 +38,14 @@ let
 in
 {
   imports = [
+    nix-colors.homeManagerModule
     ./modules/shell
     ./modules/graphics
     ./modules/git
     ./modules/polybar
   ];
+
+  #colorscheme = nix-colors.colorSchemes.dracula;
 
   programs.home-manager.enable = true;
 
@@ -150,7 +153,42 @@ in
 
   services.network-manager-applet.enable = true;
 
-  programs.alacritty.enable = true;
+  #programs.alacritty = {
+  #  enable = true;
+  #  settings = {
+  #    colors = {
+  #      primary = {
+  #        #background = "0x${config.colorscheme.colors.base00-hex}";
+  #        #foreground = "0x${config.colorscheme.colors.base05-hex}";
+  #      };
+  #      ## Colors the cursor will use if `custom_cursor_colors` is true
+  #      #cursor:
+  #      #  text: '0x{{base00-hex}}'
+  #      #  cursor: '0x{{base05-hex}}'
+  #      ## Normal colors
+  #      #normal:
+  #      #  black:   '0x{{base00-hex}}'
+  #      #  red:     '0x{{base08-hex}}'
+  #      #  green:   '0x{{base0B-hex}}'
+  #      #  yellow:  '0x{{base0A-hex}}'
+  #      #  blue:    '0x{{base0D-hex}}'
+  #      #  magenta: '0x{{base0E-hex}}'
+  #      #  cyan:    '0x{{base0C-hex}}'
+  #      #  white:   '0x{{base05-hex}}'
+  #      ## Bright colors
+  #      #bright:
+  #      #  black:   '0x{{base03-hex}}'
+  #      #  red:     '0x{{base09-hex}}'
+  #      #  green:   '0x{{base01-hex}}'
+  #      #  yellow:  '0x{{base02-hex}}'
+  #      #  blue:    '0x{{base04-hex}}'
+  #      #  magenta: '0x{{base06-hex}}'
+  #      #  cyan:    '0x{{base0F-hex}}'
+  #      #  white:   '0x{{base07-hex}}'
+  #    };
+  #    draw_bold_text_with_bright_colors = false;
+  #  };
+  #};
 
   xdg.userDirs = rec {
     enable = true;
@@ -191,7 +229,7 @@ in
       recursive = true;
     };
 
-  }
-    // (linkChildren ./config/alacritty "${config.xdg.configHome}/alacritty");
+  };
+    #// (linkChildren ./config/alacritty "${config.xdg.configHome}/alacritty");
 
 }
