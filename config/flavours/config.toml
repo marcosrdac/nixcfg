@@ -14,3 +14,9 @@ rewrite = true
 file = "~/.config/polybar/colors"
 template = "_polybar"
 rewrite = true
+
+[[items]]
+file = "~/.config/bspwm/colors"
+template = "_bspwm"
+rewrite = true
+hook = "sh '~/.config/bspwm/colors'"

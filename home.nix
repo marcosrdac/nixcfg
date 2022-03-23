@@ -10,6 +10,7 @@ let
       name = "${linkdir}/${filename}";
       value = with config.lib.file; {
         source = mkOutOfStoreSymlink "${dir}/${filename}";
+        #source = mkOutOfStoreSymlink ./. + dir + filename ;
       };
     }) (builtins.attrNames (builtins.readDir dir)));
   defaultDirs = rec {
@@ -41,17 +42,20 @@ in
     ./modules/graphics
     ./modules/git
     ./modules/polybar
-    ./modules/nvim
   ];
 
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    neovim
+
     st
     nox
     htop
     scrot
     xclip xsel
+
+    sxiv
 
     ripgrep
     #xpdf  #=: pdftotext, pdfimages - tagged insecure (?)

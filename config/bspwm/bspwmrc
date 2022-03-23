@@ -1,10 +1,8 @@
 #!/usr/bin/env sh
 
-# importing colors
-[ -f ~/.cache/wal/colors.sh ] && . ~/.cache/wal/colors.sh
+# display
 [ -x ~/.local/bin/bspwm/bspwm_display_menu ] && ~/.local/bin/bspwm/bspwm_display_menu auto
-
-# monitors... probably  gonna be on home-manager or something
+# monitors... probably  gonna be on home-manager or above display script or something
 bspc monitor -d 1 2 3 4 5 6 7 8 9 0 
 
 # --- workflow --- #
@@ -16,14 +14,13 @@ bspc config gapless_monocle         true
 bspc config ignore_ewmh_fullscreen  all
 bspc config pointer_modifier        mod1  # mod3
 
-# --- colors style --- #
+# --- style --- #
 
 bspc config window_gap    ${WINDOW_GAP:=22}
 bspc config border_width  3
-bspc config normal_border_color    $color8
-bspc config focused_border_color   $color15
-bspc config presel_feedback_color  $color15
 
+# --- color --- #
+[ -f "./colors" ] && sh ./colors
 
 # --- rules --- #
 

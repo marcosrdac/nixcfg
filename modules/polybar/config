@@ -11,11 +11,9 @@ background     = ${colors.base00}
 background-alt = ${colors.base01}
 foreground-alt = ${colors.base03}
 foreground     = ${colors.base05}
-primary        = ${colors.base11}
+primary        = ${colors.base0D}
 secondary      = ${colors.base08}
-alert          = ${colors.base10}
-
-
+alert          = ${colors.base0A}
 
 [bar/base]
 monitor = ${env:MONITOR:}

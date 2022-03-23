@@ -14,7 +14,12 @@
 
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nur, home-manager, ... }:
-    {
+    let
+      importChildren = (
+        dir: map (mod: import (dir + "/${mod}"))
+          (builtins.attrNames (builtins.readDir dir))
+      );
+    in {
       homeConfigurations = rec {
         # convenient workaround for unneeded "--flake ~/.config/nixpkgs#adam"
         marcosrdac = adam;  
@@ -29,16 +34,17 @@
 
           configuration = { config, pkgs, ... }:
             let
-              overlay-unstable = final: prev: {
+              unstable-overlay = self: pkgs: {
                 unstable = import inputs.nixpkgs-unstable {
-                  system = prev.system;
+                  system = pkgs.system;
                   config.allowUnfree = true;
 		};
               };
-	      overlay-nur = nur.overlay;
+              external-overlays = [ unstable-overlay nur.overlay ];
+              internal-overlays = importChildren ./overlays;
             in
               {
-                nixpkgs.overlays = [ overlay-unstable overlay-nur ];
+                nixpkgs.overlays = external-overlays ++ internal-overlays;
                 nixpkgs.config = {
                   allowUnfree = true;
                   allowBroken = true;
