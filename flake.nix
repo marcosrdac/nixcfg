@@ -12,7 +12,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-colors, ... }@inputs:
     let
       importChildren = (
         dir: map (mod: import (dir + "/${mod}"))
@@ -31,6 +31,7 @@
           username = "marcosrdac";
           homeDirectory = "/home/marcosrdac";
 
+          extraSpecialArgs = { inherit nix-colors; };
           configuration = { config, pkgs, ... }:
             let
               unstable-overlay = self: pkgs: {
