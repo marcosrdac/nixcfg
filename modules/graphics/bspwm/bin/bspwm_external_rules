@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+wid=$1
+class=$2
+instance=$3
+
+
+# Debug
+#notify-send "new window" "id: $wid\nclass: $class\ninstance: $instance\nname: $name"
+
+#desktop=$(bspc query -D -d --names)
+#bspc rule -a "$class" desktop="^$desktop"
+
+
+case "$class" in
+  Gimp) echo "desktop=^5" ;;
+
+  #Inkscape)
+    ##verify if tiling: future
+    #echo "desktop=^6 state=tiled"
+    #name=$(xdotool getwindowname $wid)
+    #case $name in
+      #*Inkscape) echo "locked=on" ;;
+      #*) ;;
+    #esac
+    #;;
+
+  Zathura) echo "state=tiled" ;;
+
+  ffplay)
+    name=$(xdotool getwindowname $wid)
+    echo \"$name\" | grep -q 'webcam_cast' &&
+      echo "state=floating focus=off sticky=on locked=on border=on" # manage=false"
+    ;;
+
+  # bar pop-up calendar
+  Yad) echo "state=floating border=off" ;;
+
+  # dropdown terminals
+  tchoice)
+    echo "state=floating sticky=on private=on border=on center=true" ;;
+  dropdown_terminal)
+    echo "state=floating sticky=on locked=on private=on hidden=on border=off center=false rectangle=$(bspwm_golden_rectangle 0 2 0 22)" ;;
+  dropdown_calculator)
+    echo "state=floating sticky=on locked=on private=on hidden=on border=on  center=true  rectangle=$(bspwm_golden_rectangle 2 2)" ;;
+  dropdown_mail)
+    echo "state=floating sticky=on locked=on private=on hidden=on border=on  center=true  rectangle=$(bspwm_golden_rectangle 1 1)" ;;
+  dropdown_music_player)
+    echo "state=floating sticky=on locked=on private=on hidden=on border=on  center=true  rectangle=$(bspwm_golden_rectangle 1 1)" ;;
+esac

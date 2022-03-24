@@ -2,18 +2,24 @@
 
 let
   binHome = "${config.home.homeDirectory}/.local/bin";
-  #dotDir = ./.;
-  #dotConfig = dotDir + "/config";
-  dotDir = "${config.xdg.configHome}/nixpkgs";
-  dotConfig = "${dotDir}/config";
-  dotBin = "${dotDir}/bin";
+  dotConfig = ./config;
+  dotBin = ./bin;
+#  linkChildren = dir: linkdir: builtins.listToAttrs (
+#    map (filename: {
+#      name = "${linkdir}/${filename}";
+#      value = with config.lib.file; {
+#        #source = mkOutOfStoreSymlink "${builtins.toString dir}/${filename}";
+#        #source = mkOutOfStoreSymlink (dir + "/${filename}");
+#        #source = mkOutOfStoreSymlink "${dir}/${filename}";
+#        #source = mkOutOfStoreSymlink ./. + dir + filename ;
+#        #source = mkOutOfStoreSymlink dir + "/${filename}" ;
+#        source = mkOutOfStoreSymlink dir/${filename};
+#      };
+#    }) (builtins.attrNames (builtins.readDir dir)));
   linkChildren = dir: linkdir: builtins.listToAttrs (
     map (filename: {
-      name = "${linkdir}/${filename}";
-      value = with config.lib.file; {
-        source = mkOutOfStoreSymlink "${dir}/${filename}";
-        #source = mkOutOfStoreSymlink ./. + dir + filename ;
-      };
+      name = "${builtins.toString linkdir}/${filename}";
+      value = { source = config.lib.file.mkOutOfStoreSymlink "${builtins.toString dir}/${filename}"; };
     }) (builtins.attrNames (builtins.readDir dir)));
   defaultDirs = rec {
     # xdg
@@ -155,43 +161,6 @@ in
 
   services.network-manager-applet.enable = true;
 
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      colors = {
-        primary = {
-          background = "0x${config.colorscheme.colors.base00}";
-          foreground = "0x${config.colorscheme.colors.base05}";
-        };
-        ## Colors the cursor will use if `custom_cursor_colors` is true
-        #cursor:
-        #  text: '0x{{base00-hex}}'
-        #  cursor: '0x{{base05-hex}}'
-        ## Normal colors
-        #normal:
-        #  black:   '0x{{base00-hex}}'
-        #  red:     '0x{{base08-hex}}'
-        #  green:   '0x{{base0B-hex}}'
-        #  yellow:  '0x{{base0A-hex}}'
-        #  blue:    '0x{{base0D-hex}}'
-        #  magenta: '0x{{base0E-hex}}'
-        #  cyan:    '0x{{base0C-hex}}'
-        #  white:   '0x{{base05-hex}}'
-        ## Bright colors
-        #bright:
-        #  black:   '0x{{base03-hex}}'
-        #  red:     '0x{{base09-hex}}'
-        #  green:   '0x{{base01-hex}}'
-        #  yellow:  '0x{{base02-hex}}'
-        #  blue:    '0x{{base04-hex}}'
-        #  magenta: '0x{{base06-hex}}'
-        #  cyan:    '0x{{base0F-hex}}'
-        #  white:   '0x{{base07-hex}}'
-      };
-      draw_bold_text_with_bright_colors = false;
-    };
-  };
-
   xdg.userDirs = rec {
     enable = true;
     createDirectories = true;
@@ -199,18 +168,20 @@ in
   };
 
   home.file = let
-      mkLink = config.lib.file.mkOutOfStoreSymlink;
-    in {
+    mkLink = config.lib.file.mkOutOfStoreSymlink;
+  in {
       "${config.xdg.dataHome}/flavours/base16/templates" = {
         source = ./config/flavours/templates;
         recursive = true;
       };
-    } // linkChildren ./bin binHome;
+      "test".source = mkLink ./bin/show_timer;
+      ".local/bin/show".source = mkLink ./bin/show_timer;
+    #} // linkChildren ./bin binHome;
+  } // linkChildren ./bin ".local/bin";
 
   xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
-    "sxhkd".source = mkLink "${dotConfig}/sxhkd";
     "flavours".source = mkLink "${dotConfig}/flavours";
     "zathura/zathurarc".source = mkLink "${dotConfig}/zathura/zathurarc";
     "lf".source = mkLink "${dotConfig}/lf";
@@ -232,6 +203,5 @@ in
     };
 
   };
-    #// (linkChildren ./config/alacritty "${config.xdg.configHome}/alacritty");
 
 }

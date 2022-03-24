@@ -14,7 +14,7 @@
       enable = true;
       package = pkgs.unstable.polybar;
       script = pkgs.lib.strings.fileContents ./polybar-start;
-      extraConfig = builtins.readFile ./config;
+      extraConfig = pkgs.lib.strings.fileContents ./config;
     };
   #};
 }
