@@ -1,2 +1,4 @@
 import:
   -  ~/.config/alacritty/colors.yml
+
+live_config_reload: true

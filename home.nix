@@ -43,21 +43,41 @@ let
     XDG_MAIL_DIR  = "${XDG_DATA_HOME}/mail";
     XDG_DOCUMENTS_DATA ="${XDG_DOCUMENTS_DIR}/h/dat";
   };
+  defaultPrograms = rec {
+    OPENER = "xdg-open";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    TERMINAL = "alacritty";
+    FILEBROWSER = "${dotConfig}/lf/bin/lf-ueberzug";
+    BROWSER = "qutebrowser";
+    ALTBROWSER = "firefox";
+    ALTALTBROWSER = "google-chrome-stable";
+    READER = "zathura";
+    PAGER = "less";
+    VIDEOPLAYER = "mpv";
+    TRUEBROWSER = "qutebrowser";
+    XIMAGEVIEWER = "sxiv";
+    MENU = "menu";
+    MENURUN = "menurun";
+  };
 in
 {
   imports = [
-    inputs.nix-colors.homeManagerModule
+    ./theme.nix
+    ./modules/terminal
     ./modules/shell
-    ./modules/graphics
     ./modules/git
-    ./modules/polybar
+    ./modules/graphics
+    ./modules/programs
+    ./modules/fonts
   ];
 
-  colorscheme = inputs.nix-colors.colorSchemes.dracula;
+  #colorscheme = inputs.nix-colors.colorSchemes.solarized-dark;
 
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    #(callPackage (import ./packages/nvim) {})
     neovim
 
     st
@@ -78,7 +98,7 @@ in
     # browsers
     qutebrowser firefox google-chrome
     # pdf readers
-    zathura evince
+    evince
 
     ueberzug
 
@@ -108,8 +128,6 @@ in
   ];
 
 
-  services.dunst.enable = true;
-
   home.sessionPath = [
     binHome
   ] ++ (builtins.attrNames (linkChildren ./bin binHome));
@@ -119,25 +137,14 @@ in
       #!/usr/bin/env sh
       echo hello world
     '';
+    mkNixConfigFunction = pkgs.writeShellScriptBin "mkNixConfigFunction" ''
+      #!/usr/bin/env sh
+      [ -e default.nix ] || (echo "{ config, pkgs, ... }:\n\n{\n\n}" > default.nix)
+    '';
     in (
-      defaultDirs // {
+      defaultDirs // defaultPrograms // {
       MYSCRIPT = "${myscript}/bin/myscpt";
-
-      OPENER = "xdg-open";
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      TERMINAL = "alacritty";
-      FILEBROWSER = "${dotConfig}/lf/bin/lf-ueberzug";
-      BROWSER = "qutebrowser";
-      ALTBROWSER = "firefox";
-      ALTALTBROWSER = "google-chrome-stable";
-      READER = "zathura";
-      PAGER = "less";
-      VIDEOPLAYER = "mpv";
-      TRUEBROWSER = "qutebrowser";
-      XIMAGEVIEWER = "sxiv";
-      MENU = "menu";
-      MENURUN = "menurun";
+      MKNIXCONFIGFUNCTION = "${mkNixConfigFunction}/bin/mkNixConfigFunction";
     });
 
   home.keyboard = {
@@ -167,41 +174,37 @@ in
     extraConfig = defaultDirs;
   };
 
-  home.file = let
-    mkLink = config.lib.file.mkOutOfStoreSymlink;
-  in {
-      "${config.xdg.dataHome}/flavours/base16/templates" = {
-        source = ./config/flavours/templates;
-        recursive = true;
-      };
-      "test".source = mkLink ./bin/show_timer;
-      ".local/bin/show".source = mkLink ./bin/show_timer;
-    #} // linkChildren ./bin binHome;
-  } // linkChildren ./bin ".local/bin";
+  #home.file = let
+  #  mkLink = config.lib.file.mkOutOfStoreSymlink;
+  #in {
+  #    "${config.xdg.dataHome}/flavours/base16/templates" = {
+  #      source = ./config/flavours/templates;
+  #      recursive = true;
+  #    };
+  #    "test".source = mkLink ./bin/show_timer;
+  #    ".local/bin/show".source = mkLink ./bin/show_timer;
+  #  #} // linkChildren ./bin binHome;
+  #} // linkChildren ./bin ".local/bin";
 
-  xdg.configFile = let
-      mkLink = config.lib.file.mkOutOfStoreSymlink;
-    in {
-    "flavours".source = mkLink "${dotConfig}/flavours";
-    "zathura/zathurarc".source = mkLink "${dotConfig}/zathura/zathurarc";
-    "lf".source = mkLink "${dotConfig}/lf";
+  #xdg.configFile = let
+  #    mkLink = config.lib.file.mkOutOfStoreSymlink;
+  #  in {
+  #  "flavours".source = mkLink "${dotConfig}/flavours";
+  #  "zathura/zathurarc".source = mkLink "${dotConfig}/zathura/zathurarc";
+  #  "lf".source = mkLink "${dotConfig}/lf";
+  #  "qutebrowser" = {
+  #    source = ./config/qutebrowser;
+  #    recursive = true;
+  #  };
+  #  "GIMP" = {
+  #    source = ./config/GIMP;
+  #    recursive = true;
+  #  };
+  #  "wal" = {
+  #    source = ./config/wal;
+  #    recursive = true;
+  #  };
 
-    "qutebrowser" = {
-      source = ./config/qutebrowser;
-      recursive = true;
-    };
-    "GIMP" = {
-      source = ./config/GIMP;
-      recursive = true;
-    };
-    "dunst/dunstrc.base" = {
-      source = ./config/dunst/dunstrc.base;
-    };
-    "wal" = {
-      source = ./config/wal;
-      recursive = true;
-    };
-
-  };
+  #};
 
 }

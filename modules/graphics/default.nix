@@ -2,8 +2,10 @@
 
 {
   imports = [
-    ./bspwm
-    ./picom
+    ./windowManagers/bspwm
+    ./bars/polybar
+    ./notifications/dunst
+    ./compositors/picom
   ];
 
   xsession = {
