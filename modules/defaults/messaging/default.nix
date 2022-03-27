@@ -1,11 +1,9 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./dunst
-  ];
-
   home.packages = with pkgs; [
-    libnotify  #=: notify-send
+    tdesktop  #=: telegram
+    discord
+    teams zoom-us
   ];
 }

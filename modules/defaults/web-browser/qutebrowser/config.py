@@ -112,24 +112,23 @@ c.url.searchengines = {
     # "DEFAULT": "https://duckduckgo.com/?q={}",
     "g":  "https://www.google.com.br/search?q={}",
     "gs": "https://scholar.google.com/scholar?q={}",
-    "gsb":
-    "https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q={}",
-        "gpten": "https://translate.google.com/#pt/en/{}",
-        "gen": "http://gen.lib.rus.ec/search.php?req={}&open=0&res=25&view=simple&phrase=1&column=def",
-        "wr": "https://www.wordreference.com/enpt/{}",
-        "w":  "https://en.wikipedia.org/wiki/Special:Search?search={}",
-        "wb":  "https://pt.wikipedia.org/wiki/Special:Search?search={}",
-        "wh": "https://alpha.wallhaven.cc/search?q={}",
-        "doi": "http://gen.lib.rus.ec/scimag/?q={}",
-        "dd":  "https://duckduckgo.com/?q={}",
-        "gd":  "https://drive.google.com/drive/search?q={}",
-        "yt":  "https://www.youtube.com/results?search_query={}",
-        "aw": "https://wiki.archlinux.org/?search={}",
-        "pten":
-            "https://translate.google.com/#view=home&op=translate&sl=pt&tl=en&text={}",
-        "enpt":
-            "https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text={}",
-        "sc": "https://soundcloud.com/search?q={}",
+    "gsb": "https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q={}",
+    "gpten": "https://translate.google.com/#pt/en/{}",
+    "gen": "http://gen.lib.rus.ec/search.php?req={}&open=0&res=25&view=simple&phrase=1&column=def",
+    "wr": "https://www.wordreference.com/enpt/{}",
+    "w":  "https://en.wikipedia.org/wiki/Special:Search?search={}",
+    "wb":  "https://pt.wikipedia.org/wiki/Special:Search?search={}",
+    "wh": "https://alpha.wallhaven.cc/search?q={}",
+    "doi": "http://gen.lib.rus.ec/scimag/?q={}",
+    "dd":  "https://duckduckgo.com/?q={}",
+    "gd":  "https://drive.google.com/drive/search?q={}",
+    "yt":  "https://www.youtube.com/results?search_query={}",
+    "aw": "https://wiki.archlinux.org/?search={}",
+    "pten": "https://translate.google.com/#view=home&op=translate&sl=pt&tl=en&text={}",
+    "enpt": "https://translate.google.com/#view=home&op=translate&sl=en&tl=pt&text={}",
+    "sc": "https://soundcloud.com/search?q={}",
+    "n": "https://search.nixos.org/packages?query={}",
+
 }
 
 

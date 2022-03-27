@@ -10,6 +10,8 @@
     ];
   };
 
+  home.sessionPath = [ "./bin" ];
+
   xdg.configFile."polybar/colors" = {
     onChange = "polybar-msg cmd restart";
     text = with config.colorscheme.colors; ''
@@ -22,5 +24,4 @@
       alert          = ${base0A}
     '';
   };
-
 }

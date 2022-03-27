@@ -21,7 +21,7 @@
     in {
       homeConfigurations = rec {
         # convenient workaround for unneeded "--flake ~/.config/nixpkgs#adam"
-        marcosrdac = adam;  
+        marcosrdac = adam;
 
         # user configuration by system
         adam = home-manager.lib.homeManagerConfiguration {
@@ -37,10 +37,14 @@
               unstable-overlay = self: pkgs: {
                 unstable = import inputs.nixpkgs-unstable {
                   system = pkgs.system;
-                  config.allowUnfree = true;
+                  config = {
+                    allowUnfree = true;
+                    permittedInsecurePackages = [ "xpdf-4.03" ];
+                  };
 		};
               };
-              external-overlays = [ unstable-overlay inputs.nur.overlay ];
+              insecure-overlay = self: pkgs: { };
+              external-overlays = [ insecure-overlay unstable-overlay inputs.nur.overlay ];
               internal-overlays = importChildren ./overlays;
             in
               {
@@ -49,7 +53,7 @@
                   allowUnfree = true;
                   allowBroken = true;
                 };
-                imports = [ ./home.nix ]; # ./users/marcosrdac/home.nix 
+                imports = [ ./home.nix ]; # ./users/marcosrdac/home.nix
               };
         };
       };

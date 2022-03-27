@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./dunst
+  home.packages = with pkgs; [
+    less
   ];
 
-  home.packages = with pkgs; [
-    libnotify  #=: notify-send
-  ];
+  home.sessionVariables = {
+    PAGER = "less";
+  };
 }

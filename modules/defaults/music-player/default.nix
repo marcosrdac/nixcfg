@@ -2,6 +2,7 @@
 
 {
   imports = [
-    ./lf
-  ]:
+    ./mpd
+    ./spotify
+  ];
 }

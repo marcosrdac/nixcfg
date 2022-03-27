@@ -6,7 +6,6 @@
   home.packages = with pkgs; [
     spleen
     ttf-envy-code-r
-    #envypn-font
     
     dejavu_fonts
     source-serif-pro
