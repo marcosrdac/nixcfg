@@ -16,7 +16,7 @@ let
   #};
 
   #wallpaper = wallpapers.brown-ravine;
-  wallpaper = wallpapers.green-machu-pichu;
+  wallpaper = wallpapers.dark-blue-earth-from-moon;
   colorscheme = colorschemeFromPicture {
     path = wallpaper;
     kind = "dark";

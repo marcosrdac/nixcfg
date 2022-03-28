@@ -1,0 +1,67 @@
+#!/bin/sh
+
+XDG_PICTURES_DIR=${XDG_PICTURES_DIR:-"$HOME/Pictures"}
+XDG_SCREENSHOT_DIR=${XDG_SCREENSHOT_DIR:-"$XDG_PICTURES_DIR"}
+[ -d "$XDG_SCREENSHOT_DIR" ] || mkdir -p "$XDG_SCREENSHOT_DIR"
+GRIMARGS=''
+
+showhelp () {
+  echo "Usage: $0 [OPTIONS]"
+  echo 'Take a screenshot and save it to $XDG_SCREENSHOT_DIR (or defaults to ~/Pictures if variable is not set), copies screenshot to clipboard and its path to primary selection. On wayland, this script is a wrapper for slup, grim and xclip; on xorg, this is a wrapper for scrot.'
+  echo
+  echo "Options"
+  echo "  -s or --select  Select area to take screeshot."
+  echo "  -h or --help  Show this help."
+}
+
+if  [ -z "$WAYLAND_DISPLAY" ]
+then
+  screenshot() {
+    scrot '%Y%m%d%H%M%S_screenshot_$wx$h.png' -e "mv \$f \"$XDG_SCREENSHOT_DIR\" &&
+      xclip -selection clipboard -t image/png -i "$XDG_SCREENSHOT_DIR/\$f" &&
+      notify-send 'Screenshot taken' 'location: $XDG_SCREENSHOT_DIR/\$f\n\nImage copied to clipboard.'"
+  }
+
+  sliceshot() {
+    scrot '%Y%m%d%H%M%S_sliceshot_$wx$h.png' -s -e "mv \$f \"$XDG_SCREENSHOT_DIR\" &&
+      xclip -selection clipboard -t image/png -i $XDG_SCREENSHOT_DIR/\$f &&
+      notify-send 'Sliceshot taken'  'Location: $XDG_SCREENSHOT_DIR/\$f\n\nImage copied to clipboard.'"
+  }
+else
+  screenshot () {
+    filename="`date +'%Y%m%d%H%M%S'`_screenshot.png"
+    filepath="$XDG_SCREENSHOT_DIR/$filename"
+    grim $GRIMARGS "$filepath" &&
+      echo "$filepath" | xclip -sel p &&
+      xclip -sel c -t image/png -i "$filepath" &&
+      notify-send 'Screenshot taken' "Location: $filepath\n\nImage copied to clipboard."
+  }
+  sliceshot () {
+    frame=`slurp` || exit 1
+    dimensions=`echo $frame | cut -d ' ' -f 2`
+    filename="`date +'%Y%m%d%H%M%S'`_sliceshot_$dimensions.png"
+    filepath="$XDG_SCREENSHOT_DIR/$filename"
+    grim -g "$frame" $GRIMARGS "$filepath" &&
+      echo "$filepath" | xclip -sel p &&
+      xclip -sel c -t image/png -i "$filepath" &&
+      notify-send 'Sliceshot taken' "Location: $filepath\n\nImage copied to clipboard."
+  }
+fi
+
+
+ARGS=`getopt -o 'sh' --long 'select,help' -- "$@"` || exit
+eval "set -- $ARGS"
+while true
+do case $1 in
+  -s|--select) select=true; shift ;;
+  -h|--help) showhelp; exit ;;
+  --) shift; break ;;
+  *) exit 1 ;;
+esac done
+select=${select:-false}
+
+
+if [ $select = true ]
+then sliceshot
+else screenshot
+fi

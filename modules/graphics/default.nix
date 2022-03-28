@@ -4,14 +4,14 @@
   imports = [
     ./windowManagers/bspwm
     ./bars/polybar
-    ./notifications/dunst
+    ./notifications
     ./compositors/picom
   ];
 
   xsession = {
     enable = true;
     scriptPath = ".hm-xsession";
-    #profileExtra = "${pkgs.pywal}/bin/wal -i $HOME/tmp &";
+    profileExtra = "${pkgs.feh}/bin/feh --bg-scale ${config.xdg.dataHome}/appearance/wallpaper";
     #profilePath = ".hm-profile";  # apparently does not change it
   };
 }

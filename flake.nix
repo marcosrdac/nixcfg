@@ -43,8 +43,7 @@
                   };
 		};
               };
-              insecure-overlay = self: pkgs: { };
-              external-overlays = [ insecure-overlay unstable-overlay inputs.nur.overlay ];
+              external-overlays = [ unstable-overlay inputs.nur.overlay ];
               internal-overlays = importChildren ./overlays;
             in
               {
