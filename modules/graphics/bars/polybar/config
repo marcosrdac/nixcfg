@@ -39,7 +39,7 @@ inherit = bar/base
 ; modules position
 modules-left   = bspwm xkeyboard
 modules-center = mpd
-modules-right  = wlan eth pulseaudio brightness battery timer time
+modules-right  = wlan eth pulseaudio brightness battery date time
 ;modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
 ; tray position
 tray-position   = left
@@ -304,12 +304,20 @@ animation-charging-3 = "%{T2}%{T-}"
 animation-charging-4 = "%{T2}%{T-}"
 
 
+;[module/date]
+;type = custom/script
+;interval = 1
+;exec = ~/.local/bin/polybar/polybar_date_calendar
+;format-prefix = "%{T2}%{T-} "
+;click-left = ~/.local/bin/polybar/polybar_date_calendar --popup &
 [module/date]
-type = custom/script
+type = internal/date
 interval = 1
-exec = ~/.local/bin/polybar/polybar_date_calendar
+time = "%Y%m%d"
 format-prefix = "%{T2}%{T-} "
+label = "%time%"
 click-left = ~/.local/bin/polybar/polybar_date_calendar --popup &
+click-right = "alacritty -e vim &"
 
 
 [module/time]

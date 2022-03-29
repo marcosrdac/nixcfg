@@ -3,15 +3,35 @@
 {
   home.packages = with pkgs; [
     lf
+
     ueberzug
+    ffmpegthumbnailer
+    imagemagick
+    poppler
+    #epub-thumbnailer
+    wkhtmltopdf
+    bat
+    chafa
+    unzip
+    p7zip
+    unrar
+    catdoc
+    #docx2txt
+    odt2txt
+    gnumeric
+    exiftool
+    #iso-info
+    transmission
+    mcomix3
   ];
+
+  home.sessionPath = [ "${builtins.toString ./bin}" ];
 
   xdg.configFile."lf" = {
     source = ./config;
     recursive = true;
   };
 
-  home.sessionPath = [ "${builtins.toString ./bin}" ];
 
   #programs.lf = {
   #  enable = true;

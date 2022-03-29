@@ -6,21 +6,21 @@ let
   wallpapers = (import ./wallpapers.nix) pkgs;
   fonts = (import ./fonts.nix) pkgs;
 
-  #colorscheme = colorSchemes.dracula;
-  #wallpaper = nixWallpaperFromScheme {
-  #  scheme = config.colorscheme;
-  #  width = 1920;
-  #  height = 1080;
-  #  #logoScale = 4.0;
-  #  logoScale = 0;
-  #};
+  colorscheme = colorSchemes.solarized-dark;
+  wallpaper = nixWallpaperFromScheme {
+    scheme = config.colorscheme;
+    width = 1920;
+    height = 1080;
+    #logoScale = 4.0;
+    logoScale = 0;
+  };
 
   #wallpaper = wallpapers.brown-ravine;
-  wallpaper = wallpapers.dark-blue-earth-from-moon;
-  colorscheme = colorschemeFromPicture {
-    path = wallpaper;
-    kind = "dark";
-  };
+  #wallpaper = wallpapers.dark-blue-earth-from-moon;
+  #colorscheme = colorschemeFromPicture {
+  #  path = wallpaper;
+  #  kind = "dark";
+  #};
 in
 {
   imports = [

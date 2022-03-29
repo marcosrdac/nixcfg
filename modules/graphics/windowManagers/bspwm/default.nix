@@ -43,9 +43,9 @@ in
     onChange = "${config.xdg.configHome}/bspwm/colors";
     text = with config.colorscheme.colors; ''
       #!/usr/bin/env sh
-      bspc config focused_border_color '#${base04}'
-      bspc config normal_border_color '#${base03}'
-      bspc config presel_feedback_color '#${base04}'
+      bspc config focused_border_color '#${base05}'
+      bspc config normal_border_color '#${base01}'
+      bspc config presel_feedback_color '#${base05}'
     '';
     executable = true;
   };

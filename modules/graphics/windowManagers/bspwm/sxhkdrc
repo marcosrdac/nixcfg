@@ -208,13 +208,12 @@ XF86MonBrightness{Down,Up}
 
 # screenshots
 {_,shift + ,alt +} @Print
-	xorg-screenshot {_, --slice, --slice}
+	screenshot {_, --slice, --slice}
 
 # power button
 XF86PowerOff
 	dm_power_menu
 
-
 # temporary
 alt + F2
-	xrdb ~/.config/Xresources/mAin
+	xrdb ~/.config/Xresources/main
