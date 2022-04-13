@@ -14,4 +14,25 @@
   home.sessionVariables = {
     OFFICE = "loffice";
   };
+
+  xdg.desktopEntries = rec {
+    vector-image-editor = {
+      name = "Vector image editor";
+      genericName = "Vector image editor";
+      exec = "inkscape %u";
+      categories = [ "Application" "Graphics" "VectorGraphics" ];
+    };
+    handwritten-editor = {
+      name = "Handwritten editor";
+      genericName = "Handwritten editor";
+      exec = "Write %u";
+      categories = [ "Application" "Office" "VectorGraphics" ];
+    };
+    office-suite = {
+      name = "Office suite";
+      genericName = "Office suite";
+      exec = "libreoffice %u";
+      categories = [ "Application" "Office" ];
+    };
+  };
 }

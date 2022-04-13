@@ -6,6 +6,8 @@
     ./bars/polybar
     ./notifications
     ./compositors/picom
+
+    ./windowManagers/riverwm
   ];
 
   xsession = {

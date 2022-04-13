@@ -27,6 +27,10 @@
 
   home.sessionPath = [ "${builtins.toString ./bin}" ];
 
+  home.sessionVariables = {
+    LF_ICONS_FILE = builtins.toString ./config/icons;
+  };
+
   xdg.configFile."lf" = {
     source = ./config;
     recursive = true;

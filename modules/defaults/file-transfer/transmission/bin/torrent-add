@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+pgrep -x transmission-da >/dev/null || (transmission-daemon && notify-send "starting transmission-daemon..." && sleep 3)
+  # && pkill -RTMIN+20 i3blocks) signal if needed
+transmission-remote -a "$@" && notify-send "Torrent" "Torrent added"

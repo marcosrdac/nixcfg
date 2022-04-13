@@ -20,8 +20,9 @@
     shadowOpacity = "0.75";
     shadowOffsets = [ (-15) (-15) ];  # H&V
     opacityRule = [
+      "100:class_g = 'Alacritty' && focused"
+      "89:class_g = 'Alacritty' && !focused"  # .90 * .89 = .8
       "90:class_g = 'St' && focused"
-      "90:class_g = 'Alacritty' && focused"
       "90:class_g = 'dmenu' && focused"
       "90:class_g = 'Polybar'"
       "90:class_g = 'Spotify' && focused"
@@ -33,7 +34,6 @@
       "90:class_g = 'dropdown_music_player' && focused"
       #"90:class_g = 'qutebrowser' && focused"
       "80:class_g = 'St' && !focused"
-      "80:class_g = 'Alacritty' && !focused"
       "80:class_g = 'dmenu' && !focused"
       "80:class_g = 'Spotify' && !focused"
       #"80:class_g = 'Zathura' && !focused"

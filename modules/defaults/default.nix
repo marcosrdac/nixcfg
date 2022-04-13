@@ -9,17 +9,18 @@ let
 in
 {
   imports = [
-    ./user-dirs
+    ./xdg
     ./basic
     ./fonts
     ./terminal
-    ./editor
-    ./pager
+    ./text-editor
+    ./text-pager
     ./file-browser
+    ./file-transfer
     ./web-browser
     ./image-viewer
     ./video-player
-    ./music-player
+    ./audio-player
     ./pdf-reader
     ./office-suite
     ./messaging

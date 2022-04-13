@@ -1,5 +1,6 @@
-self: pkgs: {
-  neovim = pkgs.neovim.override {
+self: pkgs:
+
+pkgs.neovim.override {
     viAlias = true;
     vimAlias = true;
 
@@ -135,5 +136,4 @@ self: pkgs: {
       ];
 
     };     
-  };
-}
+  }

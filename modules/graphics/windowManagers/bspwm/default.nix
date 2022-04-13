@@ -13,7 +13,7 @@ in
     enable = true;
     #extraConfig = pkgs.lib.strings.fileContents ./bspwmrc;
     monitors = {
-      "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
+      "eDP-1-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
     };
     settings = {
       split_ratio = 0.6;

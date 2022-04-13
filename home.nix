@@ -2,12 +2,11 @@
 
 let
   binHome = "${config.home.homeDirectory}/.local/bin";
-  dotConfig = ./config;
-  dotBin = ./bin;
   linkChildren = dir: linkdir: builtins.listToAttrs (
     map (filename: {
       name = "${linkdir}/${filename}";
       value = with config.lib.file; {
+        #target = "${filename}");
         #source = mkOutOfStoreSymlink "${builtins.toString dir}/${filename}";
         source = mkOutOfStoreSymlink (dir + "/${filename}");
         #source = mkOutOfStoreSymlink "${dir}/${filename}";
@@ -20,10 +19,12 @@ let
 in
 {
   imports = [
+    ./modules/module-a.nix
     ./modules/shell
     ./modules/graphics
     ./modules/defaults
     ./modules/appearance
+    ./modules/cloud
   ];
 
   services.network-manager-applet.enable = true;
@@ -40,12 +41,13 @@ in
   home.packages = with pkgs; [
     #(callPackage (import ./packages/nvim) {})
     nox
-    scrot
+    neofetch
 
     ripgrep
 
     fzy
 
+    scrot
     brightnessctl  # light control
     pamixer        # sound control
 
@@ -64,6 +66,10 @@ in
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
       asd.source = mkLink ./home.nix;
+      #".local/share/applications" = {
+      #  source = ./share/applications;
+      #  recursive = true;
+      #};
     } // linkChildren ./bin ".local/bin";
 
   xdg.configFile = let

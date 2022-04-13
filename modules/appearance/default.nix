@@ -6,7 +6,9 @@ let
   wallpapers = (import ./wallpapers.nix) pkgs;
   fonts = (import ./fonts.nix) pkgs;
 
-  colorscheme = colorSchemes.solarized-dark;
+  #colorscheme = colorSchemes.solarized-light;
+  #colorscheme = colorSchemes.solarized-dark;
+  colorscheme = colorSchemes.monokai;
   wallpaper = nixWallpaperFromScheme {
     scheme = config.colorscheme;
     width = 1920;
@@ -27,13 +29,29 @@ in
     inputs.nix-colors.homeManagerModule
   ];
 
+  services.redshift = {
+    enable = true;
+    latitude = -12.97;
+    longitude = -38.50;
+  };
+
   colorscheme = colorscheme;
 
   home.file = {
-    "${config.xdg.dataHome}/appearance/wallpaper" = {
+    wallpaper = {
+      target = "${config.xdg.dataHome}/appearance/wallpaper";
       source = wallpaper;
       onChange = ''
-        ${pkgs.feh}/bin/feh --bg-scale ${wallpaper}
+        ${pkgs.feh}/bin/feh --bg-scale ${wallpaper} &
+      '';
+    };
+    xsettingsdrc = {
+      target = "${config.xdg.dataHome}/appearance/xsettingsdrc";
+      text = ''Net/ThemeName "${config.colorscheme.slug}"'';
+      onChange = ''
+        ${pkgs.xsettingsd}/bin/xsettingsd \
+          -c ${config.xdg.dataHome}/appearance/xsettingsdrc 2>/dev/null &
+        (sleep .2 && kill $!) &
       '';
     };
   };
