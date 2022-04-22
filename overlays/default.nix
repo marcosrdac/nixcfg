@@ -1,7 +1,6 @@
 inputs: final: prev:
 
 {
-  # maybe config should be here
   unstable = import inputs.nixpkgs-unstable {
     system = prev.system;
     config = {

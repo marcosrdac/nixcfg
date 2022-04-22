@@ -111,7 +111,7 @@ alt + s; {_,shift + } s
 	$TERMINAL -e joplin, \
 	joplin-desktop, \
 	kpmenu_wal, \
-	keepassx2 \
+	keepassx \
 	}
 
 

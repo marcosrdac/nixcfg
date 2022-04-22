@@ -2,7 +2,6 @@
 
 XDG_PICTURES_DIR=${XDG_PICTURES_DIR:-"$HOME/Pictures"}
 XDG_SCREENSHOT_DIR=${XDG_SCREENSHOT_DIR:-"$XDG_PICTURES_DIR"}
-[ -d "$XDG_SCREENSHOT_DIR" ] || mkdir -p "$XDG_SCREENSHOT_DIR"
 GRIMARGS=''
 
 showhelp () {
@@ -49,17 +48,19 @@ else
 fi
 
 
-ARGS=`getopt -o 'sh' --long 'select,help' -- "$@"` || exit
+ARGS=`getopt -o 'sdh' --long 'select,directory,help' -- "$@"` || exit
 eval "set -- $ARGS"
 while true
 do case $1 in
   -s|--select) select=true; shift ;;
+  -d|--directory) export XDG_SCREENSHOT_DIR=$2; shift 2 ;;
   -h|--help) showhelp; exit ;;
   --) shift; break ;;
   *) exit 1 ;;
 esac done
 select=${select:-false}
 
+[ -d "$XDG_SCREENSHOT_DIR" ] || mkdir -p "$XDG_SCREENSHOT_DIR"
 
 if [ $select = true ]
 then sliceshot

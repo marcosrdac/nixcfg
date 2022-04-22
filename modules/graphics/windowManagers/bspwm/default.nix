@@ -40,7 +40,8 @@ in
   };
 
   xdg.configFile."bspwm/colors" = {
-    onChange = "${config.xdg.configHome}/bspwm/colors";
+    #onChange = "sh ${config.xdg.configHome}/bspwm/colors";
+    onChange = "${pkgs.dash}/bin/dash ${config.xdg.configHome}/bspwm/colors";
     text = with config.colorscheme.colors; ''
       #!/usr/bin/env sh
       bspc config focused_border_color '#${base05}'

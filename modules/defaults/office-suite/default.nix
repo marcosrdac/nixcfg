@@ -9,6 +9,7 @@
     imagemagick
     inkscape gimp
     unstable.write_stylus
+    aegisub
   ];  
 
   home.sessionVariables = {

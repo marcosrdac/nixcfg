@@ -10,7 +10,8 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    {
     homeConfigurations = rec {
       adam-marcosrdac = home-manager.lib.homeManagerConfiguration {
         system = "x86_64-linux";
@@ -18,15 +19,15 @@
         username = "marcosrdac";
         homeDirectory = "/home/marcosrdac";
         extraSpecialArgs = { inherit inputs; };
-        configuration = { config, pkgs, ... }: let
-          overlay = import ./overlays inputs;
-        in {
-          nixpkgs.overlays = [ overlay ];
-          nixpkgs.config = {
-            allowUnfree = true;
-            allowBroken = true;
+        configuration = { config, pkgs, ... }: {
+          nixpkgs = {
+            config = {
+              allowUnfree = true;
+              allowBroken = true;
+            };
+            overlays = [ (import ./overlays inputs) ];
           };
-          imports = [ ./home.nix ]; # base configuration user config imports (future; maybe at ./users/marcosrdac/home.nix)
+          imports = [ ./home.nix ];
         };
       };
     };
