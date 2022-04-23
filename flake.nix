@@ -10,27 +10,58 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    homeConfigurations = rec {
-      adam-marcosrdac = home-manager.lib.homeManagerConfiguration {
-        system = "x86_64-linux";
-        stateVersion = "21.11";
-        username = "marcosrdac";
-        homeDirectory = "/home/marcosrdac";
-        extraSpecialArgs = { inherit inputs; };
-        configuration = { config, pkgs, ... }: {
-          nixpkgs = {
-            config = {
-              allowUnfree = true;
-              allowBroken = true;
-            };
-            overlays = [ (import ./overlays inputs) ];
-          };
-          imports = [ ./home.nix ];
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    let
+      hostsConfigs = (
+        dir: builtins.listToAttrs (
+          map (host: {
+            name = host;
+            value = dir + "/${host}/configuration.nix";
+          }) (builtins.attrNames (builtins.readDir dir)))
+      ) ./hosts;
+      nixosModules = (
+        dir: map (mod: dir + "/${mod}")
+          (builtins.attrNames (builtins.readDir dir))
+      ) ./lib/modules;
+      unstable-overlay = final: prev: {  # TODO: define these on ./lib/overlays
+        unstable = import inputs.nixpkgs-unstable {
+          system = prev.system;
+          config.allowUnfree = true;
         };
       };
-    };
+      overlayModules = [  # I find this ugly... Investigation needed
+        ({ ... }: { nixpkgs.overlays = [ unstable-overlay inputs.nur.overlay ]; })
+      ];
+      mkHost = hostConfig:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";  # how to get from host?
+          specialArgs = inputs;
+          modules = overlayModules ++ nixosModules ++ [ hostConfig ];
+        };
+    in {
+      nixosConfigurations = builtins.mapAttrs
+        (host: config: mkHost config) hostsConfigs;
 
-    defaultPackage.x86_64-linux = self.homeConfigurations.adam-marcosrdac.activationPackage;
-  };
+      homeConfigurations = rec {
+        adam-marcosrdac = home-manager.lib.homeManagerConfiguration {
+          system = "x86_64-linux";
+          stateVersion = "21.11";
+          username = "marcosrdac";
+          homeDirectory = "/home/marcosrdac";
+          extraSpecialArgs = { inherit inputs; };
+          configuration = { config, pkgs, ... }: {
+            nixpkgs = {
+              config = {
+                allowUnfree = true;
+                allowBroken = true;
+              };
+              overlays = [ (import ./overlays inputs) ];
+            };
+            imports = [ ./home.nix ];
+          };
+        };
+      };
+
+      defaultPackage.x86_64-linux = self.homeConfigurations.adam-marcosrdac.activationPackage;
+    };
 }

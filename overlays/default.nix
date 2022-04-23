@@ -1,7 +1,8 @@
 inputs: final: prev:
 
+with inputs;
 {
-  unstable = import inputs.nixpkgs-unstable {
+  unstable = import nixpkgs-unstable {
     system = prev.system;
     config = {
       allowUnfree = true;
@@ -11,7 +12,7 @@ inputs: final: prev:
     };
   };
 
-  nur = import inputs.nur {
+  nur = import nur {
     pkgs = prev;
     nurpkgs = prev;
     repoOverrides = {
