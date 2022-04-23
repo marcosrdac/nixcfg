@@ -46,5 +46,4 @@
     keepassxc
     lxappearance
   ];
-
 }
