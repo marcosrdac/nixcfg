@@ -13,10 +13,9 @@ in
     enable = mkEnableOption "A test enable";
   };
 
-  #config = mkIf config.test.enable {
-  config = mkIf cfg.enable {
-    home.packages = with pkgs; [
+  config = {
+    home.packages = mkIf cfg.enable (with pkgs; [
       google-chrome-dev
-    ];
+    ]);
   };
 }

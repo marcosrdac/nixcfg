@@ -10,8 +10,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
-    {
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     homeConfigurations = rec {
       adam-marcosrdac = home-manager.lib.homeManagerConfiguration {
         system = "x86_64-linux";

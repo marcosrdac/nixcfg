@@ -69,13 +69,13 @@ in {
 #  # END DROPBOX
 
 
-  home.file = let
-    mkLink = config.lib.file.mkOutOfStoreSymlink;
-    dropbox-home = "${defaultDirs.XDG_DROPBOX_DIR}/home";
-  in {
-    dox.source = mkLink "${dropbox-home}/dox";
-    pix.source = mkLink "${dropbox-home}/pix";
-    pro.source = mkLink "${dropbox-home}/pro";
-    res.source = mkLink "${dropbox-home}/res";
-  };
+#  home.file = let
+#    mkLink = config.lib.file.mkOutOfStoreSymlink;
+#    dropbox-home = "${defaultDirs.XDG_DROPBOX_DIR}/home";
+#  in {
+#    dox.source = mkLink "${dropbox-home}/dox";
+#    pix.source = mkLink "${dropbox-home}/pix";
+#    pro.source = mkLink "${dropbox-home}/pro";
+#    res.source = mkLink "${dropbox-home}/res";
+#  };
 }
