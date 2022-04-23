@@ -40,7 +40,7 @@
         marcosrdac = {
 	  description = "Marcos Conceição";
           isNormalUser = true;
-          extraGroups = [ "wheel" "networkmanager" "vboxusers" "lp" ];
+          extraGroups = [ "nixcfg" "wheel" "networkmanager" "vboxusers" "lp" ];  # maybe lp should not be extra group but commom group? (just group idk)
         };
         guest = {
 	  description = "Guest";

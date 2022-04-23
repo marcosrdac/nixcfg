@@ -16,12 +16,12 @@ let
 in
 {
   imports = [
-    ./modules/module-a.nix
-    ./modules/shell
-    ./modules/graphics
-    ./modules/defaults
-    ./modules/appearance
-    ./modules/cloud
+    #./modules/module-a.nix
+    ./modules/home-manager/shell
+    ./modules/home-manager/graphics
+    ./modules/home-manager/defaults
+    ./modules/home-manager/appearance
+    ./modules/home-manager/cloud
   ];
 
   services.network-manager-applet.enable = true;

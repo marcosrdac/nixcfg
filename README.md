@@ -8,14 +8,18 @@
 
 #### For both system and user configuration: `/etc/nixos`
 
+As super user:
+
 ```sh
 # git clone git@github.com:marcosrdac/nixcfg.git /etc/nixos
 ```
 
 #### For user configuration only: `$XDG_CONFIG_HOME/nixpkgs`
 
+As normal user:
+
 ```sh
-$ git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
+git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
 ```
 
 ### Acquire flakes

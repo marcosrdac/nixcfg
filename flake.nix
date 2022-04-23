@@ -12,6 +12,10 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
     let
+      overlay = import ./overlay inputs;
+
+      lib = import ./lib { inherit inputs overlays; };
+
       hostsConfigs = (
         dir: builtins.listToAttrs (
           map (host: {
@@ -23,15 +27,6 @@
         dir: map (mod: dir + "/${mod}")
           (builtins.attrNames (builtins.readDir dir))
       ) ./lib/modules;
-      unstable-overlay = final: prev: {  # TODO: define these on ./lib/overlays
-        unstable = import inputs.nixpkgs-unstable {
-          system = prev.system;
-          config.allowUnfree = true;
-        };
-      };
-      overlayModules = [  # I find this ugly... Investigation needed
-        ({ ... }: { nixpkgs.overlays = [ unstable-overlay inputs.nur.overlay ]; })
-      ];
       mkHost = hostConfig:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";  # how to get from host?

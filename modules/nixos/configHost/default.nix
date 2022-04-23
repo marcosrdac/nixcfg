@@ -397,7 +397,6 @@ in
 	#hplipWithPlugin  # unfree-warning
       ];
     };
-
   
     programs.gnupg.agent = {
       enable = true;
@@ -410,13 +409,24 @@ in
     users.defaultUserShell = cfg.users.defaultUserShell;
 
     nix.allowedUsers = builtins.attrNames cfg.users.available;  # all of them
-    
-    users.extraGroups = let
-        allUsers = builtins.attrNames config.users.users;
-      in {
-       vboxusers.members = allUsers;
-      };
 
+    # below is not good: there are a lot of users in config.users.users
+    #users.extraGroups = let
+    #    allUsers = builtins.attrNames config.users.users;
+    #  in {
+    #   vboxusers.members = allUsers;
+    #  };
+
+    users.groups.nixcfg.gid = null;
+    system.activationScripts = {
+      nixos-config-permissions = ''
+        echo "setting up permissions for /etc/nixos..."
+        chgrp -R nixcfg /etc/nixos
+        find /etc/nixos -type d -exec chmod u=rwx,g=rwx,o=rx {} \;
+        find /etc/nixos -type f -exec chmod u=rw,g=rw,o=r {} \;
+      '';
+    };
+    
     networking = {
       networkmanager.enable = true;
 
