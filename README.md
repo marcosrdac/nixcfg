@@ -1,57 +1,96 @@
-# My Nix and NixOS configuration for multiple machines and users
+# My NixOS and Home Manager configurations
 
-## First instalation
+These configurations can be used differently to manage:
 
-### Set your ssh key up with github
+- current user configuration;
+- system configuration;
+- both system and user configurations at the same time;
 
-### Clone the repository
+If you are going to use SSH, you should be setting your ssh key up by now with GitHub.
 
-#### For both system and user configuration: `/etc/nixos`
 
-As super user:
+### Dependencies
 
-```sh
-# git clone git@github.com:marcosrdac/nixcfg.git /etc/nixos
-```
+You will need `Nix` with `Flakes` enabled to use my configurations.
 
-#### For user configuration only: `$XDG_CONFIG_HOME/nixpkgs`
-
-As normal user:
-
-```sh
-git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
-```
-
-### Acquire flakes
-
-I am not really confident of my first steps, but I know that, as far as NixOS 21.05, I had to install the unstable version of Nix to have access to `flakes` via:
+#### Acquire Flakes
 
 ```sh
 nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixUnstable
 ```
 
+#### Are you a normal user and does not have sudo access?
+
+Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default.
+
+
+## Current user configuration
+
+### Download
+
+```sh
+# https
+git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
+# ...or ssh
+git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
+```
+
+### Install <a name="user-install"></a>
+
+```sh
+home-manager switch --flake "~/.config/nixpkgs#$(hostname)-$USER"
+# i.e.: if my hostname is `adam` and my username is `marcosrdac`:
+home-manager switch --flake "~/.config/nixpkgs#adam-marcosrdac"
+```
+
+Observation: host is defined in `hosts` and my user configurations are defined in `users/$USER`
+TODO add a placeholder for non-NixOS machines I might use
+
+
+## System configuration
+
+### Clone the repository
+
+As super user:
+
+```sh
+# https
+git clone https://github.com/marcosrdac/nixcfg /etc/nixos
+# ...or ssh
+git clone git@github.com:marcosrdac/nixcfg.git /etc/nixos
+```
+
 ### Set system hostname
 
-Set your hostname: `flakes` will use it to setup the correct machine. Example for my `adam` desktop:
+Set your hostname: `Flakes` will use it to setup the correct machine. Example for my `adam` desktop:
 
 ```sh
 hostname adam
 ```
+
 
 ### Build system
 
 Then to build the machine for the first time:
 
 ```sh
-nixos-rebuild switch --flake "/etc/nixos#${HOSTNAME}"
+nixos-rebuild switch
+# ...or directly specifying the hostname and folder with
+nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
 ```
 
-## Rebuilding in the future
+
+## Both system and user configuration
+
+First instal system configuration, then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
 
 ```sh
-nixos-rebuild switch
+ln -s /etc/nixos /home/$USER/nixpkgs
 ```
+
+As a user, you can now use the installation commands from the [user section](#user-installation).
+
 
 ## Principles
 
@@ -64,11 +103,15 @@ nixos-rebuild switch
 - Users are to be able to use xinit from DM (if a DM is really wanted)
 - Consider creating nix file for overlays (maybe a module?)
 
+If you want graphics set up, you will also want my graphical session system configuration (NixOS) - TODO investigate how to remove such;
+
+
 ## Inspiration
 
 - [Pinpox' configurations](https://github.com/pinpox/nixos)
 - [Jordan Isaacs' configurations](https://github.com/jordanisaacs/dotfiles)
 - [Krutonium's configurations](https://github.com/Krutonium/My_Unified_NixOS_Config)
+- [Misterio77's configurations](https://github.com/Misterio77/nix-config)
 
 ## TODO
 
