@@ -1,49 +1,42 @@
 { inputs, overlays }:
 
+let
+  nixpkgs = {
+    inherit overlays;
+    config = {
+      allowUnfree = true;
+      allowBroken = true;  # TODO SPECIFY INSTEAD!
+    };
+  };
+in
 {
-  mkSystem =
-    { hostname
-    , system }:
-      inputs.nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit system hostname inputs; };
-        modules = builtins.attrValues (import ../modules/nixos) ++ [
-          ../hosts/${hostname}/configuration.nix
+  mkHost = { hostname }: inputs.nixpkgs.lib.nixosSystem rec {
+    system = import ../hosts/${hostname}/system.nix;  # TODO try to import from configuration.nix
+    specialArgs = { inherit system hostname inputs; };
+    modules = (import ../modules/nixos) ++ [
+      { inherit nixpkgs; }
+      ../hosts/${hostname}/configuration.nix
+    ];
+  };
 
-          {
-            nixpkgs = {
-              overlays = overlays;
-              config.allowUnfree = true;
-            };
-          }
-        ];
-      };
-
-  mkHome =
+  mkUser =
     { username
-    , system
     , hostname
     }:
-      inputs.home-manager.lib.homeManagerConfiguration {
-        inherit username system;
-        extraSpecialArgs = {
-          inherit system hostname inputs;
-        };
+      inputs.home-manager.lib.homeManagerConfiguration rec {
+        inherit username;
+        system = import ../hosts/${hostname}/system.nix;  # TODO try to import from configuration.nix
         homeDirectory = "/home/${username}";
-        configuration = ../users/${username}/home;
-        extraModules = builtins.attrValues (import ../modules/home-manager) ++ [
-          # Base configuration
+        extraSpecialArgs = { inherit system hostname inputs; };
+        extraModules = (import ../modules/home-manager) ++ [
           {
-            nixpkgs = {
-              inherit overlays;
-              config.allowUnfree = true;
-            };
+            inherit nixpkgs;
             programs = {
-              home-manager.enable = true;
-              git.enable = true;
+              #home-manager.enable = true;
+              #git.enable = true;
             };
-            systemd.user.startServices = "sd-switch";
           }
         ];
+        configuration = ../users/${username}/home.nix;
       };
 }

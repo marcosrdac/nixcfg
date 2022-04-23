@@ -17,11 +17,11 @@ in
 {
   imports = [
     #./modules/module-a.nix
-    ./modules/home-manager/shell
-    ./modules/home-manager/graphics
-    ./modules/home-manager/defaults
-    ./modules/home-manager/appearance
-    ./modules/home-manager/cloud
+    #./modules/home-manager/shell
+    #./modules/home-manager/graphics
+    #./modules/home-manager/defaults
+    #./modules/home-manager/appearance
+    #./modules/home-manager/cloud
   ];
 
   services.network-manager-applet.enable = true;
@@ -61,17 +61,17 @@ in
 
   home.sessionPath = [
     binHome
-  ] ++ (builtins.attrNames (linkChildren ./bin binHome));
+  ] ++ (builtins.attrNames (linkChildren ../../bin binHome));
 
   home.file = let
     mkLink = config.lib.file.mkOutOfStoreSymlink;
-  in linkChildren ./bin "${config.home.homeDirectory}/.local/bin";
+  in linkChildren ../../bin "${config.home.homeDirectory}/.local/bin";
 
   xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
     in {
       "GIMP" = {
-        source = ./config/GIMP;
+        source = ../../config/GIMP;
         recursive = true;
       };
     };

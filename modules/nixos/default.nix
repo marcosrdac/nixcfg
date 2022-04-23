@@ -1,0 +1,4 @@
+[
+  ./configHost
+  #./hello
+]
