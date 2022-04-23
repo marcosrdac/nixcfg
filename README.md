@@ -50,29 +50,38 @@ nixos-rebuild switch
 - [Jordan Isaacs' configurations](https://github.com/jordanisaacs/dotfiles)
 - [Krutonium's configurations](https://github.com/Krutonium/My_Unified_NixOS_Config)
 
-## TODO - General
+## TODO
 
-- [X] Overlay for unfree software
-- [X] Make system configuration default as a module
-- [X] Use configUsers module to create users listed for the host
-- [ ] Create usual GPT boot config in module
-- [ ] Handle overlays better (use ./lib/overlays)
+- [ ] Discover how to fuse different modules in one
+- [ ] Default python env should be easily accessable for data analysis stuff
 
-## TODO - user configurable X/Wayland sessions
+### Dream structure
 
-- [ ] Make a system module to create a system-wide xinit-session based on NixOS version of bspwm or any other wm to be selectable from DM
-- [ ] start with startxfce4 in ~/.xinit
-- [ ] Change from xfce to bspwm
-- [ ] Make home-manager modules for writing ~/.xinitrc ~/.xserverrc
+- `README.md`
+- `flake.nix`
+- `hosts`
+  - `adam`
+    - `README.md`
+    - `configuration.nix`
+    - `hardware-config.nix`
+    - `home.nix` (extra home-manager base config for this machine)
+- `users`
+  - `marcosrdac`
+    - `README.md`
+    - `home.nix` (main home-manager user configuration)
+    - `home-adam.nix` (extra home-manager machine-specific user configurations)
+  - `guest`
+    - `...`
+  - `neovim`
+    - (just a fast neovim set up)
+- `modules`
+  - `system`
+  - `user`
+- `overlays`
+  - `default.nix` (my neovim configs are made as an overlay)
 
-... if doesn't work for riverwm
-- [ ] Make a system module to create a system-wide wayland-session based on NixOS version of sway or any other wayland wm to be selectable from DM
 
 ### Reading tips
 
 - [NixOS module](https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/x11/window-managers/i3.nix)
 - [Home-manager module](https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm/default.nix)
-
-
-## My personal desires
-- [ ] Default python env should be easily accessable for data analysis stuff
