@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-
-home-manager switch --flake "$HOME/.config/nixpkgs#$(hostname)-${USER}" || home-manager switch --flake "$HOME/.config/nixpkgs#$(hostname)-${USER}"

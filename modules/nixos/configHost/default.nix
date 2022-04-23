@@ -16,6 +16,13 @@ in
         example = "marcos-desktop";
       };
 
+      system = mkOption {
+        type = with types; uniq str;
+        description = "System architecture";
+        default = "x86_64-linux";
+        example = "x86_64-linux";
+      };
+
       timeZone = mkOption {
         type = with types; uniq str;
         description = "Host time zone";
@@ -33,7 +40,7 @@ in
       stateVersion = mkOption {
         type = with types; uniq str;
         description = "NixOS state version";
-        default = "21.05";
+        default = "21.11";
         example = "21.11";
       };
     };
@@ -42,7 +49,7 @@ in
       available = mkOption {
         type = with types; attrs;
         description = "Set of users for the machine";
-        default = {
+        default = {  # TODO transform in literal string
           "marcosrdac" = {
             isNormalUser = true;
             extraGroups = [ "wheel" ];
@@ -77,9 +84,10 @@ in
           '';
           device = mkOption {
             type = with types; uniq str;
-            description = ''
+            description = 
+            ''
               Drive device ID (not to be confused with partition ID) in which to install GRUB. Can be gotten from ls TODO
-            '';
+            '';  # TODO
             default = null;
             example = "/dev/disk/by-id/ata-KINGSTON_SA400S37960G_0123456789ABCDEF";
           };

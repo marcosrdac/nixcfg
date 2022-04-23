@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+
+CLASS=`basename $0`
+[ $# -gt 1 ] && CHOICENAME=${1} && shift || CHOICENAME=$CLASS
+PROMPT=${1}
+RUNDIR="${XDG_RUNTIME_DIR:-"/run/user/$UID"}/tchoice"
+CHOICEFILE="$RUNDIR/$CHOICENAME"
+[ -d "$RUNDIR" ] || mkdir "$RUNDIR"
+
+# closing old windows
+[ -z "$WAYLAND_DISPLAY" ] && DOTOOL=xdotool || DOTOOL=ydotool
+oldpids=`$DOTOOL search --class "$CLASS" getwindowpid %@`
+for pid in $oldpids
+do
+  kill $pid
+done
+
+# specific options
+case `basename $TERMINAL` in
+  alacritty)
+    geometry='--option window.dimensions.columns=40 --option window.dimensions.lines=10'
+    class="--class $CHOICENAME,$CLASS" ;;
+  st)
+    #geometry='[=][<cols>{xX}<rows>][{+-}<xoffset>{+-}<yoffset>]'
+    class="-c $CLASS -n $CHOICENAME" ;;
+esac
+run=${run:-'-e'}
+
+# run terminal
+$TERMINAL $class $geometry $extra $run sh -c \
+  "printf '`</dev/stdin`' | fzy -p '$PROMPT' > '$CHOICEFILE'"
+
+# print choice
+printf "`<$CHOICEFILE`"
+printf '' > "$CHOICEFILE"

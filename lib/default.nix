@@ -8,27 +8,34 @@ let
       allowBroken = true;  # TODO SPECIFY INSTEAD!
     };
   };
-in
-{
+  getSystem = {hostname ? null, username ? null }: let
+    host-configuration = ../hosts/${hostname}/configuration.nix;
+    nullInputs = { config = null; pkgs = null; };
+  in if builtins.pathExists host-configuration
+    then (import host-configuration nullInputs).hostConfig.machine.system
+    else (import ../users/${username}/hosts/${hostname} nullInputs).system;
+in rec {
+
   mkHost = { hostname }: inputs.nixpkgs.lib.nixosSystem rec {
-    system = import ../hosts/${hostname}/system.nix;  # TODO try to import from configuration.nix
+    system = getSystem { inherit hostname; };
     specialArgs = { inherit system hostname inputs; };
-    modules = (import ../modules/nixos) ++ [
-      { inherit nixpkgs; }
-      ../hosts/${hostname}/configuration.nix
-    ];
+    modules = #(import ../modules/common) ++
+      (import ../modules/nixos)
+      ++ [
+        { inherit nixpkgs; }
+        ../hosts/${hostname}/configuration.nix
+      ];
   };
 
-  mkUser =
-    { username
-    , hostname
-    }:
-      inputs.home-manager.lib.homeManagerConfiguration rec {
-        inherit username;
-        system = import ../hosts/${hostname}/system.nix;  # TODO try to import from configuration.nix
-        homeDirectory = "/home/${username}";
-        extraSpecialArgs = { inherit system hostname inputs; };
-        extraModules = (import ../modules/home-manager) ++ [
+  mkUser = { username , hostname }:
+    inputs.home-manager.lib.homeManagerConfiguration rec {
+      inherit username;
+      system = getSystem { inherit hostname username; };
+      homeDirectory = "/home/${username}";
+      extraSpecialArgs = { inherit system hostname inputs; };
+      extraModules = (import ../modules/common)
+        ++ (import ../modules/home-manager)
+        ++ [
           {
             inherit nixpkgs;
             programs = {
@@ -37,6 +44,6 @@ in
             };
           }
         ];
-        configuration = ../users/${username}/home.nix;
-      };
+      configuration = ../users/${username}/home.nix;
+    };
 }

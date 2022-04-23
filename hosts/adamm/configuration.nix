@@ -13,6 +13,7 @@
       hostName = "adam";
       timeZone = "Brazil/East";
       locale = "en_US.UTF-8";
+      system = "x86_64-linux";
       stateVersion = "21.11";
     };
 

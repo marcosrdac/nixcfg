@@ -10,7 +10,7 @@ in
   ];
 
   options.test-abc = {
-    enable = mkEnableOption "A test enable";
+    enable = mkEnableOption "An enable otion";
   };
 
   config = {

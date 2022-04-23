@@ -5,4 +5,5 @@
   ./graphics
   ./module-a.nix
   ./shell
+  ./system
 ]

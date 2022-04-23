@@ -14,6 +14,12 @@
     let
       overlays = [ (import ./overlays inputs) ];
       lib = import ./lib { inherit inputs overlays; };
+      getExtraHosts = username: let
+        user-hosts = ./users/${username}/hosts;
+      in
+        if (builtins.pathExists user-hosts) 
+        then (builtins.attrNames (builtins.readDir user-hosts))
+        else [];
       hosts = builtins.attrNames (builtins.readDir ./hosts);
       users = builtins.attrNames (builtins.readDir ./users);
     in {
@@ -22,8 +28,11 @@
         value = lib.mkHost { inherit hostname; };
       }) hosts);
       homeConfigurations = let
+        #hostUserPairs = nixpkgs.lib.lists.flatten (
+        #  map (hostname: map (username: { inherit hostname username; }) users) hosts
+        #);
         hostUserPairs = nixpkgs.lib.lists.flatten (
-          map (hostname: map (username: { inherit hostname username; }) users) hosts
+          map (username: map (hostname: { inherit hostname username; }) (nixpkgs.lib.lists.unique (hosts ++ (getExtraHosts username))) ) users
         );
       in
         builtins.listToAttrs (map (pair: {

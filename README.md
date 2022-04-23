@@ -6,23 +6,53 @@ These configurations can be used differently to manage:
 - system configuration;
 - both system and user configurations at the same time;
 
-If you are going to use SSH, you should be setting your ssh key up by now with GitHub.
+## Principles
+
+- NixOS should be easy to reinstall and be ready to use --- so that I no longer feel attached to my machines
+- Each host should have its own configuration file inside ./hosts
+- All frequently used boilerplate should be modularized in ./modules so that a computer configuration is always clear and easy to be made intuitively
+- A user should not need be forced use home-manager. Each user is responsible for using the system as wished (imperatively or declaratively)
+- Each user should be able to configure their own WM/GE without having to contact the system admin
+
+## Structure
+
+- `hosts`
+  - `adam`
+    - `configuration.nix`
+    - `system.nix`
+    - `hardware-config.nix`
+    - `home.nix` (extra home-manager base config for this machine)
+- `users`
+  - `marcosrdac`
+    - `home.nix` (main home-manager user configuration)
+    - `home-adam.nix` (extra home-manager machine-specific user configurations)
+  - `guest`
+  - `vim` (just an easy to use neovim setup)
+- `overlays`
+  - `default.nix` (i.e.: my neovim configs as an overlay)
+- `modules`
+  - `nixos`
+  - `home-manager`
 
 
-### Dependencies
+## Dependencies
 
-You will need `Nix` with `Flakes` enabled to use my configurations.
+You will need `Nix` with `Flakes` enabled to use my configurations, as well as `git`.
 
-#### Acquire Flakes
+### Acquire Flakes
 
 ```sh
 nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixUnstable
 ```
 
-#### Are you a normal user and does not have sudo access?
+### Are you a normal user and does not have sudo access?
 
 Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default.
+
+### Reminder before instalation
+
+If you are going to use SSH, you should be setting your ssh key up with GitHub by now.
 
 
 ## Current user configuration
@@ -48,7 +78,7 @@ Observation: host is defined in `hosts` and my user configurations are defined i
 TODO add a placeholder for non-NixOS machines I might use
 
 
-## <a name="system-install"/> System configuration
+## <a name="system-config"/> System configuration
 
 ### Clone the repository
 
@@ -83,27 +113,13 @@ nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
 
 ## Both system and user configuration
 
-First [instal system configuration](#system-install), then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
+Start by [configuring the system](#system-config), then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
 
 ```sh
 ln -s /etc/nixos /home/$USER/nixpkgs
 ```
 
-As a user, you can now use the installation commands from the [user install section](#user-install).
-
-
-## Principles
-
-- NixOS should be easy to reinstall and be ready to use --- so that I no longer feel attached to my machines
-- Each host should have its own configuration file inside ./hosts
-- Almost every config should be modularized in ./lib/modules so that a computer configuration is always clear
-- Personal stuff should not be in this repository
-- Each user is responsible for using the system as wished (via personal config repositories and HomeManager or not)
-- Each user configures their own WM/GE without having to ask root
-- Users are to be able to use xinit from DM (if a DM is really wanted)
-- Consider creating nix file for overlays (maybe a module?)
-
-If you want graphics set up, you will also want my graphical session system configuration (NixOS) - TODO investigate how to remove such;
+As a user, you can now use the installation commands from the [user install section](#user-install) to configure your space.
 
 
 ## Inspiration
@@ -113,35 +129,12 @@ If you want graphics set up, you will also want my graphical session system conf
 - [Krutonium's configurations](https://github.com/Krutonium/My_Unified_NixOS_Config)
 - [Misterio77's configurations](https://github.com/Misterio77/nix-config)
 
+
 ## TODO
 
-- [ ] Discover how to fuse different modules in one
-- [ ] Default python env should be easily accessable for data analysis stuff
-
-### Dream structure
-
-- `README.md`
-- `flake.nix`
-- `hosts`
-  - `adam`
-    - `README.md`
-    - `configuration.nix`
-    - `hardware-config.nix`
-    - `home.nix` (extra home-manager base config for this machine)
-- `users`
-  - `marcosrdac`
-    - `README.md`
-    - `home.nix` (main home-manager user configuration)
-    - `home-adam.nix` (extra home-manager machine-specific user configurations)
-  - `guest`
-    - `...`
-  - `neovim`
-    - (just a fast neovim set up)
-- `modules`
-  - `system`
-  - `user`
-- `overlays`
-  - `default.nix` (my neovim configs are made as an overlay)
+- [ ] Discover how to fuse different modules in one.
+- [ ] Default python env should be easily accessable for data analysis stuff.
+- [ ] I want to be able to install and use my WM configuration on any computer (use xinit and stuff, instead of xinit-hm).
 
 
 ### Reading tips
