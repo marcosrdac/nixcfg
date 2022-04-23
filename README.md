@@ -36,7 +36,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
 git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
 ```
 
-### <a name="userinstall" /> Install
+### <a name="user-install"/> Install
 
 ```sh
 home-manager switch --flake "~/.config/nixpkgs#$(hostname)-$USER"
@@ -48,7 +48,7 @@ Observation: host is defined in `hosts` and my user configurations are defined i
 TODO add a placeholder for non-NixOS machines I might use
 
 
-## System configuration
+## <a name="system-install"/> System configuration
 
 ### Clone the repository
 
@@ -83,13 +83,13 @@ nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
 
 ## Both system and user configuration
 
-First instal system configuration, then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
+First [instal system configuration](#system-install), then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
 
 ```sh
 ln -s /etc/nixos /home/$USER/nixpkgs
 ```
 
-As a user, you can now use the installation commands from the [user section](#userinstall).
+As a user, you can now use the installation commands from the [user install section](#user-install).
 
 
 ## Principles
