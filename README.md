@@ -36,7 +36,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
 git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
 ```
 
-### [Install](#user-install)
+### <a name="userinstall" /> Install
 
 ```sh
 home-manager switch --flake "~/.config/nixpkgs#$(hostname)-$USER"
@@ -89,7 +89,7 @@ First instal system configuration, then symlink `/etc/nixos` to `/home/$USER/nix
 ln -s /etc/nixos /home/$USER/nixpkgs
 ```
 
-As a user, you can now use the installation commands from the [user section](#user-installation).
+As a user, you can now use the installation commands from the [user section](#userinstall).
 
 
 ## Principles
