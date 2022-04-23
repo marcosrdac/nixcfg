@@ -25,7 +25,8 @@ These configurations can be used differently to manage:
 - `users`
   - `marcosrdac`
     - `home.nix` (main home-manager user configuration)
-    - `home-adam.nix` (extra home-manager machine-specific user configurations)
+    - `hosts`
+      - `marreca` (extra home-manager machine-specific user configurations --- for machines that are not mine or are not running NixOS)
   - `guest`
   - `vim` (just an easy to use neovim setup)
 - `overlays`

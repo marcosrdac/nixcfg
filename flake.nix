@@ -28,9 +28,6 @@
         value = lib.mkHost { inherit hostname; };
       }) hosts);
       homeConfigurations = let
-        #hostUserPairs = nixpkgs.lib.lists.flatten (
-        #  map (hostname: map (username: { inherit hostname username; }) users) hosts
-        #);
         hostUserPairs = nixpkgs.lib.lists.flatten (
           map (username: map (hostname: { inherit hostname username; }) (nixpkgs.lib.lists.unique (hosts ++ (getExtraHosts username))) ) users
         );
