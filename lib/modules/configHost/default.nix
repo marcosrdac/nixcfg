@@ -411,10 +411,11 @@ in
 
     nix.allowedUsers = builtins.attrNames cfg.users.available;  # all of them
     
-    #users.extraGroups = {
-    #   vboxusers.members = [ "marcosrdac" ];
-    #};
-
+    users.extraGroups = let
+        allUsers = builtins.attrNames config.users.users;
+      in {
+       vboxusers.members = allUsers;
+      };
 
     networking = {
       networkmanager.enable = true;
