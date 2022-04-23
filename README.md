@@ -36,7 +36,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
 git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
 ```
 
-### Install <a name="user-install"></a>
+### [Install](#user-install)
 
 ```sh
 home-manager switch --flake "~/.config/nixpkgs#$(hostname)-$USER"
