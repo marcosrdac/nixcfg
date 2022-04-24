@@ -21,17 +21,17 @@ These configurations can be used differently to manage:
     - `configuration.nix`
     - `system.nix`
     - `hardware-config.nix`
-    - `home.nix` (extra home-manager base config for this machine)
+    - `home.nix`: extra home-manager base config for this machine
 - `users`
   - `marcosrdac`
-    - `home.nix` (main home-manager user configuration)
+    - `home.nix`: main home-manager user configuration
     - `hosts`
-      - `marreca` (extra home-manager machine-specific user configurations --- for machines that are not mine or are not running NixOS)
+      - `uncle`: extra home-manager machine-specific user configurations (for machines that are not mine or are not running NixOS)
   - `guest`
-  - `vim` (just an easy to use neovim setup)
-- `overlays`
-  - `default.nix` (i.e.: my neovim configs as an overlay)
+  - `vim`: just an easy to use neovim setup
+- `overlays`: i.e.: my neovim configs and plugins as an overlay
 - `modules`
+  - `common` (modules)
   - `nixos`
   - `home-manager`
 
