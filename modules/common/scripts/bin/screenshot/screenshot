@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 XDG_PICTURES_DIR=${XDG_PICTURES_DIR:-"$HOME/Pictures"}
 XDG_SCREENSHOT_DIR=${XDG_SCREENSHOT_DIR:-"$XDG_PICTURES_DIR"}

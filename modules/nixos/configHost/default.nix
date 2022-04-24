@@ -418,7 +418,7 @@ in
 
     nix.allowedUsers = builtins.attrNames cfg.users.available;  # all of them
 
-    # below is not good: there are a lot of users in config.users.users
+    # below is not good: there are a lot of users in config.users.users  # TODO use attrNames cfg.users.available
     #users.extraGroups = let
     #    allUsers = builtins.attrNames config.users.users;
     #  in {
@@ -431,7 +431,7 @@ in
         echo "setting up permissions for /etc/nixos..."
         chgrp -R nixcfg /etc/nixos
         find /etc/nixos -type d -exec chmod u=rwx,g=rwx,o=rx {} \;
-        find /etc/nixos -type f -exec chmod u=rw,g=rw,o=r {} \;
+        find /etc/nixos -type f -exec chmod u+rw,g+rw,o+r {} \;
       '';
     };
     

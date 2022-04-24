@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configurations";
+  description = "NixOS and Home Manager setup";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
@@ -10,31 +10,29 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
-    let
-      overlays = [ (import ./overlays inputs) ];
-      lib = import ./lib { inherit inputs overlays; };
-      getExtraHosts = username: let
-        user-hosts = ./users/${username}/hosts;
-      in
-        if (builtins.pathExists user-hosts) 
-        then (builtins.attrNames (builtins.readDir user-hosts))
-        else [];
-      hosts = builtins.attrNames (builtins.readDir ./hosts);
-      users = builtins.attrNames (builtins.readDir ./users);
-    in {
-      nixosConfigurations = builtins.listToAttrs (map (hostname: {
-        name = hostname;
-        value = lib.mkHost { inherit hostname; };
-      }) hosts);
-      homeConfigurations = let
-        hostUserPairs = nixpkgs.lib.lists.flatten (
-          map (username: map (hostname: { inherit hostname username; }) (nixpkgs.lib.lists.unique (hosts ++ (getExtraHosts username))) ) users
-        );
-      in
-        builtins.listToAttrs (map (pair: {
-          name = "${pair.hostname}-${pair.username}";
-          value = lib.mkUser pair;
-        }) hostUserPairs);
-    };
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: with builtins; let
+    overlays = [ (import ./overlays inputs) ];
+    lib = import ./lib { inherit inputs overlays; };
+    getExtraHosts = username: let
+      user-hosts = ./users/${username}/hosts;
+    in
+      nixpkgs.lib.optionals (pathExists user-hosts) (attrNames (readDir user-hosts));
+    hosts = attrNames (readDir ./hosts);
+    users = attrNames (readDir ./users);
+  in {
+    nixosConfigurations = listToAttrs (map (hostname: {
+      name = hostname;
+      value = lib.mkHost { inherit hostname; };
+    }) hosts);
+    homeConfigurations = let
+      getUserHosts = username: nixpkgs.lib.unique (hosts ++ getExtraHosts username);
+      user-host-pairs = nixpkgs.lib.flatten (
+        map (username: map (hostname: { inherit hostname username; }) (getUserHosts username) ) users
+      );
+    in
+      listToAttrs (map (pair: {
+        name = "${pair.hostname}-${pair.username}";
+        value = lib.mkUser pair;
+      }) user-host-pairs);
+  };
 }
