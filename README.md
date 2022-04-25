@@ -132,7 +132,7 @@ As a normal user, you can now use the installation commands from the [user insta
 
 ## TODO
 
-- [ ] Discover how to fuse different modules in one.
+- [ ] Get options to custom home-manager modules (xorg vs wayland, etc).
 - [ ] Default python env should be easily accessable for data analysis stuff.
 - [ ] I want to be able to install and use my WM configuration on any computer (use xinit and stuff, instead of xinit-hm).
 
