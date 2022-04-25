@@ -12,7 +12,7 @@
   #  };
   #};
 
-  default.packages = {
+  packages = {
     enable = true;
     design = true;
   };

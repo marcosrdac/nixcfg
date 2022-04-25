@@ -2,10 +2,10 @@
 
 with lib;
 let
-  cfg = config.default.boot;
+  cfg = config.bootTemplates;
 in
 {
-  options.default.boot = {
+  options.bootTemplates = {
     enable = mkEnableOption "Enable default host configuration";
 
     portable = {

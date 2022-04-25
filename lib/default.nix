@@ -53,7 +53,6 @@ rec {
           {
             inherit nixpkgs;
             programs = {
-              home-manager.enable = true;
               git.enable = true;
             };
           }

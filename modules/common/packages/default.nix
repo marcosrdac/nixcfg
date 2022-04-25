@@ -2,10 +2,10 @@
 
 with pkgs.lib;
 let
-  cfg = config.default.packages;
+  cfg = config.packages;
 in
 {
-  options.default.packages = {
+  options.packages = {
     enable = mkEnableOption "Enable default package management";
 
     basic = mkOption {

@@ -2,10 +2,10 @@
 
 with lib;
 let
-  cfg = config.default.graphical;
+  cfg = config.graphics;
 in
 {
-  options.default.graphical = {
+  options.graphics = {
     enable = mkEnableOption "Enable default host configuration";
 
     # TODO default false?

@@ -1,11 +1,11 @@
 [
   ./nix
-  ./boot
-  ./users
+  ./boot-templates
+  ./host-users
   ./variables
   ./encription
   ./mount
-  ./graphical
+  ./graphics
   ./keyboard
   ./mouse
   ./audio

@@ -2,10 +2,10 @@
 
 with lib;
 let
-  cfg = config.default.users;
+  cfg = config.hostUsers;
 in
 {
-  options.default.users = {
+  options.hostUsers = {
 
     available = mkOption {
       type = with types; attrs;

@@ -46,7 +46,7 @@
     enable = true;
   };
 
-  default.users = {
+  hostUsers = {
     available = {
       marcosrdac = {
         description = "Marcos Conceição";
@@ -61,17 +61,17 @@
     defaultGroups = [ "networkmanager" "lp" ];
   };
 
-  default.graphical = {
+  graphics = {
     enable = true;
   };
 
-  default.packages = {
+  packages = {
     enable = true;
     design = true;
     #extra = [ ];
   };
 
-  default.boot = {
+  bootTemplates = {
     enable = true;
     portable = {
       enable = true;
