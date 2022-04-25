@@ -25,8 +25,7 @@ These configurations can be used differently to manage:
 - `users`
   - `marcosrdac`
     - `home.nix`: main home-manager user configuration
-    - `hosts`
-      - `uncle`: extra home-manager machine-specific user configurations (for machines that are not mine or are not running NixOS)
+    - `hosts`: extra home-manager machine-specific user configurations (for machines that are not mine or are not running NixOS)
   - `guest`
   - `vim`: just an easy to use neovim setup
 - `overlays`: i.e.: my neovim configs and plugins as an overlay
