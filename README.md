@@ -30,7 +30,7 @@ These configurations can be used differently to manage:
   - `vim`: just an easy to use neovim setup
 - `overlays`: i.e.: my neovim configs and plugins as an overlay
 - `modules`
-  - `common` (modules)
+  - `common`
   - `nixos`
   - `home-manager`
 
