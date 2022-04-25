@@ -2,17 +2,19 @@
 
 These configurations can be used differently to manage:
 
-- current user configuration;
-- system configuration;
-- both system and user configurations at the same time;
+- the current user configuration;
+- the system configuration;
+- both system and user configurations at the same time.
+
 
 ## Principles
 
-- NixOS should be easy to reinstall and be ready to use --- so that I no longer feel attached to my machines
-- Each host should have its own configuration file inside ./hosts
-- All frequently used boilerplate should be modularized in ./modules so that a computer configuration is always clear and easy to be made intuitively
-- A user should not need be forced use home-manager. Each user is responsible for using the system as wished (imperatively or declaratively)
-- Each user should be able to configure their own WM/GE without having to contact the system admin
+- NixOS should be easy to reinstall and be ready to use — so that I no longer feel attached to my machines.
+- Each host should have its own configuration file inside `./hosts`.
+- All frequently used boilerplate should be modularized in `./modules` so that a computer configuration is always clear and easy to be made intuitively.
+- A user should not need be forced use `home-manager`. Each user is responsible for using the system as wished (imperatively or declaratively).
+- Each user should be able to configure their own WM/GE without having to contact the system admin.
+
 
 ## Structure
 
@@ -39,6 +41,7 @@ These configurations can be used differently to manage:
 
 You will need `Nix` with `Flakes` enabled to use my configurations, as well as `git`.
 
+
 ### Acquire Flakes
 
 ```sh
@@ -46,9 +49,11 @@ nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixUnstable
 ```
 
+
 ### Are you a normal user and does not have sudo access?
 
 Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default.
+
 
 ### Reminder before instalation
 
@@ -65,6 +70,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
 # ...or ssh
 git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
 ```
+
 
 ### <a name="user-install"/> Install
 
@@ -91,7 +97,7 @@ git clone https://github.com/marcosrdac/nixcfg /etc/nixos
 git clone git@github.com:marcosrdac/nixcfg.git /etc/nixos
 ```
 
-### Set system hostname
+### Set the system hostname
 
 Set your hostname: `Flakes` will use it to setup the correct machine. Example for my `adam` desktop:
 
@@ -119,7 +125,7 @@ Start by [configuring the system](#system-config), then symlink `/etc/nixos` to 
 ln -s /etc/nixos /home/$USER/nixpkgs
 ```
 
-As a normal user, you can now use the installation commands from the [user install section](#user-install) to configure your space.
+Now, as a normal user, you can now run the installation commands in the [user install section](#user-install) to configure your home space.
 
 
 ## Inspiration
@@ -132,7 +138,7 @@ As a normal user, you can now use the installation commands from the [user insta
 
 ## TODO
 
-- [ ] Get options to custom home-manager modules (xorg vs wayland, etc).
+- [ ] Make options in my `home-manager` modules (xorg vs wayland, etc).
 - [ ] Default python env should be easily accessable for data analysis stuff.
 - [ ] I want to be able to install and use my WM configuration on any computer (use xinit and stuff, instead of xinit-hm).
 
