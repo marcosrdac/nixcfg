@@ -1,3 +1,5 @@
 [
+  ./host
+  ./packages
   ./scripts
 ]

@@ -12,7 +12,7 @@
 
   xsession = {
     enable = true;
-    scriptPath = ".hm-xsession";
+    scriptPath = ".xsession";
     profileExtra = "${pkgs.feh}/bin/feh --bg-scale ${config.xdg.dataHome}/appearance/wallpaper";
     #profilePath = ".hm-profile";  # apparently does not change it
   };

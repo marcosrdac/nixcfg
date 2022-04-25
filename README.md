@@ -120,7 +120,7 @@ Start by [configuring the system](#system-config), then symlink `/etc/nixos` to 
 ln -s /etc/nixos /home/$USER/nixpkgs
 ```
 
-As a user, you can now use the installation commands from the [user install section](#user-install) to configure your space.
+As a normal user, you can now use the installation commands from the [user install section](#user-install) to configure your space.
 
 
 ## Inspiration

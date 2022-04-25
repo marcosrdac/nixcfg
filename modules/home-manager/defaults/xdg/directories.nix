@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+# TODO maybe unify it with variables
 
 let
   defaultDirs = rec {

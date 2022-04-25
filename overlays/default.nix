@@ -1,18 +1,14 @@
 inputs: final: prev:
 
-with inputs;
-{
-  unstable = import nixpkgs-unstable {
+rec {
+  unstable = import inputs.nixpkgs-unstable {
     system = prev.system;
     config = {
       allowUnfree = true;
-      permittedInsecurePackages = [
-        "xpdf-4.03"
-      ];
     };
   };
 
-  nur = import nur {
+  nur = import inputs.nur {
     pkgs = prev;
     nurpkgs = prev;
     repoOverrides = {
@@ -21,6 +17,9 @@ with inputs;
   };
 
   neovim = (import ./neovim) final prev;
+
+  alacritty = unstable.alacritty;  # symlink autoreload on v0.10
+
 }
 
 

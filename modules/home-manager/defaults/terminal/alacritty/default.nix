@@ -3,7 +3,7 @@
 {
   programs.alacritty = {
     enable = true;
-    package = pkgs.unstable.alacritty;  # symlink autoreload on v0.10
+    package = pkgs.alacritty;
   };
 
   xdg.configFile = {

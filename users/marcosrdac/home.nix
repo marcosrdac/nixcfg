@@ -12,6 +12,11 @@
   #  };
   #};
 
+  default.packages = {
+    enable = true;
+    design = true;
+  };
+
   services.network-manager-applet.enable = true;
 
   home.keyboard = {
@@ -20,8 +25,6 @@
     variant = "intl";
     options = [ "caps:swapescape" ];
   };
-
-  programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
     #(callPackage (import ./packages/nvim) {})

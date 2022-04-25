@@ -11,7 +11,6 @@ in
   imports = [
     ./xdg
     ./basic
-    ./fonts
     ./terminal
     ./text-editor
     ./text-pager

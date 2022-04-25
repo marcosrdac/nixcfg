@@ -6,7 +6,10 @@ let
     inherit overlays;
     config = {
       allowUnfree = true;
-      allowBroken = true;  # TODO SPECIFY INSTEAD!
+      #allowBroken = true;
+      permittedInsecurePackages = [
+        "xpdf-4.03"
+      ];
     };
   };
 
@@ -21,8 +24,8 @@ let
     users-host-config = getUsersHostConfig host-and-user;
     nulls = { config = null; pkgs = null; };
   in if pathExists host-config
-    then (import host-config nulls).hostConfig.machine.system
-    else (import users-host-config nulls).system;
+    then (import host-config nulls).host.system
+    else (import users-host-config nulls).host.system;
 in
 
 rec {

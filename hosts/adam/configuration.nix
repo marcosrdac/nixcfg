@@ -6,51 +6,78 @@
     #./nvidia.nix
   ];
 
-  hostConfig = {
+  host = {
+    name = "adam";
+    zone = "Brazil/East";
+    locale = "en_US.UTF-8";
+    system = "x86_64-linux";
+    nixos = "21.11";
+  };
+
+  keyboard = {
     enable = true;
-
-    machine = {
-      hostName = "adam";
-      timeZone = "Brazil/East";
-      locale = "en_US.UTF-8";
-      system = "x86_64-linux";
-      stateVersion = "21.11";
+    xorg = {
+      layout = "us";
+      variant = "intl";
+      options = "caps:swapescape";
     };
+    console = {
+      layout = "us";
+    };
+  };
 
-    boot = {
-      loader.portable = {
-        enable = true;
-        device = "/dev/disk/by-id/ata-KINGSTON_SA400S37960G_0123456789ABCDEF";
-        efiSysMountPoint = "/efi";
+  print = {
+    enable = true;
+    drivers = with pkgs; [ epson-escpr ];
+  };
+
+  network = {
+    enable = true;
+    interfaces = [ "enp2s0" "wlp3s0" ];
+    sshServer = true;
+  };
+
+  variables = {
+    enable = true;
+    overrides = { };
+  };
+
+  audio = {  # uneeded
+    enable = true;
+  };
+
+  default.users = {
+    available = {
+      marcosrdac = {
+        description = "Marcos Conceição";
+        isNormalUser = true;
+        extraGroups = [ "nixcfg" "wheel" "vboxusers" ];
       };
-      tmpOnTmpfs = false;
-    };
-
-    devices = {
-      network = {
-        interfaces = [ "enp2s0" "wlp3s0" ];
+      guest = {
+        description = "Guest";
+        isNormalUser = true;
       };
     };
+    defaultGroups = [ "networkmanager" "lp" ];
+  };
 
-    packages = with pkgs; {
-      extra = [ ];
+  default.graphical = {
+    enable = true;
+  };
+
+  default.packages = {
+    enable = true;
+    design = true;
+    #extra = [ ];
+  };
+
+  default.boot = {
+    enable = true;
+    portable = {
+      enable = true;
+      device = "/dev/disk/by-id/ata-KINGSTON_SA400S37960G_0123456789ABCDEF";
     };
-
-    users = {
-      available = {
-        marcosrdac = {
-	  description = "Marcos Conceição";
-          isNormalUser = true;
-          extraGroups = [ "nixcfg" "wheel" "networkmanager" "vboxusers" "lp" ];  # maybe lp should not be extra group but commom group? (just group idk)
-        };
-        guest = {
-	  description = "Guest";
-          isNormalUser = true;
-          extraGroups = [ "networkmanager" "lp" ];
-        };
-      };
-    };
-
+    tmpOnTmpfs = false;
   };
 
   services.logind.extraConfig = ''

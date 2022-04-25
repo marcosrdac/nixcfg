@@ -1,4 +1,15 @@
 [
-  ./configHost
-  #./hello
+  ./nix
+  ./boot
+  ./users
+  ./variables
+  ./encription
+  ./mount
+  ./graphical
+  ./keyboard
+  ./mouse
+  ./audio
+  ./network
+  ./print
+  #./nvidia
 ]
