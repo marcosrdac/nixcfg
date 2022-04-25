@@ -13,12 +13,13 @@
   outputs = { self, nixpkgs, home-manager, ... }@inputs: with builtins; let
     overlays = [ (import ./overlays inputs) ];
     lib = import ./lib { inherit inputs overlays; };
+    hosts = attrNames (readDir ./hosts);
+    users = attrNames (readDir ./users);
     getExtraHosts = username: let
       user-hosts = ./users/${username}/hosts;
     in
       nixpkgs.lib.optionals (pathExists user-hosts) (attrNames (readDir user-hosts));
-    hosts = attrNames (readDir ./hosts);
-    users = attrNames (readDir ./users);
+    
   in {
     nixosConfigurations = listToAttrs (map (hostname: {
       name = hostname;
