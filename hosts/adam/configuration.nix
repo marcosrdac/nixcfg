@@ -61,7 +61,7 @@
     defaultGroups = [ "networkmanager" "lp" ];
   };
 
-  graphics = {
+  gui = {
     enable = true;
   };
 

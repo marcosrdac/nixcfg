@@ -44,7 +44,7 @@ rec {
     inputs.home-manager.lib.homeManagerConfiguration rec {
       inherit username;
       system = getSystem args;
-      homeDirectory = "/home/${username}";
+      homeDirectory = if username == "root" then "/root" else "/home/${username}";
       extraSpecialArgs = { inherit system hostname inputs; nixos = false; };
       extraModules = (import ../modules/common)
         ++ (import ../modules/home-manager)

@@ -4,10 +4,8 @@
   services.polybar = {
     enable = true;
     package = pkgs.unstable.polybar;
-    script = pkgs.lib.strings.fileContents ./script;
-    extraConfig = builtins.concatStringsSep "\n" [
-      (pkgs.lib.strings.fileContents ./config)
-    ];
+    script = pkgs.lib.fileContents ./script;
+    extraConfig = pkgs.lib.fileContents ./config;
   };
 
   home.sessionPath = [ "./bin" ];

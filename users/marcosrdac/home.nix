@@ -1,9 +1,18 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ];
+  gui.bspwm.enable = true;
 
-  #xdg.configFile = let
+  home.keyboard = {
+    layout = "us";
+    variant = "intl";
+    options = [ "caps:swapescape" ];
+  };
+  #home.keyboard.layout = "br";
+
+  services.network-manager-applet.enable = true;
+
+  #xdg.configFile = let  # TODO pass extra configs to XDG_CONFIG_HOME
   #  mkLink = config.lib.file.mkOutOfStoreSymlink;
   #in {
   #  "GIMP" = {
@@ -15,38 +24,19 @@
   packages = {
     enable = true;
     design = true;
+    extra = with pkgs; [
+      scrot          # xorg screenshot  # TODO move to xorg module
+      brightnessctl  # light control
+      pamixer        # sound control
+
+      julia_16-bin
+
+      tmatrix
+
+      keepassxc
+      lxappearance
+      #(callPackage (import ./packages/nvim) {})  # maybe move nvim overlay to package?
+    ];
   };
 
-  services.network-manager-applet.enable = true;
-
-  home.keyboard = {
-    #layout = "br";
-    layout = "us";
-    variant = "intl";
-    options = [ "caps:swapescape" ];
-  };
-
-  home.packages = with pkgs; [
-    #(callPackage (import ./packages/nvim) {})
-    nox
-    neofetch
-
-    p7zip
-    zip
-
-    ripgrep
-
-    fzy
-
-    scrot
-    brightnessctl  # light control
-    pamixer        # sound control
-
-    julia_16-bin
-
-    tmatrix
-
-    keepassxc
-    lxappearance
-  ];
 }

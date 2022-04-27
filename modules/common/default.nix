@@ -1,5 +1,6 @@
 [
   ./host
   ./packages
+  ./gui
   ./scripts
 ]

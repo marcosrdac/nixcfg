@@ -27,26 +27,32 @@ in
 
   config = with pkgs; let 
     basic-packages = [
-      pciutils
-      usbutils
       acpi
-      wget
-      curl
-      git
-      unzip
-      jq
+      alacritty
       at
       bc
+      curl
       file
-      ntfs3g
-      libnotify
-      killall
-      keepassx2
-      tmux
-      lf
-      neovim
       firefox
-      alacritty
+      fzy
+      git
+      jq
+      keepassx2
+      killall
+      lf
+      libnotify
+      neofetch
+      neovim
+      nox
+      ntfs3g
+      p7zip
+      pciutils
+      ripgrep
+      tmux
+      unzip
+      usbutils
+      wget
+      zip
     ];
     design-packages = [
       gimp

@@ -5,7 +5,6 @@
   ./variables
   ./encription
   ./mount
-  ./graphics
   ./keyboard
   ./mouse
   ./audio
