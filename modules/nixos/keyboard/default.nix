@@ -8,7 +8,7 @@ in
   options.keyboard = {
     enable = mkEnableOption "Enable default host configuration";
 
-    xorg = {
+    gui = {
       layout = mkOption {
         description = "";
         type = with types; str;
@@ -31,7 +31,7 @@ in
       };
     };
 
-    console = {
+    tty = {
       layout = mkOption {
         description = "";
         type = with types; str;
@@ -43,11 +43,11 @@ in
 
   config = mkIf cfg.enable {
     services.xserver = { 
-      layout = cfg.xorg.layout;
-      xkbVariant = cfg.xorg.variant;
-      xkbOptions = cfg.xorg.options;
+      layout = cfg.gui.layout;
+      xkbVariant = cfg.gui.variant;
+      xkbOptions = cfg.gui.options;
     };
 
-    console.keyMap = cfg.console.layout;
+    console.keyMap = cfg.tty.layout;
   };
 }

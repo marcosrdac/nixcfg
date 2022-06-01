@@ -3,7 +3,7 @@
 with inputs.nixpkgs.lib;
 let
   nixpkgs = {
-    inherit overlays;
+    inherit overlays;  # TODO is this the cause for nox/import nixpks not working?
     config = {
       allowUnfree = true;
       #allowBroken = true;

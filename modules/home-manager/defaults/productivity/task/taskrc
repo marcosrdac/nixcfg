@@ -1,0 +1,75 @@
+verbose=blank,footnote,label,new-id,affected,edit,special,project,sync,unwait
+dateformat=YMD
+default.project=
+
+# TODO so that I can use rec instead of rep
+recurrence=off
+
+exit.on.missing.db=1
+burndown.cumulative=0
+
+hooks.location=$XDG_CONFIG_HOME/task/hooks
+
+report.next.columns=id,priority,project,description,due.remaining,scheduled.remaining,urgency
+report.next.labels=ID,*,Project,Desc,Due,Sched,Urgency
+
+# priority
+uda.priority.values=H,M,,L
+#uda.priority.label=Priority
+#uda.priority.type=string
+#color.uda.priority.H=color255
+#color.uda.priority.L=color245
+#color.uda.priority.M=color250
+
+# urgency calculation
+urgency.user.tag.next.coefficient=15.0          # +next tag
+urgency.due.coefficient=12.0                    # overdue or near due date
+urgency.blocking.coefficient=8.0                # blocking other tasks
+urgency.uda.priority.H.coefficient=6.0          # high Priority
+urgency.uda.priority.M.coefficient=4.0          # medium Priority
+urgency.uda.priority..coefficient=2.0           # priority unset
+urgency.uda.priority.L.coefficient=-2.0         # low Priority
+urgency.scheduled.coefficient=5.0               # scheduled tasks
+urgency.active.coefficient=4.0                  # already started tasks
+urgency.age.coefficient=2.0                     # coefficient for age
+urgency.annotations.coefficient=1.0             # has annotations
+urgency.tags.coefficient=1.0                    # has tags
+urgency.project.coefficient=1.0                 # assigned to any project
+urgency.waiting.coefficient=-3.0                # waiting task
+urgency.blocked.coefficient=-5.0                # blocked by other tasks
+
+# priority - projects and tags
+urgency.user.project.sys.coefficient=-3.0
+#urgency.user.tag.sys.coefficient=-3.0
+
+context.self.read=pro:slf
+context.self.write=pro:slf
+context.health.read=pro:slf.hth
+context.health.write=pro:slf.hth
+context.hygien.read=project:slf.hyg
+context.hygien.write=project:slf.hyg
+context.home.read=project:slf.hom
+context.home.write=project:slf.hom
+#home
+
+#context.los.read=project:los or +los
+context.work.read=pro:wrk
+context.work.write=pro:wrk
+context.ltrace.read=pro:wrk.ltrace
+context.ltrace.write=pro:wrk.ltrace
+
+context.free.read=pro.not:los pro.not:ufba pro.not:wrk pro.not:eage
+
+#context.learn.read=pro: or +std
+context.tmp.read=pro:tmp
+context.tmp.write=pro:tmp
+
+# non-trivial
+context.non-trivial.read=pro.not:slf pro.not:bod pro.not:mnd pro.not:sys pro.not:hom
+#context.non-trivial.write=pro:tmp
+
+#default.project=tmp
+
+# state variables
+news.version=2.6.0
+context=self

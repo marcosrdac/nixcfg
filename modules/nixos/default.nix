@@ -1,14 +1,16 @@
 [
-  ./nix
-  ./boot-templates
-  ./host-users
-  ./variables
-  ./encription
-  ./mount
-  ./keyboard
-  ./mouse
   ./audio
+  ./booting
+  ./encription
+  ./typeface
+  ./graphics
+  ./gui
+  ./permissions
+  ./keyboard
+  ./mount
+  ./mouse
   ./network
-  ./print
-  #./nvidia
+  ./nix
+  ./printer
+  ./variables
 ]

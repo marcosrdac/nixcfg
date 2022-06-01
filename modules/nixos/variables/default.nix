@@ -18,7 +18,7 @@ in
       default = true;
     };
 
-    overrides = mkOption {
+    definitions = mkOption {
       description = "Extra variables";
       type = with types; attrsOf str;
       default = { };
@@ -32,6 +32,6 @@ in
     };
   in {
     environment.variables = mkIf cfg.enable
-      ((mkIf cfg.useDefault defaultVariables) // cfg.overrides);
+      ((mkIf cfg.useDefault defaultVariables) // cfg.definitions);
   };
 }

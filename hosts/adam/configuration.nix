@@ -3,7 +3,6 @@
 {
   imports = [ 
     ./hardware-configuration.nix
-    #./nvidia.nix
   ];
 
   host = {
@@ -14,64 +13,9 @@
     nixos = "21.11";
   };
 
-  keyboard = {
-    enable = true;
-    xorg = {
-      layout = "us";
-      variant = "intl";
-      options = "caps:swapescape";
-    };
-    console = {
-      layout = "us";
-    };
-  };
+  gui.enable = true;
 
-  print = {
-    enable = true;
-    drivers = with pkgs; [ epson-escpr ];
-  };
-
-  network = {
-    enable = true;
-    interfaces = [ "enp2s0" "wlp3s0" ];
-    sshServer = true;
-  };
-
-  variables = {
-    enable = true;
-    overrides = { };
-  };
-
-  audio = {  # uneeded
-    enable = true;
-  };
-
-  hostUsers = {
-    available = {
-      marcosrdac = {
-        description = "Marcos Conceição";
-        isNormalUser = true;
-        extraGroups = [ "nixcfg" "wheel" "vboxusers" ];
-      };
-      guest = {
-        description = "Guest";
-        isNormalUser = true;
-      };
-    };
-    defaultGroups = [ "networkmanager" "lp" ];
-  };
-
-  gui = {
-    enable = true;
-  };
-
-  packages = {
-    enable = true;
-    design = true;
-    #extra = [ ];
-  };
-
-  bootTemplates = {
+  booting = {
     enable = true;
     portable = {
       enable = true;
@@ -84,4 +28,69 @@
     RuntimeDirectorySize=8G
     RuntimeDirectoryInodesMax=1048576  
   '';
+
+  keyboard = {
+    enable = true;
+    gui = {
+      layout = "us";
+      variant = "intl";
+      options = "caps:swapescape";
+    };
+    tty = {
+      layout = "us";
+    };
+  };
+
+  typeface = {
+    enable = true;
+    default = {
+      gui = {
+        general = "...";
+        terminal = "...";
+      };
+      tty = "Lat2-Terminus16";
+    };
+  };
+
+  graphics.nvidia.enable = true;
+
+  audio.enable = true; # TODO make default user module with 'mkForce'd options
+
+  network = {
+    enable = true;
+    interfaces = [ "enp2s0" "wlp3s0" ];
+    sshServer = true;
+  };
+
+  printer = {
+    enable = true;
+    drivers = with pkgs; [ epson-escpr ];
+  };
+
+  variables = {
+    enable = true;
+    definitions = { };
+  };
+
+  packages = {
+    enable = true;
+    design = true;
+    extra = [ ];
+  };
+
+  permissions = {
+    enable = true;
+    users = {
+      marcosrdac = {
+        description = "Marcos Conceição";
+        isNormalUser = true;
+        extraGroups = [ "nixcfg" "wheel" "vboxusers" ];
+      };
+      guest = {
+        description = "Guest";
+        isNormalUser = true;
+      };
+    };
+    defaultGroups = [ "networkmanager" "lp" ];
+  };
 }

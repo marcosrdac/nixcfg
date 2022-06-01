@@ -1,6 +1,6 @@
 [
   ./host
   ./packages
-  ./gui
   ./scripts
+  ./typeface
 ]

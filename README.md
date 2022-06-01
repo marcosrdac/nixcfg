@@ -50,7 +50,7 @@ nix-env -f '<nixpkgs>' -iA nixUnstable
 ```
 
 
-### Are you a normal user and does not have sudo access?
+### Are you a normal user and does not have sudo access? (not fully tested)
 
 Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default.
 
@@ -66,18 +66,18 @@ If you are going to use SSH, you should be setting your ssh key up with GitHub b
 
 ```sh
 # https
-git clone https://github.com/marcosrdac/nixcfg $HOME/.config/nixpkgs
+git clone https://github.com/marcosrdac/nixcfg $HOME/.config/home-manager
 # ...or ssh
-git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/nixpkgs
+git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/home-manager
 ```
 
 
 ### <a name="user-install"/> Install
 
 ```sh
-home-manager switch --flake "~/.config/nixpkgs#$(hostname)-$USER"
+home-manager switch --flake "$HOME/.config/home-manager#$(hostname)-$USER"
 # i.e.: if my hostname is `adam` and my username is `marcosrdac`:
-home-manager switch --flake "~/.config/nixpkgs#adam-marcosrdac"
+home-manager switch --flake "$HOME/.config/home-manager#adam-marcosrdac"
 ```
 
 Observation: host is defined in `hosts` and my user configurations are defined in `users/$USER`
@@ -119,13 +119,19 @@ nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
 
 ## Both system and user configuration
 
-Start by [configuring the system](#system-config), then symlink `/etc/nixos` to `/home/$USER/nixpkgs`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
+Start by [configuring the system](#system-config), then symlink `/etc/nixos` to `/home/$USER/home-manager`. Make the user part of `nixcfg` group in the specific machine configuration, so that it can modify the configuration files without super powers.
 
 ```sh
-ln -s /etc/nixos /home/$USER/nixpkgs
+ln -s /etc/nixos /home/$USER/.config/home-manager
 ```
 
-Now, as a normal user, you can now run the installation commands in the [user install section](#user-install) to configure your home space.
+Now, as a normal user, you can now run similar commands to [user install section](#user-install) section's to configure your home space, except that `$HOME/.config/home-manager` will become its original configuration directory (`/etc/nixos`):
+
+```sh
+home-manager switch --flake "/etc/nixos#$(hostname)-$USER"
+# i.e.: if my hostname is `adam` and my username is `marcosrdac`:
+home-manager switch --flake "/etc/nixos#adam-marcosrdac"
+```
 
 
 ## Inspiration
@@ -140,10 +146,10 @@ Now, as a normal user, you can now run the installation commands in the [user in
 
 - [ ] Make options in my `home-manager` modules (xorg vs wayland, etc).
 - [ ] Default python env should be easily accessable for data analysis stuff.
-- [ ] I want to be able to install and use my WM configuration on any computer (use xinit and stuff, instead of xinit-hm).
+- [ ] I want to be able to install and use my WM configuration from any computer (use xinit and stuff, instead of xinit-hm).
 
 
 ### Reading tips
 
-- [NixOS module](https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/x11/window-managers/i3.nix)
+- [NixOS modules](https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/x11/window-managers/i3.nix)
 - [Home-manager module](https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm/default.nix)

@@ -4,7 +4,7 @@ rec {
   unstable = import inputs.nixpkgs-unstable {
     system = prev.system;
     config = {
-      allowUnfree = true;
+      allowUnfree = final.config.allowUnfree;
     };
   };
 
@@ -16,16 +16,10 @@ rec {
     };
   };
 
-  neovim = (import ./neovim) final prev;
-
+  nix = unstable.nix;
   alacritty = unstable.alacritty;  # symlink autoreload on v0.10
+  polybar = unstable.alacritty;  # colors = ~/.config/polybar/colors
+  #lightdm = unstable.lightdm;  # TODO test if remembers username is solved (it does not :()
 
+  neovim = (import ./neovim) final prev;
 }
-
-
-# let
-#   importChildren = (
-#     dir: map (mod: import (dir + "/${mod}"))
-#       (builtins.attrNames (builtins.readDir dir))
-#   );
-

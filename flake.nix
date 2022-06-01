@@ -21,14 +21,16 @@
       nixpkgs.lib.optionals (pathExists user-hosts) (attrNames (readDir user-hosts));
     
   in {
+
     nixosConfigurations = listToAttrs (map (hostname: {
       name = hostname;
       value = lib.mkHost { inherit hostname; };
     }) hosts);
+
     homeConfigurations = let
       getUserHosts = username: nixpkgs.lib.unique (hosts ++ getExtraHosts username);
       user-host-pairs = nixpkgs.lib.flatten (
-        map (username: map (hostname: { inherit hostname username; }) (getUserHosts username) ) users
+        map (username: map (hostname: { inherit hostname username; }) (getUserHosts username)) users
       );
     in
       listToAttrs (map (pair: {

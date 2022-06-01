@@ -24,5 +24,7 @@ in
     ./office-suite
     ./messaging
     ./git
+    ./productivity
+    ./misc
   ];
 }

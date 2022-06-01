@@ -230,6 +230,7 @@ let
   #colorscheme = colorSchemes."windows-10";
 
   colorscheme = colorSchemes."harmonic-dark";
+  #colorscheme = colorSchemes."harmonic-light";
   #colorscheme = colorSchemes."greenscreen";
 
   wallpaper = nixWallpaperFromScheme {

@@ -6,11 +6,15 @@
     ./zsh
   ];
   
-  home.shellAliases = {
+  home.shellAliases = let
+    nixcfg = ''`realpath ${config.xdg.configHome}/home-manager`'';
+    host = ''`hostname`'';
+    user = ''$USER'';
+  in {
     # home-manager
-    hm = "home-manager";
-    hms = "home-manager switch --flake ${config.xdg.configHome}/nixpkgs#`hostname`-\${USER}";
-    ehm = "$EDITOR ${config.xdg.configHome}/nixpkgs/home.nix";
+    hm = ''home-manager --flake "${nixcfg}#${host}-${user}"'';
+    hms = ''home-manager switch --flake "${nixcfg}#${host}-${user}"'';
+    nrs = ''sudo nixos-rebuild switch --flake "${nixcfg}#${host}"'';
 
     # making it easy
     n = "$FILEBROWSER";

@@ -68,7 +68,6 @@ config.bind('<Ctrl-->', 'tab-focus -1')
 #--- configs ---#
 c.window.title_format = "{private}{perc}{current_title}{title_sep}qutebrowser"
 c.auto_save.session = True
-c.editor.command = ['st', '-e', os.environ.get('EDITOR'), '{}']
 
 xresources = read_xresources('*')
 try:

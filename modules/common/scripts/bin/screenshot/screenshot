@@ -2,7 +2,6 @@
 
 XDG_PICTURES_DIR=${XDG_PICTURES_DIR:-"$HOME/Pictures"}
 XDG_SCREENSHOT_DIR=${XDG_SCREENSHOT_DIR:-"$XDG_PICTURES_DIR"}
-GRIMARGS=''
 
 showhelp () {
   echo "Usage: $0 [OPTIONS]"
@@ -16,34 +15,42 @@ showhelp () {
 if  [ -n "$WAYLAND_DISPLAY" ]
 then
   screenshot () {
-    filename="`date +'%Y%m%d%H%M%S'`_screenshot.png"
-    filepath="$XDG_SCREENSHOT_DIR/$filename"
-    grim $GRIMARGS "$filepath" &&
+    if [ $select != true ]
+    then
+      shot="screenshot"
+    else
+      shot="sliceshot"
+      frame=`slurp` || exit 1
+      dims=`echo $frame | cut -d ' ' -f 2`
+      grim_args="-g '$frame'"
+    fi
+    Shot=`echo "$shot" | sed 's/./\U&/'`
+
+    filename="`date +'%Y%m%d%H%M%S'`_${shot}${dims:+"_$dims"}"
+    filepath="$XDG_SCREENSHOT_DIR/${filename}.png"
+
+    grim $grim_args "$filepath" &&
       echo "$filepath" | xclip -sel p &&
       xclip -sel c -t image/png -i "$filepath" &&
-      notify-send 'Screenshot taken' "Location: $filepath\n\nImage copied to clipboard."
-  }
-  sliceshot () {
-    frame=`slurp` || exit 1
-    dimensions=`echo $frame | cut -d ' ' -f 2`
-    filename="`date +'%Y%m%d%H%M%S'`_sliceshot_$dimensions.png"
-    filepath="$XDG_SCREENSHOT_DIR/$filename"
-    grim -g "$frame" $GRIMARGS "$filepath" &&
-      echo "$filepath" | xclip -sel p &&
-      xclip -sel c -t image/png -i "$filepath" &&
-      notify-send 'Sliceshot taken' "Location: $filepath\n\nImage copied to clipboard."
+      notify-send '${Shot} taken' "Location: $filepath\n\nImage copied to clipboard."
   }
 else
   screenshot() {
-    scrot '%Y%m%d%H%M%S_screenshot_$wx$h.png' -e "mv \$f \"$XDG_SCREENSHOT_DIR\" &&
-      xclip -selection clipboard -t image/png -i "$XDG_SCREENSHOT_DIR/\$f" &&
-      notify-send 'Screenshot taken' 'location: $XDG_SCREENSHOT_DIR/\$f\n\nImage copied to clipboard.'"
-  }
+    if [ $select != true ]
+    then
+      shot="screenshot"
+    else
+      shot="sliceshot"
+      scrot_args="-s"
+    fi
+    Shot=`echo "$shot" | sed 's/./\U&/'`
 
-  sliceshot() {
-    scrot '%Y%m%d%H%M%S_sliceshot_$wx$h.png' -s -e "mv \$f \"$XDG_SCREENSHOT_DIR\" &&
-      xclip -selection clipboard -t image/png -i $XDG_SCREENSHOT_DIR/\$f &&
-      notify-send 'Sliceshot taken'  'Location: $XDG_SCREENSHOT_DIR/\$f\n\nImage copied to clipboard.'"
+    filename="`date +'%Y%m%d%H%M%S'`_${shot}"
+    filepath="$XDG_SCREENSHOT_DIR/${filename}.png"
+    scrot "$filepath" $scrot_args &&
+    echo "$filepath" | xclip -sel p &&
+    xclip -sel c -t image/png -i "$filepath" &&
+    notify-send "$Shot taken" "Location: $filepath\n\nImage copied to clipboard."
   }
 fi
 
@@ -62,7 +69,4 @@ select=${select:-false}
 
 [ -d "$XDG_SCREENSHOT_DIR" ] || mkdir -p "$XDG_SCREENSHOT_DIR"
 
-if [ $select = true ]
-then sliceshot
-else screenshot
-fi
+screenshot

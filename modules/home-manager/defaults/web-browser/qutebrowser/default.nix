@@ -16,6 +16,8 @@ in
     extraConfig = builtins.concatStringsSep "\n" [
       (pkgs.lib.strings.fileContents ./config.py)
       ''
+      c.editor.command = ['${config.home.sessionVariables.TERMINAL}', '-e', os.environ.get('EDITOR'), '{}']
+
       try:
           import extra.py
       except ImportError:

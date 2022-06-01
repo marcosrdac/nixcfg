@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+read task
+
+api=`echo "$1" | cut -d ':' -f 2`
+[ "$api" -lt 2 ] && exit 0
+
+due=`echo "$task" | jq -r '.due'`
+scheduled=`echo "$task" | jq -r '.scheduled'`
+#wait=`echo "$task" | jq -r '.wait'`
+until=`echo "$task" | jq -r '.until'`
+
+postpone_midnight () {
+  task calc "$1" | grep -q '00:00:00' && task calc "$1 + 21h" || echo "$1"
+}
+
+due=`postpone_midnight "$due"`
+scheduled=`postpone_midnight "$scheduled"`
+#wait=`postpone_midnight "$wait"`
+until=`postpone_midnight "$until"`
+
+[ "$due" != null ] && due=`postpone_midnight "$due"` &&
+  task=`echo "$task" | jq -c --arg due "$due" '.due = $due'`
+
+[ "$scheduled" != null ] && scheduled=`postpone_midnight "$scheduled"` &&
+  task=`echo "$task" | jq -c --arg scheduled "$scheduled" '.scheduled = $scheduled'`
+
+#[ "$wait" != null ] && wait=`postpone_midnight "$wait"` &&
+  #task=`echo "$task" | jq -c --arg wait "$wait" '.wait = $wait'`
+
+[ "$until" != null ] && until=`postpone_midnight "$until"` &&
+  task=`echo "$task" | jq -c --arg until "$until" '.until = $until'`
+
+echo "$task"
+
+exit 0

@@ -15,6 +15,7 @@ let
     XDG_CONFIG_HOME  =  "${config.xdg.configHome}";
     XDG_DATA_HOME  =  "${config.xdg.dataHome}";
     # custom
+    XDG_CLOUD_HOME = "${config.home.homeDirectory}/cld";
     XDG_PROJECTS_DIR = "${config.home.homeDirectory}/pro";
     XDG_BIN_HOME  = "${config.home.homeDirectory}/.local/bin";
     XDG_RESOURCES_DIR  = "${config.home.homeDirectory}/res";
@@ -30,7 +31,7 @@ in
 
   xdg.userDirs = rec {
     enable = true;
-    createDirectories = true;
+    #createDirectories = true;  # TODO replace with script that considers cloud symlinks
     extraConfig = defaultDirs;
   };
 }

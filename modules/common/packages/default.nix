@@ -43,6 +43,8 @@ in
       libnotify
       neofetch
       neovim
+      nix-index
+      nixpkgs-fmt
       nox
       ntfs3g
       p7zip
@@ -53,13 +55,19 @@ in
       usbutils
       wget
       zip
+
+      # needed?
+      singularity
+      docker
+      containerd
     ];
     design-packages = [
       gimp
       inkscape
     ];
     packages = optionals cfg.enable (
-      [ inputs.home-manager.packages.${system}.home-manager ]
+      cfg.extra
+      ++ [ inputs.home-manager.packages.${system}.home-manager ]
       ++ (optionals cfg.basic basic-packages)
       ++ (optionals cfg.design design-packages)
     );

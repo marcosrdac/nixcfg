@@ -81,3 +81,6 @@ inoremap ;d <++><Esc>:r !date '+\%Y\%m\%d'<Enter>0v$h"dd"_dd?<++><Enter>v3l"dpa
 "   center writing
 map <silent> <leader>c :Goyo \| set linebreak<CR>
 "map <silent> <leader>c :Goyo<CR>
+
+"Nix
+autocmd FileType nix inoremap ,meta meta = with lib; {<Enter>description = "<++>";<Enter>homepage = "<++>";<Enter>license = licenses.<++>;<Enter>platforms.<++>;<Enter>maintainers = with maintainers; [ atila ];<Enter>};<Esc>6k^i

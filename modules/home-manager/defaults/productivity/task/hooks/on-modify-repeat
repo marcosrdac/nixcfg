@@ -1,0 +1,82 @@
+#!/usr/bin/env sh
+
+
+read old_task
+read new_task
+
+# check api version
+api=`echo "$1" | cut -d : -f 2`
+[ -n "$api" ] && [ "$api" -lt 2 ] && exit 0
+
+command=`echo "$3" | cut -d : -f 2`
+
+# workaround for taskwarrior block when undoing a task addition
+# https://github.com/GothenburgBitFactory/taskwarrior/issues/2832
+[ $command = undo ] && [ "$new_task" = '{}' ] && echo "$old_task" && exit 0
+
+[ $command != modify ] &&
+  [ $command != prepend ] &&
+  [ $command != append ] &&
+  [ $command != edit ] && echo "$new_task" &&  exit 0
+
+# if description did not change, exit
+old_description=`echo "$old_task" | jq -r '.description'`
+description=`echo "$new_task" | jq -r '.description'`
+[ "$description" = "$old_description" ] && echo "$new_task" && exit 0
+
+# if no repeat flag, exit
+repeat_key_val=`echo "$description" | sed -n 's/.*\(rep\(\|e\(\|a\(\|t\)\)\)\):\(.*\)\(\s.*\|$\)/\1:\5/p'`
+key=`echo "$repeat_key_val" | cut -d : -f 1`
+repeat=`echo "$repeat_key_val" | cut -d : -f 2`
+
+tags=`echo "$new_task" | jq -c .tags`
+[ "$tags" == null ] &&
+  idx=null ||
+  idx=`echo "$tags" | jq -c 'map(startswith("repeat@")) | index(true)'`
+[ -z $idx ] && idx=null
+
+# no repeat:xxx nor tag set: noop
+[ -z "$key" ] && [ $idx = null ] && echo "$new_task" && exit 0
+
+# remove repeat:xxx from description
+new_description=`echo "$description" | 
+  sed -n "s/\(^\|\(\(.*\)\s\)\)\b\(rep\(\|e\(\|a\(\|t\)\)\):\S*\)\s*\(.*\)/\3 \8/p" |
+  awk '{ $1=$1; print }'`
+[ -n "$new_description" ] && description=$new_description
+
+# if new description only has rep:xxx then do not modify description
+old_description=`echo "$old_task" | jq -r '.description'`
+[ -n "$description" ] && description=$old_description
+
+if [ -z "$repeat" ]
+then
+  # unset repeat 
+  [ $idx != null ] && tags=`echo "$tags" |
+    jq -c --argjson idx $idx 'del(.[$idx])'`
+else
+  # set repeat
+  tag="repeat@$repeat"
+
+  if [ "$tags" = null ]
+  then
+    tags=`jq -c -n --arg tag "$tag" '.[0] = $tag'`
+  else
+    ntags=`echo "$tags" | jq length`
+    [ $idx == null ] && idx=$ntags
+    tags=`echo "$tags" |
+      jq -c --argjson idx $idx --arg tag "$tag" '.[$idx] = $tag'`
+  fi
+fi
+
+# update tags and description
+echo "$new_task" | jq -c \
+  --argjson tags "$tags" \
+  --arg description "$description" \
+  '.description = $description | .tags = $tags'
+
+exit 0
+
+
+# DEBUG
+#old_task='{"description":"asd asd efe fef rep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@0d"]}'
+#new_task='{"description":"asd asd efe fef rep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@0d"]}'
