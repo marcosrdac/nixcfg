@@ -10,8 +10,9 @@ burndown.cumulative=0
 
 hooks.location=$XDG_CONFIG_HOME/task/hooks
 
-report.next.columns=id,priority,project,description,due.remaining,scheduled.remaining,urgency
-report.next.labels=ID,*,Project,Desc,Due,Sched,Urgency
+report.next.columns=id,priority,project,description.count,due.remaining,scheduled.remaining,urgency
+report.next.labels=ID,*,Project,Description,Due,Sched,Urgency
+#report.next.sort=start-,due+,project+/,urgency-
 
 # priority
 uda.priority.values=H,M,,L
@@ -72,4 +73,3 @@ context.non-trivial.read=pro.not:slf pro.not:bod pro.not:mnd pro.not:sys pro.not
 
 # state variables
 news.version=2.6.0
-context=self
