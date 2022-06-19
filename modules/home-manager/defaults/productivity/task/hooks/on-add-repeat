@@ -8,11 +8,16 @@ api=`echo "$1" | cut -d : -f 2`
 
 # find repeat flag, else exit
 description=`echo "$task" | jq -r '.description'`
-repeat=`echo "$description" | sed -n 's/\(^\|\(\(.*\)\s\)\)\b\(rep\(\|e\(\|a\(\|t\)\)\):\(\S*\)\)\s*\(.*\)/\8/p'`
+from_repeat=`echo " $description " | sed -n 's/\s*\(.*\)\s\(\(\|\S\)\(rep\(\|e\(\|a\(\|t\)\)\)\):\(\S*\)*\)\s\(.*\)/\3:\8/p'`
+kind=`echo "$from_repeat" | cut -d : -f 1`
+repeat=`echo "$from_repeat" | cut -d : -f 2`
+
+[ "$kind" = 'r' ] &&
+  repeat_from="repeatFromRepeat" || repeat_from="repeatFromEnd"
 
 # remove repeat:xxx from description
-new_description=`echo "$description" | 
-  sed -n "s/\(^\|\(\(.*\)\s\)\)\b\(rep\(\|e\(\|a\(\|t\)\)\):\S*\)\s*\(.*\)/\3 \8/p" |
+new_description=`echo " $description " | 
+  sed -n "s/\s*\(.*\)\s\(\(\|\S\)\(rep\(\|e\(\|a\(\|t\)\)\)\):\(\S*\)*\)\s\(.*\)/\1 \9/p" |
   awk '{ $1=$1; print }'`
 [ -n "$new_description" ] && description=$new_description
 
@@ -24,14 +29,53 @@ then
   exit 0
 fi
 
+due=`echo "$task" | jq -r '.due'`
+scheduled=`echo "$task" | jq -r '.scheduled'`
+
+if [ "$repeat_from" = repeatFromRepeat ]
+then
+  repeat_date=`echo "$repeat" | sed -n "s/\(\w*\)-\(\w\w\)-\(\w\w\)\(\(\|T\)\(.*\)\)$/\1:\2:\3:\6/p"`
+  repeat_year=`echo "$repeat_date" | cut -d : -f 1`
+  repeat_month=`echo "$repeat_date" | cut -d : -f 2`
+  repeat_day=`echo "$repeat_date" | cut -d : -f 3`
+  repeat_time=`echo "$repeat_date" | cut -d : -f 4-5`
+
+  if [ -n "$repeat_year" ]
+  then
+    echo "$repeat_month" | grep -q '[0-9][0-9]' && month_filled=true || month_filled=false
+    echo "$repeat_day" | grep -q '[0-9][0-9]' && day_filled=true || day_filled=false
+
+    if [ $month_filled = true ] && [ $day_filled = false ]
+    then
+      echo "Format for rrepeat should be xxxx:MM:DD or xxxx:xx:DD."
+      exit 1
+    #elif [ "$due" = null ] && [ "$scheduled" = null ]
+    #then
+    #  if [ $month_filled = true ] && [ $day_filled = true ]
+    #  then
+    #    due=`task calc ${year}-${month}-`
+    #    task=`echo "$task" | jq --arg due "$due" '.due = $due'`
+    #  fi
+    fi
+  fi
+
+  [ -z "$due" ] && [ -z "$scheduled" ] && echo "Due or scheduled date needed." && exit 1
+fi
+
+# TODO repeatFromRepeat --> repeatFromOriginal (orep)
+
+# find repeat tag index
 tags=`echo "$task" | jq -c .tags`
-[ "$tags" = null ] &&
-  idx=null ||
-  idx=`echo "$tags" | jq -c 'map(startswith("repeat@")) | index(true)'`
-[ -z $idx ] && idx=null
+if [ "$tags" = null ]
+then
+  idx=null
+else
+  idx=`echo "$tags" | jq -c 'map(startswith("repeatFrom")) | index(true)'`
+  [ -z "$idx" ] && idx=null
+fi
 
 # set repeat tag
-tag="repeat@$repeat"
+tag="$repeat_from@$repeat"
 if [ "$tags" = null ]
 then
   tags=`jq -c -n --arg tag "$tag" '.[0] = $tag'`
@@ -52,4 +96,4 @@ exit 0
 
 
 # DEBUG
-#task='{"description":"asd asd efe fef rep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@0d"]}'
+task='{"description":"asd asd efe fef erep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeatFrom@0d"]}'

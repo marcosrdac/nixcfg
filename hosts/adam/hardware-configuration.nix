@@ -20,7 +20,7 @@
     #  };
   });
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = [ "ntfs" "exfat" ];
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "uas" "sd_mod" "rtsx_usb_sdmmc" ];
   boot.kernelParams = [ ];
   boot.kernelPatches = [

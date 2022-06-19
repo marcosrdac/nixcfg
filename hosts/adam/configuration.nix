@@ -41,6 +41,13 @@
     };
   };
 
+  #controllers.enable = true;
+  #packaging.flatpak.enable = true;
+  gaming = {
+    enable = true;
+    steam = true;
+  };
+
   typeface = {
     enable = true;
     default = {
@@ -52,7 +59,8 @@
     };
   };
 
-  graphics.nvidia.enable = true;
+  #graphics.nvidia.enable = true;
+  graphics.nvidia.enable = false;
 
   audio.enable = true; # TODO make default user module with 'mkForce'd options
 
@@ -61,6 +69,8 @@
     interfaces = [ "enp2s0" "wlp3s0" ];
     sshServer = true;
   };
+
+  bluetooth.enable = true;
 
   printer = {
     enable = true;

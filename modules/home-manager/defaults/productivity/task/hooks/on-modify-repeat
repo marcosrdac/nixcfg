@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-
 read old_task
 read new_task
 
@@ -25,28 +24,37 @@ description=`echo "$new_task" | jq -r '.description'`
 [ "$description" = "$old_description" ] && echo "$new_task" && exit 0
 
 # if no repeat flag, exit
-repeat_key_val=`echo "$description" | sed -n 's/.*\(rep\(\|e\(\|a\(\|t\)\)\)\):\(.*\)\(\s.*\|$\)/\1:\5/p'`
-key=`echo "$repeat_key_val" | cut -d : -f 1`
-repeat=`echo "$repeat_key_val" | cut -d : -f 2`
+from_repeat_key=`echo "$description" | sed -n 's/\(^\|\(\(.*\)\s\)\)\b\(\(\|\S\)rep\(\|e\(\|a\(\|t\)\)\):\(\S*\)\)\s*\(.*\)/\5:\9:\4/p'`
+kind=`echo "$from_repeat_key" | cut -d : -f 1`
+repeat=`echo "$from_repeat_key" | cut -d : -f 2`
+key=`echo "$from_repeat_key" | cut -d : -f 3`
+
+[ "$kind" = 'r' ] &&
+  repeat_from="repeatFromRepeat" || repeat_from="repeatFromEnd"
 
 tags=`echo "$new_task" | jq -c .tags`
-[ "$tags" == null ] &&
-  idx=null ||
-  idx=`echo "$tags" | jq -c 'map(startswith("repeat@")) | index(true)'`
-[ -z $idx ] && idx=null
+if [ "$tags" = null ]
+then
+  idx=null
+else
+  idx=`echo "$tags" | jq -c 'map(startswith("repeatFrom")) | index(true)'`
+  [ -z "$idx" ] && idx=null
+fi
 
 # no repeat:xxx nor tag set: noop
 [ -z "$key" ] && [ $idx = null ] && echo "$new_task" && exit 0
 
 # remove repeat:xxx from description
-new_description=`echo "$description" | 
-  sed -n "s/\(^\|\(\(.*\)\s\)\)\b\(rep\(\|e\(\|a\(\|t\)\)\):\S*\)\s*\(.*\)/\3 \8/p" |
+old_description=`echo "$old_task" | jq -r '.description'`
+new_description=`echo " $description " | 
+  sed -n "s/\s*\(.*\)\s\(\(\|\S\)\(rep\(\|e\(\|a\(\|t\)\)\)\):\(\S*\)*\)\s\(.*\)/\1 \9/p" |
   awk '{ $1=$1; print }'`
-[ -n "$new_description" ] && description=$new_description
+[ -z "$new_description" ] &&
+  description=$old_description ||
+  description=$new_description
 
 # if new description only has rep:xxx then do not modify description
-old_description=`echo "$old_task" | jq -r '.description'`
-[ -n "$description" ] && description=$old_description
+[ -z "$description" ] && description=$old_description
 
 if [ -z "$repeat" ]
 then
@@ -55,7 +63,7 @@ then
     jq -c --argjson idx $idx 'del(.[$idx])'`
 else
   # set repeat
-  tag="repeat@$repeat"
+  tag="$repeat_from@$repeat"
 
   if [ "$tags" = null ]
   then
@@ -78,5 +86,5 @@ exit 0
 
 
 # DEBUG
-#old_task='{"description":"asd asd efe fef rep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@0d"]}'
-#new_task='{"description":"asd asd efe fef rep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@0d"]}'
+#old_task='{"description":"asd asd efe fef erep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeatFromEnd@0d"]}'
+#new_task='{"description":"sd asd efe fef erep:3d","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeatFromEnd@0d"]}'

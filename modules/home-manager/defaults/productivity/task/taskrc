@@ -54,9 +54,9 @@ context.home.write=project:slf.hom
 #home
 
 #context.los.read=project:los or +los
-context.work.read=pro:wrk
+context.work.read=pro:wrk or +work
 context.work.write=pro:wrk
-context.ltrace.read=pro:wrk.ltrace
+context.ltrace.read=pro:wrk.ltrace or +ltrace
 context.ltrace.write=pro:wrk.ltrace
 
 context.free.read=pro.not:los pro.not:ufba pro.not:wrk pro.not:eage
@@ -73,3 +73,4 @@ context.non-trivial.read=pro.not:slf pro.not:bod pro.not:mnd pro.not:sys pro.not
 
 # state variables
 news.version=2.6.0
+context=ltrace

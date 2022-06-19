@@ -1,16 +1,20 @@
 [
   ./audio
+  ./gaming
+  ./bluetooth
   ./booting
+  ./controllers
   ./encription
-  ./typeface
+  ./flatpak
   ./graphics
   ./gui
-  ./permissions
   ./keyboard
   ./mount
   ./mouse
   ./network
   ./nix
+  ./permissions
   ./printer
+  ./typeface
   ./variables
 ]

@@ -5,4 +5,5 @@
   ./typeface
   ./gui
   ./shell
+  ./packaging
 ]

@@ -28,6 +28,8 @@ in
   config = with pkgs; let 
     basic-packages = [
       acpi
+      ventoy-bin  # bootable flash drive
+      gparted
       alacritty
       at
       bc
@@ -41,6 +43,7 @@ in
       killall
       lf
       libnotify
+      ncdu
       neofetch
       neovim
       nix-index

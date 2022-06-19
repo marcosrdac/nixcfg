@@ -2,24 +2,30 @@
 
 read task
 
-task='{"description":"asd asd efe fef rep:xxxx-05-13T15","due":"20221002T000000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeat@xxxx-05-13T12:15"]}'
-
 DRY_RUN=false
 
-#api=`echo "$1" | cut -d : -f 2`
-#[ -n "$api" ] && [ "$api" -lt 2 ] && exit 0
+[ $DRY_RUN = true ] && task='{"description":"asd asd efe","due":"20221002T030000Z","entry":"20220530T210547Z","modified":"20220530T210547Z","scheduled":"20220602T210547Z","status":"pending","until":"20230530T210547Z","uuid":"94799753-ddcb-4ce5-9f48-876389ef6f00","wait":"20220531T030000Z","tags":["a","b","repeatFromRepeat@xxxx-05-04"]}'
+
+api=`echo "$1" | cut -d : -f 2`
+[ -n "$api" ] && [ "$api" -lt 2 ] && exit 0
 
 command=`echo "$3" | cut -d : -f 2`
-#[ "$command" != "done" ] && exit 0
-[ "$command" == "calc" ] && exit 0
+if [ $DRY_RUN = false ]
+then
+  [ "$command" != "done" ] && exit 0
+else
+  [ "$command" == "calc" ] && exit 0
+fi
 
 tags=`echo "$task" | jq -c .tags`
 [ "$tags" == null ] && exit 0
 
-idx=`echo "$tags" | jq -c 'map(startswith("repeat@")) | index(true)'`
+idx=`echo "$tags" | jq -c 'map(startswith("repeatFrom")) | index(true)'`
 [ -n "$idx" ] && [ $idx != null ] || exit 0
 
-repeat=`echo "$tags" | jq -r --argjson idx $idx '.[$idx]' | cut -d @ -f 2`
+tag=`echo "$tags" | jq -r --argjson idx $idx '.[$idx]'`
+repeat_from=`echo "$tag" | cut -d @ -f 1`
+repeat=`echo "$tag" | cut -d @ -f 2`
 
 old_due=`echo "$task" | jq -r '.due'`
 old_scheduled=`echo "$task" | jq -r '.scheduled'`
@@ -27,46 +33,52 @@ old_scheduled=`echo "$task" | jq -r '.scheduled'`
 # if old task has no due date, use scheduled date as reference
 [ "$old_due" != null ] && old_next="$old_due" || old_next="$old_scheduled"
 
-
-# check if repeat is a repeating date (i.e., xxxx-05-13)
-repeat_date=`echo "$repeat" | sed -n "s/\(\w*\)-\(\w\w\)-\(\w\w\)\(T\(.*\)\)$/\1:\2:\3:\5/p"`
-repeat_day=`echo "$repeat_date" | cut -d : -f 3`
-
-if [ -n "$repeat_day" ]
+if [ "$repeat_from" = "repeatFromRepeat" ]
 then
-  repeat_month=`echo "$repeat_date" | cut -d : -f 2`
-  repeat_time=`echo "$repeat_date" | cut -d : -f 4-5`
 
-  old_year=`task calc "$old_due" | cut -d - -f 1`
-  old_month=`task calc "$old_due" | cut -d - -f 2`
+  repeat_date=`echo "$repeat"  | sed -n "s/\(\w*\)-\(\w\w\)-\(\w\w\)\(\(\|T\)\(.*\)\)$/\1:\2:\3:\6/p"`
+  repeat_day=`echo "$repeat_date" | cut -d : -f 3`
 
-  # presuming we are not going to deal with xxxx-03-xx
-  # ...if yearly, month will have numbers
-  if `echo "$repeat_month" | grep -q '[0-9]'`
+  if [ -n "$repeat_day" ]
   then
+    repeat_month=`echo "$repeat_date" | cut -d : -f 2`
+    repeat_time=`echo "$repeat_date" | cut -d : -f 4-5`
+
+    old_year=`task calc "$old_next" | cut -d - -f 1`
+    old_month=`task calc "$old_next" | cut -d - -f 2`
+
     next_year=$((old_year+1))
-    next="${next_year}-${repeat_month}-${repeat_day}"
-    [ -n "$repeat_time" ] && next=${next}T${repeat_time}
-  elif `echo "$repeat_day" | grep -q '[0-9]'`
-  then
-    old_year=`task calc "$old_due" | cut -d - -f 1`
-    next_year=$((old_year+1))
-    next="${next_year}-${repeat_month}-${repeat_day}"
-    [ -n "$repeat_time" ] && next=${next}T${repeat_time}
-  else
-    echo "could not repeat such format: '$repeat'"
-    exit 1
+
+    # presuming we are not going to deal with xxxx-03-xx
+    # ...if yearly, month must have numbers
+    if `echo "$repeat_month" | grep -q '[0-9]'`
+    then
+      next="${next_year}-${repeat_month}-${repeat_day}"
+      [ -n "$repeat_time" ] && next=${next}T${repeat_time}
+      next=`task calc "$next"`
+    elif `echo "$repeat_day" | grep -q '[0-9]'`
+    then
+      next_month=$((old_month+1))
+      next="${old_year}-${next_month}-${repeat_day}"
+
+      # in case it is Feb 29th and we are in leap year
+      `task calc "$old_next + $repeat" 2>/dev/null` ||
+        next="${old_year}-${next_month}-${repeat_yesterday}"
+      next="${next_year}-${repeat_month}-$((repeat_day-1))"
+      [ -n "$repeat_time" ] && next=${next}T${repeat_time}
+      next=`task calc "$next"`
+    else
+      next=`task calc "$old_next + $repeat"`
+    fi
+    # TODO if old_next and new_next are the same, do not repeat the task
   fi
-
+  
 else
   # calculate next date (due or scheduled)
   end=`echo "$task" | jq -r '.end'`
   next=`task calc "$end + $repeat" 2>/dev/null` ||
     next=`task calc "$repeat"`
 fi
-
-exit 
-
 
 # shift scheduled, wait and until accordingly
 if [ "$old_due" = null ] && [ "$old_scheduled" = null ]
@@ -100,7 +112,7 @@ else
 
   if [ $old_wait != null ]
   then
-    wait_before=`task calc "$old_wait <= $old_next"`
+    wait_before_due=`task calc "$old_wait <= $old_next"`
     if [ $wait_before_due = true ]
     then
       _wait=`task calc "$next - ($old_next - $old_wait)"` &&

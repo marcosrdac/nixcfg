@@ -18,4 +18,6 @@
       truePath = "${config.home.sessionVariables.XDG_CLOUD_HOME}/.data/dropbox";
     };
   };
+
+  packaging.flatpak.enable = true;
 }
