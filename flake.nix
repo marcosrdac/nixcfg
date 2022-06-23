@@ -2,10 +2,10 @@
   description = "NixOS and Home Manager setup";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    home-manager.url = "github:nix-community/home-manager/release-21.11";
+    home-manager.url = "github:nix-community/home-manager/release-22.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-colors.url = "github:misterio77/nix-colors";
   };

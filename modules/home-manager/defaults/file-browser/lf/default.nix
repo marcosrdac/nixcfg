@@ -27,6 +27,11 @@ let
 
 in
 {
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+    "unrar"
+  ];
+
   home.packages = with pkgs; [
     lf
     #lf-ueberzug

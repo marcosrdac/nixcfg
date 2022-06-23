@@ -77,7 +77,7 @@ in
   in
     if nixos then {
       environment.systemPackages = packages;
-
+      
       programs.neovim = {
         enable = true;
         #package = pkgs.neovim;

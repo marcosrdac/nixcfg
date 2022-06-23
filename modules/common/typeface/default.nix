@@ -12,14 +12,14 @@ in {
       corefonts
       # ubuntu-fonts
       spleen
-      ttf-envy-code-r
-      google-fonts  # not basic! (2GB) # TODO create font groups
+      #ttf-envy-code-r
+      #google-fonts  # not basic! (2GB) # TODO create font groups
       noto-fonts
       noto-fonts-cjk
       liberation_ttf
-      fira-code
-      fira-code-symbols
-      mplus-outline-fonts
+      #fira-code
+      #fira-code-symbols
+      #mplus-outline-fonts
       #dina-font
       #proggyfonts
       source-sans-pro

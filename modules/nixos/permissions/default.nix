@@ -44,7 +44,7 @@ in
     userWithBaseGroups = mapAttrs (username: settings: mkMerge [
       settings { extraGroups = cfg.defaultGroups; }
     ]) cfg.users;
-  in {
+  in mkIf cfg.enable {
     users.users = userWithBaseGroups;
     nix.allowedUsers = allUsers;
     users.defaultUserShell = cfg.defaultUserShell;

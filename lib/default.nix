@@ -5,10 +5,27 @@ let
   nixpkgs = {
     inherit overlays;  # TODO is this the cause for nox/import nixpks not working?
     config = {
-      allowUnfree = true;
+      #allowUnfree = true;
       #allowBroken = true;
+      allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+        "nvidia-x11"
+        "nvidia-settings"
+        "cudatoolkit"
+        "steam"
+        "steam-original"
+        "unrar"
+        "discord"
+        "slack"
+        "teams"
+        "zoom"
+        "spotify"
+        "spotify-unwrapped"
+        "write_stylus"
+        "corefonts"
+        "google-chrome"
+      ];
       permittedInsecurePackages = [
-        "xpdf-4.03"
+        "xpdf-4.04"
       ];
     };
   };

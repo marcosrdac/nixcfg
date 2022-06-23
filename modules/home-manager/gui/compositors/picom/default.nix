@@ -11,7 +11,7 @@
     inactiveDim = "0.0";  # 0.2 before
     blur = true;
     backend = "glx";
-    refreshRate = 0;
+    #refreshRate = 0;
     experimentalBackends = true;
     fade = false;
     fadeDelta = 10;

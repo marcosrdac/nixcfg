@@ -7,6 +7,7 @@
 
   home.sessionVariables = {
     TERMINAL = "alacritty";
+    #TERMINAL = "xterm";
   };
 
   xdg.desktopEntries = rec {
