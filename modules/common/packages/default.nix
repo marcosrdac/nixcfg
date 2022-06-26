@@ -30,6 +30,7 @@ in
       acpi
       ventoy-bin  # bootable flash drive
       gparted
+      pptp
       alacritty
       at
       bc

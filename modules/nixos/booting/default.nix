@@ -28,8 +28,13 @@ in
         default = "/efi";
       };
     };
-        
-    efi = { };
+
+    efi = {
+      enable = mkEnableOption ''
+        Cofigure NixOS for a removable drive (compatible with both MBR and EFI loaders)
+        TODO describe partition setup required
+      '';
+    };
 
     useOSProber = mkEnableOption ''
       Whether to search for other operational systems for boot menu or not
@@ -62,5 +67,16 @@ in
         efi.efiSysMountPoint = cfg.portable.efiSysMountPoint;
       };
     })
+
+    (mkIf cfg.efi.enable {
+      boot.loader = {
+        grub = {
+          device = "nodev";
+          efiSupport = true;
+          efiInstallAsRemovable = true;
+        };
+      };
+    })
+
   ]);
 }

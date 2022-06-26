@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    #nixpkgs17.url = "github:NixOS/nixpkgs/nixos-17.09";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager/release-22.05";
@@ -11,8 +12,7 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: with builtins; let
-    overlays = [ (import ./overlays inputs) ];
-    lib = import ./lib { inherit inputs overlays; };
+    lib = import ./lib { inherit inputs; };
     hosts = attrNames (readDir ./hosts);
     users = attrNames (readDir ./users);
     getExtraHosts = username: let

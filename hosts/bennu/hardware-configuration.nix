@@ -8,34 +8,37 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/5fae3440-f093-46c3-9f35-1d490c170cc4";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+      fsType = "btrfs";
+      options = [ "subvol=root" "compress=zstd" ];
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b71f1c8a-fcf8-44ca-b921-0dd493b695e9";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+      fsType = "btrfs";
+      options = [ "subvol=home" "compress=zstd" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+      fsType = "btrfs";
+      options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/BC99-212B";
+    { device = "/dev/disk/by-uuid/8D00-3C46";
       fsType = "vfat";
     };
 
-  fileSystems."/mnt/hdd" =
-    { device = "/dev/disk/by-uuid/892b1061-772e-4b48-a2dc-e67cb5b7ebc7";
-      fsType = "ext4";
-    };
-
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/957ad7d5-a678-41d2-9f05-296d244fa5fe"; }
-    ];
+    [ { device = "/dev/disk/by-uuid/957ad7d5-a678-41d2-9f05-296d244fa5fe"; } ];
+    # options = [ "noatime" ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

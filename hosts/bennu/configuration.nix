@@ -16,26 +16,13 @@
   gui.enable = true;
   #graphics.nvidia.enable = true;
 
-  #booting = {
-  #  enable = true;
-  #  portable = {
-  #    enable = true;
-  #    device = "/dev/disk/by-id/ata-KINGSTON_SA400S37960G_0123456789ABCDEF";
-  #  };
-  #  tmpOnTmpfs = false;
-  #};
-  
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = false;
-    };
-    grub = {
-      efiSupport = true;
-      efiInstallAsRemovable = true;
-      device = "nodev";
-    };
+  booting = {
+    enable = true;
+    efi.enable = true;
+    tmpOnTmpfs = true;
+    useOSProber = false;
   };
-
+  
   services.logind.extraConfig = ''
     RuntimeDirectorySize=8G
     RuntimeDirectoryInodesMax=1048576  
@@ -94,8 +81,23 @@
   packages = {
     enable = true;
     design = true;
-    extra = [ ];
+    extra = with pkgs; [ ];
   };
+
+  networking.networkmanager.plugins = with pkgs; lib.mkForce [
+    networkmanager-pptp
+    networkmanager-vpnc
+  ];
+  #networking.networkmanager.plugins = with pkgs; lib.mkForce [
+    #networkmanager-pptp
+    #networkmanager-fortisslvpn
+    #networkmanager-iodine
+    #networkmanager-l2tp
+    #networkmanager-openconnect
+    #networkmanager-openvpn
+    #networkmanager-vpnc
+    #networkmanager-sstp
+  #];
 
   permissions = {
     enable = true;

@@ -35,7 +35,7 @@
       taskwarrior
 
       # PETROBRAS
-      networkmanager-vpnc
+      #networkmanager-vpnc
       singularity
       docker
       containerd
