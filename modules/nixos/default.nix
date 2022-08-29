@@ -1,11 +1,11 @@
 [
   ./audio
-  ./gaming
   ./bluetooth
   ./booting
   ./controllers
   ./encription
   ./flatpak
+  ./gaming
   ./graphics
   ./gui
   ./keyboard
@@ -17,4 +17,5 @@
   ./printer
   ./typeface
   ./variables
+  ./virtualization
 ]

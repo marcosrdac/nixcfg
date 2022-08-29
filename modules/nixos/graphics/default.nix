@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.graphics.nvidia;
+  nvidiaDriver = pkgs.linuxPackages.nvidia_x11;
 in
 {
   options.graphics.nvidia = {
@@ -16,11 +17,12 @@ in
       gcc      # needed?
 
       cudatoolkit
+      nvidiaDriver
     ];
 
     systemd.services.nvidia-control-devices = {
       wantedBy = [ "multi-user.target" ];
-      serviceConfig.ExecStart = "${pkgs.linuxPackages.nvidia_x11.bin}/bin/nvidia-smi";
+      serviceConfig.ExecStart = "${nvidiaDriver.bin}/bin/nvidia-smi";
     };
 
     #boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];

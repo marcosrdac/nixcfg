@@ -53,6 +53,9 @@ context.home.read=project:slf.hom
 context.home.write=project:slf.hom
 #home
 
+context.plan.read=pro.pln or +plan
+context.plan.write=pro.pln
+
 #context.los.read=project:los or +los
 context.work.read=pro:wrk or +work
 context.work.write=pro:wrk

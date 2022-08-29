@@ -33,12 +33,20 @@
     design = true;
     extra = with pkgs; [
       taskwarrior
+      xournalpp
+      lua5_3
+
+      # mail stuff
+      isync
+      msmtp
+      oauth2-proxy
+
+      # rclone
+      nextcloud-client
+      rclone
 
       # PETROBRAS
       #networkmanager-vpnc
-      singularity
-      docker
-      containerd
       
       scrot          # xorg screenshot  # TODO move to xorg module
       brightnessctl  # light control

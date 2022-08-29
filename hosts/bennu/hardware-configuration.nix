@@ -12,6 +12,10 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  
+
+  # space_cache (?)
+  # https://wiki.tnonline.net/w/Btrfs/Space_Cache
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
@@ -19,10 +23,9 @@
       options = [ "subvol=root" "compress=zstd" ];
     };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
-      fsType = "btrfs";
-      options = [ "subvol=home" "compress=zstd" ];
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/8D00-3C46";
+      fsType = "vfat";
     };
 
   fileSystems."/nix" =
@@ -31,10 +34,23 @@
       options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/8D00-3C46";
-      fsType = "vfat";
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+      fsType = "btrfs";
+      options = [ "subvol=home" "compress=zstd" ];
     };
+
+  #fileSystems."/tmp" =
+  #  { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+  #    fsType = "btrfs";
+  #    options = [ "subvol=tmp" ];
+  #  };
+
+  #fileSystems."/tmp" = {
+  #  fsType = "tmpfs";
+  #  device = "tmpfs";
+  #  options = [ "nosuid" "nodev" "relatime" "size=14G" ];
+  #};
 
   swapDevices =
     [ { device = "/dev/disk/by-uuid/957ad7d5-a678-41d2-9f05-296d244fa5fe"; } ];

@@ -50,14 +50,9 @@ nix-env -f '<nixpkgs>' -iA nixUnstable
 ```
 
 
-### Are you a normal user and does not have sudo access? (not fully tested)
+<!-- ### Are you a normal user and does not have sudo access? (not fully tested)
 
-Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default.
-
-
-### Reminder before instalation
-
-If you are going to use SSH, you should be setting your ssh key up with GitHub by now.
+Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default. -->
 
 
 ## Current user configuration
@@ -65,10 +60,7 @@ If you are going to use SSH, you should be setting your ssh key up with GitHub b
 ### Download
 
 ```sh
-# https
 git clone https://github.com/marcosrdac/nixcfg $HOME/.config/home-manager
-# ...or ssh
-git clone git@github.com:marcosrdac/nixcfg.git $HOME/.config/home-manager
 ```
 
 
@@ -91,10 +83,7 @@ TODO add a placeholder for non-NixOS machines I might use
 As super user:
 
 ```sh
-# https
 git clone https://github.com/marcosrdac/nixcfg /etc/nixos
-# ...or ssh
-git clone git@github.com:marcosrdac/nixcfg.git /etc/nixos
 ```
 
 ### Set the system hostname
@@ -133,6 +122,15 @@ home-manager switch --flake "/etc/nixos#$(hostname)-$USER"
 home-manager switch --flake "/etc/nixos#adam-marcosrdac"
 ```
 
+
+## Moving from HTTPS to SSH
+
+Something like this
+
+```sh
+git remote add origin git@github.com:marcosrdac/nixcfg.git
+git remote --set-url origin git@github.com:marcosrdac/nixcfg.git
+```
 
 ## Inspiration
 

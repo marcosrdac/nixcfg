@@ -62,7 +62,6 @@ in
 
       # needed?
       singularity
-      docker
       containerd
     ];
     design-packages = [

@@ -49,6 +49,9 @@ with inputs.nixpkgs.lib;
           #paul = import paul { pkgs = prev; };
         };
       };
+      nixos-17 = import inputs.nixpkgs-17 {
+        system = prev.system;
+      };
     };
   in [
     sources

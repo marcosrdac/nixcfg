@@ -27,6 +27,15 @@ let wiki_1.syntax = 'markdown'
 let wiki_1.nested_syntaxes = vimwiki_nested_syntaxes
 let wiki_1.auto_diary_index = 1
 
+" not using because of a CSS error
+"let wiki_1.path_html = '~/dox/html/'
+"let wiki_1.template_path = '~/dox/templates/'
+"let wiki_1.template_default = 'default'
+""let wiki_1.custom_wiki2html = 'vimwiki_markdown'
+""let wiki_1.custom_wiki2html = '/nix/store/zm96a2m0x28bdlbrph918zq14hy6flcc-vimwiki-markdown-0.4.0/bin/vimwiki_markdown'
+"let wiki_1.template_ext = '.tpl'
+
+
 let g:vimwiki_list = [wiki_1]
 
 

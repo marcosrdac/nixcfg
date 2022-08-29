@@ -14,7 +14,7 @@
   };
 
   gui.enable = true;
-  #graphics.nvidia.enable = true;
+  graphics.nvidia.enable = true;
 
   booting = {
     enable = true;
@@ -22,9 +22,16 @@
     tmpOnTmpfs = true;
     useOSProber = false;
   };
-  
+
+  #boot.tmpOnTmpfs = cfg.boot.tmpOnTmpfs;
+  #boot.cleanTmpDir = !cfg.boot.tmpOnTmpfs;
+
+  boot.tmpOnTmpfs = true;
+  boot.cleanTmpDir = false;
+  boot.tmpOnTmpfsSize = "180%";
+
   services.logind.extraConfig = ''
-    RuntimeDirectorySize=8G
+    RuntimeDirectorySize=20G
     RuntimeDirectoryInodesMax=1048576  
   '';
 
@@ -99,13 +106,17 @@
     #networkmanager-sstp
   #];
 
+  virtualization = {
+    docker = true;
+  };
+
   permissions = {
     enable = true;
     users = {
       marcosrdac = {
         description = "Marcos Conceição";
         isNormalUser = true;
-        extraGroups = [ "nixcfg" "wheel" "vboxusers" ];
+        extraGroups = [ "nixcfg" "wheel" "docker" "vboxusers" ];
       };
       guest = {
         description = "Guest";

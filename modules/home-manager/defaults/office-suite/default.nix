@@ -8,7 +8,7 @@
     xpdf  #=: pdftotext, pdfimages - tagged insecure (?)
     imagemagick
     inkscape gimp
-    unstable.write_stylus
+    write_stylus
     aegisub
   ];  
 

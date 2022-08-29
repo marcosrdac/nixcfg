@@ -91,6 +91,11 @@ pkgs.neovim.override {
             vim-devicons                   # NERDTree file icons
             vim-nerdtree-syntax-highlight  # highlights filetypes
             ctrlp-vim                      # file fuzyfinder
+            #nvim-fzf
+            fzf-vim
+            #pkgs.vimwiki-markdown  # dream
+            #unstable.vim-markdown-composer  # did not work
+            markdown-preview-nvim  # very nice
         
             # easy-writting
             # bracketting

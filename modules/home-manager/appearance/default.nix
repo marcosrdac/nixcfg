@@ -212,7 +212,7 @@ let
   #colorscheme = colorSchemes."tube";
   #colorscheme = colorSchemes."twilight";
   #colorscheme = colorSchemes."unikitty-dark";
-  #colorscheme = colorSchemes."unikitty-light";
+  colorscheme = colorSchemes."unikitty-light";
   #colorscheme = colorSchemes."unikitty-reversible";
   #colorscheme = colorSchemes."uwunicorn";
   #colorscheme = colorSchemes."vice";
@@ -224,12 +224,12 @@ let
   #colorscheme = colorSchemes."windows-highcontrast-light";
   #colorscheme = colorSchemes."windows-nt";
   #colorscheme = colorSchemes."windows-nt-light";
-  #colorscheme = colorSchemes."woodland";
   #colorscheme = colorSchemes."xcode-dusk";
   #colorscheme = colorSchemes."zenburn";
   #colorscheme = colorSchemes."windows-10";
+  #colorscheme = colorSchemes."woodland";
 
-  colorscheme = colorSchemes."harmonic-dark";
+  #colorscheme = colorSchemes."harmonic-dark";
   #colorscheme = colorSchemes."harmonic-light";
   #colorscheme = colorSchemes."greenscreen";
 

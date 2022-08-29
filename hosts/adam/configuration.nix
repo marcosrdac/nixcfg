@@ -94,7 +94,7 @@
       marcosrdac = {
         description = "Marcos Conceição";
         isNormalUser = true;
-        extraGroups = [ "nixcfg" "wheel" "vboxusers" ];
+        extraGroups = [ "nixcfg" "wheel" "docker" "vboxusers" ];
       };
       guest = {
         description = "Guest";
