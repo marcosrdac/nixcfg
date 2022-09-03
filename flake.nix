@@ -37,5 +37,7 @@
         name = "${pair.hostname}-${pair.username}";
         value = lib.mkUser pair;
       }) user-host-pairs);
+    
+    aarch64-linux.homeConfigurations = self.homeConfigurations;
   };
 }
