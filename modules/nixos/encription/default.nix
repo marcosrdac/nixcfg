@@ -6,14 +6,16 @@ let
 in {
 
   options.encription = {
-    enable = mkOption {
-      description = "Whether to enable GPG agent or not";
-      type = with types; bool;
-      default = true;
+    gpg = {
+      enable = mkOption {
+        description = "Whether to enable GPG agent or not";
+        type = with types; bool;
+        default = true;
+      };
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.gpg.enable {
     programs.gnupg.agent.enable = true;
   };
 

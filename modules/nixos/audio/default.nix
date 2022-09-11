@@ -5,11 +5,7 @@ let
   cfg = config.audio;
 in {
   options.audio = {
-    enable = mkOption {
-      description = "Whether to enable sound or not";
-      type = with types; bool;
-      default = true;
-    };
+    enable = mkEnableOption "Whether to enable sound or not";
   };
 
   config = mkIf cfg.enable {

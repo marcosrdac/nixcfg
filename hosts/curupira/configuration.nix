@@ -4,6 +4,8 @@
   imports = [
     ./oci
     ./hardware-configuration.nix
+    ./nginx.nix
+    ./nextcloud.nix
   ];
 
   host = {
@@ -14,11 +16,35 @@
     nixos = "22.05";
   };
 
-  environment.systemPackages = with pkgs; [
-    lf
-    vim
-    neovim
-    wget
-    git
-  ];
+  booting = {
+    enable = true;
+    tmpOnTmpfs = false;
+  };
+
+  permissions = {
+    users = {
+      marcosrdac = {
+        description = "Marcos Conceição";
+        isNormalUser = true;
+        extraGroups = [ "nixcfg" "wheel" "docker" ];
+      };
+    };
+  };
+
+  packages = {
+    list = with pkgs; [
+      lf
+      vim
+      neovim
+      wget
+      git
+      screen
+
+      imagemagick
+      ffmpeg
+
+      # 
+      #openiscsi
+    ];
+  };
 }

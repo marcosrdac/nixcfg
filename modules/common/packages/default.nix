@@ -6,32 +6,24 @@ let
 in
 {
   options.packages = {
-    enable = mkEnableOption "Enable default package management";
-
-    basic = mkOption {
-      description = "Install default basic packages?";
-      type = with types; bool;
-      default = true;
-    };
-
-    design = mkEnableOption "Install default design packages?";
-
-    extra = mkOption {
+    list = mkOption {
       description = "Extra packages to be installed";
       type = with types; listOf package;
       default = [ ];
       example = literalExpression ''[ pkgs.inkscape ]'';
     };
 
+    basic = mkEnableOption "Install default basic packages?";
+    design = mkEnableOption "Install default design packages?";
   };
 
   config = with pkgs; let 
     basic-packages = [
-      acpi
-      ventoy-bin  # bootable flash drive
+      acpi  # TODO useful for notebooks, should be separated from basic
+      ventoy-bin  # TODO bootable flash drive
       gparted
       pptp
-      alacritty
+      alacritty  # TODO not useful for servers... another group for this one here
       at
       bc
       curl
@@ -58,7 +50,7 @@ in
       unzip
       usbutils
       wget
-      zip
+      zip  # this is truly basic
 
       # needed?
       singularity
@@ -68,8 +60,8 @@ in
       gimp
       inkscape
     ];
-    packages = optionals cfg.enable (
-      cfg.extra
+    packages = (
+      cfg.list
       ++ [ inputs.home-manager.packages.${system}.home-manager ]
       ++ (optionals cfg.basic basic-packages)
       ++ (optionals cfg.design design-packages)

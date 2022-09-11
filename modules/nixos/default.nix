@@ -9,8 +9,8 @@
   ./graphics
   ./gui
   ./keyboard
-  ./mount
-  ./mouse
+  ./mounter
+  ./pointer
   ./network
   ./nix
   ./permissions

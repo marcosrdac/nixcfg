@@ -6,11 +6,7 @@ let
 in
 {
   options.variables = {
-    enable = mkOption {
-      description = "Enable session variables configuration";
-      type = with types; bool;
-      default = true;
-    };
+    enable = mkEnableOption "Enable session variables configuration";
 
     useDefault = mkOption {
       description = "Whether to use default environment variables or not";
@@ -28,7 +24,7 @@ in
 
   config = let
     defaultVariables = {
-      EDITOR = "nvim";
+      EDITOR = "nvim";  # TODO necessary?
     };
   in {
     environment.variables = mkIf cfg.enable

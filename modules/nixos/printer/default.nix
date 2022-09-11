@@ -6,11 +6,7 @@ let
 in
 {
   options.printer = {
-    enable = mkOption {
-      description = "Enable default printing configuration";
-      type = with types; bool;
-      default = true;
-    };
+    enable = mkEnableOption "Enable default printing configuration";
 
     drivers = mkOption {
       description = "Extra printing drivers";

@@ -62,7 +62,12 @@
   #graphics.nvidia.enable = true;
   graphics.nvidia.enable = false;
 
-  audio.enable = true; # TODO make default user module with 'mkForce'd options
+  # TODO make default user module with 'mkForce'd options (of just this kind of settings set used)
+  # this would be useful for non-servers
+  audio.enable = true;
+  encryption.gpg.enable = true;
+  mounter.enable = true;
+  pointer.enable = true;
 
   network = {
     enable = true;
@@ -83,9 +88,8 @@
   };
 
   packages = {
-    enable = true;
     design = true;
-    extra = [ ];
+    list = [ ];
   };
 
   permissions = {
@@ -103,4 +107,5 @@
     };
     defaultGroups = [ "networkmanager" "lp" ];
   };
+
 }

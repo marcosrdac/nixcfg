@@ -2,15 +2,11 @@
 
 with lib;
 let
-  cfg = config.mouse;
+  cfg = config.pointer;
 in
 {
-  options.mouse = {
-    enable = mkOption {
-      description = "Enable default mouse configuration";
-      type = with types; bool;
-      default = true;
-    };
+  options.pointer = {
+    enable = mkEnableOption "Enable default mouse configuration";
 
     touchPad = mkOption {
       description = "Enable touch pad configuration";

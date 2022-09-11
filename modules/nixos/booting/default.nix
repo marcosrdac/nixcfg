@@ -8,6 +8,7 @@ in
   options.booting = {
     enable = mkEnableOption "Enable default host configuration";
 
+    # TODO ADD OCI BOOT
     portable = {
       enable = mkEnableOption ''
         Cofigure NixOS for a removable drive (compatible with both MBR and EFI loaders)

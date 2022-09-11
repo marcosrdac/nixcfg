@@ -123,14 +123,52 @@ home-manager switch --flake "/etc/nixos#adam-marcosrdac"
 ```
 
 
-## Moving from HTTPS to SSH
+## Moving remote from HTTPS to SSH
 
-Something like this
+To see current remotes:
 
 ```sh
-git remote add origin git@github.com:marcosrdac/nixcfg.git
-git remote --set-url origin git@github.com:marcosrdac/nixcfg.git
+git remote -v
 ```
+
+To change to SSH:
+
+```sh
+set-url origin git@github.com:marcosrdac/nixcfg.git
+```
+
+
+## Configuring SSH keys
+
+```sh
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+```
+
+Copy `cat` output and paste it into a new SSH key with name `username@hostname` where username and hostname are your current ones.
+
+
+## Configuring git
+
+```sh
+git config --global user.email "mail@marcosrdac.com"
+git config --global user.name "Marcos Conceição"
+```
+
+## System maintenance
+
+### Remove unused packages (nix)
+
+```sh
+nix-collect-garbage -d
+```
+
+### Remove unused packages (home-manager)
+
+```sh
+TODO
+```
+
 
 ## Inspiration
 
