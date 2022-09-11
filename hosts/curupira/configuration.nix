@@ -1,12 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./oci
-    ./hardware-configuration.nix
-    ./nginx.nix
-    ./nextcloud.nix
-  ];
 
   host = {
     name = "curupira";
@@ -16,10 +10,19 @@
     nixos = "22.05";
   };
 
+  imports = [
+    ./oci
+    ./hardware-configuration.nix
+    ./nginx.nix
+    ./nextcloud.nix
+  ];
+
   booting = {
     enable = true;
     tmpOnTmpfs = false;
   };
+
+  variables.enable = true;
 
   permissions = {
     users = {

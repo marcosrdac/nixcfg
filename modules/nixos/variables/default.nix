@@ -24,7 +24,7 @@ in
 
   config = let
     defaultVariables = {
-      EDITOR = "nvim";  # TODO necessary?
+      EDITOR = "nvim";
     };
   in {
     environment.variables = mkIf cfg.enable

@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ 
-    ./hardware-configuration.nix
-  ];
 
   host = {
     name = "adam";
@@ -12,6 +9,10 @@
     system = "x86_64-linux";
     nixos = "21.11";
   };
+
+  imports = [ 
+    ./hardware-configuration.nix
+  ];
 
   gui.enable = true;
 

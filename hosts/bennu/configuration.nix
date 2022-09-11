@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ 
-    ./hardware-configuration.nix
-  ];
 
   host = {
     name = "bennu";
@@ -12,6 +9,10 @@
     system = "x86_64-linux";
     nixos = "22.05";
   };
+
+  imports = [ 
+    ./hardware-configuration.nix
+  ];
 
   gui.enable = true;
   graphics.nvidia.enable = true;
