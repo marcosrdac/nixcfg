@@ -2,6 +2,9 @@
 
 {
 
+  # building aarch-64 stuff
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   host = {
     name = "bennu";
     zone = "Brazil/East";

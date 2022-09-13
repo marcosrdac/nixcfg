@@ -41,6 +41,7 @@ in
       neovim
       nix-index
       nixpkgs-fmt
+      nixpkgs-review
       nox
       ntfs3g
       p7zip

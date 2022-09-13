@@ -212,7 +212,6 @@ let
   #colorscheme = colorSchemes."tube";
   #colorscheme = colorSchemes."twilight";
   #colorscheme = colorSchemes."unikitty-dark";
-  colorscheme = colorSchemes."unikitty-light";
   #colorscheme = colorSchemes."unikitty-reversible";
   #colorscheme = colorSchemes."uwunicorn";
   #colorscheme = colorSchemes."vice";
@@ -229,9 +228,10 @@ let
   #colorscheme = colorSchemes."windows-10";
   #colorscheme = colorSchemes."woodland";
 
-  #colorscheme = colorSchemes."harmonic-dark";
+  colorscheme = colorSchemes."harmonic-dark";
   #colorscheme = colorSchemes."harmonic-light";
   #colorscheme = colorSchemes."greenscreen";
+  #colorscheme = colorSchemes."unikitty-light";
 
   wallpaper = nixWallpaperFromScheme {
     scheme = config.colorscheme;
