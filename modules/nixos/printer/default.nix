@@ -18,15 +18,30 @@ in
 
   config = mkIf cfg.enable {
 
-    services.printing = {
+    # wifi printing
+    services.printing.browsing = true;
+    services.printing.browsedConf = ''
+      BrowseDNSSDSubTypes _cups,_print
+      BrowseLocalProtocols all
+      BrowseRemoteProtocols all
+      CreateIPPPrinterQueues All
+
+      BrowseProtocols all
+         '';
+    services.avahi = {
       enable = true;
-      drivers = with pkgs; cfg.drivers ++ [
-	gutenprint
-      ];
+      nssmdns = true;
     };
+    #
+
+    services.printing.enable = true;
+    services.printing.drivers = with pkgs; cfg.drivers ++ [
+      gutenprint gutenprintBin
+    ];
 
     environment.systemPackages = with pkgs; [
-      gutenprint  #=: escputil: maintenance
+      system-config-printer
+      gutenprint gutenprintBin #=: escputil: maintenance
     ];
   };
 }

@@ -10,6 +10,7 @@ in
     ./bars
     ./compositors
     ./notifiers
+    ./launchers
   ];
 
   options.gui.enable = mkEnableOption "Enable default gui configuration";

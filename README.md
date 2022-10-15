@@ -12,7 +12,7 @@ These configurations can be used differently to manage:
 - NixOS should be easy to reinstall and be ready to use — so that I no longer feel attached to my machines.
 - Each host should have its own configuration file inside `./hosts`.
 - All frequently used boilerplate should be modularized in `./modules` so that a computer configuration is always clear and easy to be made intuitively.
-- A user should not need be forced use `home-manager`. Each user is responsible for using the system as wished (imperatively or declaratively).
+- A user should not be forced to use `home-manager`. Each user is responsible for using the system as wished (imperatively or declaratively).
 - Each user should be able to configure their own WM/GE without having to contact the system admin.
 
 

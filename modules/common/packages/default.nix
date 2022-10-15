@@ -60,6 +60,7 @@ in
     design-packages = [
       gimp
       inkscape
+      krita
     ];
     packages = (
       cfg.list
@@ -79,6 +80,6 @@ in
       };
 
     } else {
-      home.packages = packages ++ [pkgs.krita];
+      home.packages = packages;
     };
 }

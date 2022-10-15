@@ -94,7 +94,7 @@ alt + s; {_,shift + } s
 {_,alt + v : } alt + {Return,o}
 	{ ,pkill -ALRM sxhkd;} \
 		{$TERMINAL   , \
-		 tlauncher }
+		 rofi -show run }
 		 #alacritty --class launcher -e menu-run }
 		 #term-with-class dropdown_opener menu-run }
 

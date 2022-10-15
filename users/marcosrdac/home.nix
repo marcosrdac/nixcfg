@@ -6,6 +6,7 @@
     #xfce.enable = true;
     bspwm.enable = true;
     polybar.enable = true;
+    rofi.enable = true;
   };
 
   home.keyboard = {
@@ -29,9 +30,8 @@
   #};
 
   packages = {
-    enable = true;
     design = true;
-    extra = with pkgs; [
+    list = with pkgs; [
       taskwarrior
       xournalpp
       lua5_3

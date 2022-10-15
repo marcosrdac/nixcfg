@@ -31,7 +31,7 @@ in {
     xsession.windowManager.bspwm = {
       enable = true;
       #extraConfig = pkgs.lib.fileContents ./bspwmrc;
-      monitors = {  # create activate monitors script and data/config file looker
+      monitors = {  # TODO create activate monitors script and data/config file looker
         "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
       };
       settings = {
@@ -61,7 +61,7 @@ in {
     xdg.configFile."bspwm/colors" = {
       #onChange = "sh ${config.xdg.configHome}/bspwm/colors";
       #onChange = "${pkgs.dash}/bin/dash ${config.xdg.configHome}/bspwm/colors";  # works
-      onChange = "sh ${config.xdg.configHome}/bspwm/colors";
+      onChange = builtins.trace "sh ${config.xdg.configHome}/bspwm/colors" "sh ${config.xdg.configHome}/bspwm/colors";
       text = with config.colorscheme.colors; ''
         #!/usr/bin/env sh
         bspc config focused_border_color '#${base05}'

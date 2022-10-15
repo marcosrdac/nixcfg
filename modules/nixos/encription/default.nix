@@ -2,10 +2,10 @@
 
 with lib;
 let
-  cfg = config.encription;
+  cfg = config.encryption;
 in {
 
-  options.encription = {
+  options.encryption = {
     gpg = {
       enable = mkOption {
         description = "Whether to enable GPG agent or not";
