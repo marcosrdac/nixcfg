@@ -1,4 +1,4 @@
-{ inputs }:
+{ inputs, ... }:
 
 with inputs.nixpkgs.lib;
 let
@@ -12,7 +12,7 @@ let
   getSystem = host-and-user: let
     host-config = getHostConfig host-and-user;
     users-host-config = getUsersHostConfig host-and-user;
-    nulls = { config = null; pkgs = null; };
+    nulls = { config = null; pkgs = null; modulesPath = null; };
   in if pathExists host-config
     then (import host-config nulls).host.system
     else (import users-host-config nulls).host.system;
