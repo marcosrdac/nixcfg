@@ -6,7 +6,6 @@ let
   wallpapers = (import ./wallpapers.nix) pkgs;
   fonts = (import ./fonts.nix) pkgs;
 
-  #colorscheme = colorSchemes."3024";
   #colorscheme = colorSchemes."apathy";
   #colorscheme = colorSchemes."apprentice";
   #colorscheme = colorSchemes."ashes";
@@ -228,6 +227,7 @@ let
   #colorscheme = colorSchemes."windows-10";
   #colorscheme = colorSchemes."woodland";
 
+  #colorscheme = colorSchemes."3024";
   colorscheme = colorSchemes."harmonic-dark";
   #colorscheme = colorSchemes."harmonic-light";
   #colorscheme = colorSchemes."greenscreen";
@@ -253,11 +253,11 @@ in
     inputs.nix-colors.homeManagerModule
   ];
 
-  services.redshift = {
-    enable = true;
-    latitude = -12.97;
-    longitude = -38.50;
-  };
+  #services.redshift = {
+  #  enable = true;
+  #  latitude = -12.97;
+  #  longitude = -38.50;
+  #};
 
   colorscheme = colorscheme;
 

@@ -22,6 +22,7 @@ with inputs.nixpkgs.lib;
       "corefonts"
       "google-chrome"
       "dropbox"
+      "vmware-horizon-client"
     ];
     permittedInsecurePackages = [
       "xpdf-4.04"

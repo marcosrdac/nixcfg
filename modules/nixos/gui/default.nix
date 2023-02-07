@@ -25,6 +25,8 @@ in
 
       updateDbusEnvironment = true;  # TODO dbus needed (to test)
 
+      #desktopManager.gnome.enable = true;
+
       desktopManager.session = [
         {
           name = "Custom";
@@ -34,6 +36,10 @@ in
           '';
         }
       ];
+
+      #displayManager.gdm = {
+      #  enable = true;
+      #};
 
       displayManager.lightdm = {
         enable = true;

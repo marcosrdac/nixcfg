@@ -1,7 +1,7 @@
 { ... }: {
   imports = [
     ./bspwm
-    ./riverwm
+    ./river
     ./xfce
   ];
 }

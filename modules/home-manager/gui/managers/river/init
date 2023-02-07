@@ -11,6 +11,9 @@ normalmap () {
   riverctl map normal "$@"
 }
 
+# TODO remove this line
+#normalmap $M+$S Return spawn foot
+
 defquickmode () {
   riverctl declare-mode $3
   riverctl map normal $1 $2 enter-mode $3
@@ -191,8 +194,8 @@ riverctl default-layout rivertile
 exec rivertile -outer-padding $OUTER_GAP -view-padding $INNER_GAP
 
 sleep 3
-riverctl spawn dunst_start
-riverctl spawn waybar
+#riverctl spawn dunst_start
+#riverctl spawn waybar
 #riverctl spawn "[ -f "$XRESOURCES" ] && xrdb "$XRESOURCES""
 #riverctl spawn "[ -f "$XDG_CACHE_HOME/wal/colors.Xresources" ] && xrdb -merge "$XDG_CACHE_HOME/wal/colors.Xresources""
 #riverctl spawn "dunst_start"

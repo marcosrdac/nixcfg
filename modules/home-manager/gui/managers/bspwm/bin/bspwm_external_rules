@@ -36,6 +36,9 @@ case "$class" in
   # bar pop-up calendar
   Yad) echo "state=floating border=off" ;;
 
+  "vmware-view") echo "state=floating" ;;
+  "Vmware-view") echo "state=floating" ;;
+
   # dropdown terminals
   tchoice)
     echo "state=floating sticky=on private=on border=on center=true" ;;

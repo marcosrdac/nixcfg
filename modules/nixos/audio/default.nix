@@ -18,7 +18,7 @@ in {
       jack.enable = true;
       #wireplumber.enable = true;
     };
-    #hardware.pulseaudio.enable = true;
+    hardware.pulseaudio.enable = false;
     environment.systemPackages = with pkgs; [
       pavucontrol
     ];

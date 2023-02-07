@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-
   # building aarch-64 stuff
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
@@ -13,11 +12,19 @@
     nixos = "22.05";
   };
 
+  environment.etc = {
+    "resolv.conf".text = ''
+      nameserver 8.8.8.8
+      nameserver 8.8.4.4
+    '';
+  };
+
   imports = [ 
     ./hardware-configuration.nix
   ];
 
   gui.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
   graphics.nvidia.enable = true;
 
   booting = {
@@ -52,7 +59,7 @@
   };
 
   #controllers.enable = true;
-  #packaging.flatpak.enable = true;
+  packaging.flatpak.enable = true;
   gaming = {
     enable = true;
     steam = true;
@@ -95,6 +102,7 @@
   };
 
   packages = {
+    basic = true;
     design = true;
     list = with pkgs; [ ];
   };
@@ -102,7 +110,9 @@
   networking.networkmanager.plugins = with pkgs; lib.mkForce [
     networkmanager-pptp
     networkmanager-vpnc
+    networkmanager-fortisslvpn
   ];
+
   #networking.networkmanager.plugins = with pkgs; lib.mkForce [
     #networkmanager-pptp
     #networkmanager-fortisslvpn

@@ -7,6 +7,10 @@
     # TODO create userdatadir default dir
   };
 
+  home.packages = with pkgs; [
+    jq
+  ];
+
   xdg.configFile = {
 
     "task/taskrc" = {

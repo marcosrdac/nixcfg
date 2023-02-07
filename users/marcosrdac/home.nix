@@ -3,10 +3,20 @@
 {
   gui = {
     enable = true;
-    #xfce.enable = true;
+    # X for me
     bspwm.enable = true;
     polybar.enable = true;
     rofi.enable = true;
+    dunst.enable = true;
+    picom.enable = true;
+    #redshift.enable = true;  # does not exist
+
+    # X for people TODO
+    #xfce.enable = true;
+
+    # wayland
+    #river.enable = true;
+    #wofi.enable = true;
   };
 
   home.keyboard = {
@@ -36,6 +46,9 @@
       xournalpp
       lua5_3
 
+      # test
+      #swhkd
+
       # mail stuff
       isync
       msmtp
@@ -46,6 +59,7 @@
       rclone
 
       # PETROBRAS
+      vmware-horizon-client
       #networkmanager-vpnc
       
       scrot          # xorg screenshot  # TODO move to xorg module
@@ -60,6 +74,8 @@
       lxappearance
       #(callPackage (import ./packages/nvim) {})  # maybe move nvim overlay to package?
       gnome.file-roller
+
+      #nur.repos.timjrd.overlays.popcorntime
     ];
   };
 

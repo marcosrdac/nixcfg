@@ -2,7 +2,9 @@
 with config.colorscheme.colors;
 
 #alternate-normal-background: #${base01};
-builtins.toString (pkgs.writeText "theme.rasi" ''
+# man rofi-theme then /Layout to understand elements
+builtins.toString (pkgs.writeText "style.css" ''
+
 * {
     /* Theme settings */
     highlight: bold;

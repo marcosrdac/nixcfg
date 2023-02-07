@@ -19,7 +19,8 @@ let vimwiki_nested_syntaxes = {'shell': 'sh', 'sh': 'sh', 'bash': 'sh',
 
 let wiki_1 = {}
 let wiki_1.path = g:DOCUMENTS
-let wiki_1.diary_rel_path = 'psn/log/jrn'
+"let wiki_1.diary_rel_path = 'psn/log/jrn'
+let wiki_1.diary_rel_path = 'log/jrn'
 let wiki_1.diary_index = 'index'
 let wiki_1.diary_header = 'Journal'
 let wiki_1.ext = '.md'

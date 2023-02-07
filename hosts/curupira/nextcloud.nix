@@ -4,21 +4,57 @@ let
   baseDir = "/mnt/nextcloud";
   nextcloudDir = "${baseDir}/root";
   passDir = "/mnt/pass/nextcloud";
-  subdomain = "nextcloud.marcosrdac.com";
+  domain = "marcosrdac.com";
   extraSubdomains = [ "132.226.242.130" "cloud.marcosrdac.com" ];
 in {
-  # TODO correct permissions for pass dirs
+
+  services.nginx.virtualHosts = {
+    "nextcloud.${domain}" = {
+      ## Force HTTP redirect to HTTPS
+      forceSSL = true;
+      ## LetsEncrypt
+      enableACME = true;
+      # the rest is done by nextcloud module
+    };
+
+    "collabora.${domain}" = {
+      forceSSL = true;
+      #forceSSL = false;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9980/";
+      };
+    };
+  };
 
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud24;
+    #package = pkgs.nextcloud25;  # TODO
 
     #nginx.enable = true;
     #hostName = "localhost";
-    hostName = subdomain;
+    hostName = "nextcloud.${domain}";
 
     home = nextcloudDir;
     #datadir = nextcloudDir;
+
+    extraAppsEnable = true;
+    extraApps = {
+      #maps = pkgs.fetchNextcloudApp {
+      #  name = "maps";
+      #  sha256 = "007y80idqg6b6zk6kjxg4vgw0z8fsxs9lajnv49vv1zjy6jx2i1i";
+      #  url = "https://github.com/nextcloud/maps/releases/download/v0.1.9/maps-0.1.9.tar.gz";
+      #  version = "0.1.9";
+      #};
+      #phonetrack = pkgs.fetchNextcloudApp {
+      #  name = "phonetrack";
+      #  sha256 = "0qf366vbahyl27p9mshfma1as4nvql6w75zy2zk5xwwbp343vsbc";
+      #  url = "https://gitlab.com/eneiluj/phonetrack-oc/-/wikis/uploads/931aaaf8dca24bf31a7e169a83c17235/phonetrack-0.6.9.tar.gz";
+      #  version = "0.6.9";
+      #};
+    };
+    appstoreEnable = true;
 
     autoUpdateApps = {
       enable = true;
@@ -36,7 +72,7 @@ in {
       dbpassFile = "${passDir}/db";
       #dbpassFile = "/var/nextcloud-db-pass";
 
-      extraTrustedDomains = extraSubdomains; 
+      extraTrustedDomains = extraSubdomains;
       overwriteProtocol = "https";
 
       #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/web-apps/nextcloud.nix
@@ -45,8 +81,7 @@ in {
 
   services.postgresql = {
     enable = true;
-
-    # Ensure the database, user, and permissions always exist
+    # Ensure the database, user and permissions always exist
     ensureDatabases = [ "nextcloud" ];
     ensureUsers = [
       {
@@ -61,63 +96,28 @@ in {
     after = [ "postgresql.service" ];
   };
 
-  services.nginx = {
-    enable = true;
-
-    # Use recommended settings
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-
-    # Only allow PFS-enabled ciphers with AES256
-    sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
-
-    # Setup Nextcloud virtual host to listen on ports
-    virtualHosts = {
-      ${subdomain} = {
-        ## Force HTTP redirect to HTTPS
-        forceSSL = true;
-        ## LetsEncrypt
-        enableACME = true;
-
-        #locations."~ ^\/(?:index|apc|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+|.+\/richdocumentscode\/proxy|.+\/richdocumentscode_arm64\/proxy|)\.php(?:$|\/)".extraConfig = ''
-        #  fastcgi_split_path_info ^(.+?\.php)(\/.*|)$;
-        #  set $path_info $fastcgi_path_info;
-        #  try_files $fastcgi_script_name =404;
-        #  include fastcgi_params;
-        #  fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        #  fastcgi_param PATH_INFO $path_info;
-        #  fastcgi_param HTTPS on;
-        #  # Avoid sending the security headers twice
-        #  fastcgi_param modHeadersAvailable true;
-        #  # Enable pretty urls
-        #  fastcgi_param front_controller_active true;
-        #  fastcgi_pass php-handler;
-        #  fastcgi_intercept_errors on;
-        #  fastcgi_request_buffering off;
-        #'';
-
-        # (
-        # Not related to this config
-        #root = "/var/www/blog";
-        #locations."~ \.php$".extraConfig = ''
-        #  fastcgi_pass  unix:${config.services.phpfpm.pools.mypool.socket};
-        #  fastcgi_index index.php;
-        #'';
-        # )
-
+  virtualisation.oci-containers = {
+    backend = "docker";
+    containers = {
+      collabora = {
+        image = "collabora/code:22.05.10.1.1";
+        #image = "collabora/code:latest";
+        #host_port:container_port
+        #ports = [ "443:9980" ];
+        #ports = [ "9980:9980" ];
+        ports = [ "9980:9980" ];
+        environment = {
+          username = "admin";
+          password = "${passDir}/collabora";
+          dictionaries = "en_US,pt-br";
+          domain = "collabora.${domain}";
+          extra_params = "--o:ssl.enable=false";
+        };
       };
+      #onlyoffice = {
+      #  image = "onlyoffice/documentserver";
+      #  ports = [ "9981:80" ];
+      #};
     };
-
-    #virtualHosts = {
-    #  "cloud.marcosrdac.com" = {
-    #    ## Force HTTP redirect to HTTPS
-    #    forceSSL = true;
-    #    ## LetsEncrypt
-    #    enableACME = true;
-    #   };
-    # };
   };
-
 }
