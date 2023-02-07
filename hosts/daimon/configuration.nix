@@ -14,15 +14,9 @@
   ec2.efi = true;
   imports = [
     "${modulesPath}/virtualisation/amazon-image.nix" 
-    #./hardware-configuration.nix
-    #./nginx.nix
+    ./nginx
     #./nextcloud.nix
   ];
-
-  booting = {
-    enable = true;
-    tmpOnTmpfs = false;
-  };
 
   variables.enable = true;
 
@@ -45,10 +39,9 @@
       git
       screen
 
-      imagemagick
-      ffmpeg
+      #imagemagick
+      #ffmpeg
 
-      # 
       #openiscsi
     ];
   };
