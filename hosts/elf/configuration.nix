@@ -13,7 +13,7 @@
   ec2.hvm = true;
   imports = [
     "${modulesPath}/virtualisation/amazon-image.nix" 
-    #./nginx
+    ./nginx
     #./nextcloud
   ];
 

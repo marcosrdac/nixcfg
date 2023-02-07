@@ -100,9 +100,9 @@ hostname adam
 Then to build the machine for the first time:
 
 ```sh
-nixos-rebuild switch
-# ...or directly specifying the hostname and folder with
 nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
+# ...or directly specifying the hostname and folder with
+nixos-rebuild switch
 ```
 
 
@@ -122,8 +122,19 @@ home-manager switch --flake "/etc/nixos#$(hostname)-$USER"
 home-manager switch --flake "/etc/nixos#adam-marcosrdac"
 ```
 
+## Configuring SSH keys
 
-## Moving remote from HTTPS to SSH
+```sh
+ssh-keygen -t rsa -b 4096
+cat ~/.ssh/id_rsa.pub
+```
+
+Copy `cat` output and paste it into a new SSH key with 
+
+[Create a new SSH access key for GitHub](https://github.com/settings/ssh/new) using cat output and entitle it `username@hostname`, where username and hostname are your current ones.
+
+
+## Moving remote from HTTP to SSH
 
 To see current remotes:
 
@@ -134,19 +145,8 @@ git remote -v
 To change to SSH:
 
 ```sh
-set-url origin git@github.com:marcosrdac/nixcfg.git
+git remote set-url origin git@github.com:marcosrdac/nixcfg.git
 ```
-
-
-## Configuring SSH keys
-
-```sh
-ssh-keygen
-cat ~/.ssh/id_rsa.pub
-```
-
-Copy `cat` output and paste it into a new SSH key with name `username@hostname` where username and hostname are your current ones.
-
 
 ## Configuring git
 
@@ -160,7 +160,10 @@ git config --global user.name "Marcos Conceição"
 ### Remove unused packages (nix)
 
 ```sh
+# tip #1
 nix-collect-garbage -d
+# tip #2
+sudo nix-store --optimise
 ```
 
 ### Remove unused packages (home-manager)

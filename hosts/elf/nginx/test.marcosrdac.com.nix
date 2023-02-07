@@ -8,30 +8,45 @@ in {
   services.nginx.virtualHosts = {
     "${domain}" = {
       enableACME = true;
-
-      # SSL configuration
-      #addSSL = true;     # enables https (not needed at first)
-      forceSSL = true;    # auto-redirect http -> https
-      #onlySSL = true;    # do not allow http (5% confidence)
-      #rejectSSL = true;  # do not allow https  (5% confidence)
-
-      # remember everything must be nginx's (12% confidence)
+      forceSSL = true;
       root = "${domainRoot}";
     };
   };
 
   networking.firewall = {
     enable = true;
-    # reliable ports
     allowedTCPPorts = [ 80 443 ];
-    # fast ports
-    #allowedUDPPortRanges = [ { from = 4000; to = 4007; } { from = 8000; to = 8010; } ];
   };
 
   security.acme.certs = {
     "${domain}" = {
       email = "mail@marcosrdac.com";
     };
+  };
+
+  system.activationScripts."makeFilesFor<${domain}>" = let
+    makeHtml = title: body: ''
+      <!DOCTYPE html>
+      <html>
+        <body>
+          <h1>${title}</h1>
+          <p>${body}</p>
+        </body>
+      </html>
+      '';
+  in {
+    deps = [ "var" ];
+    text = let
+      title = "marcosrdac's test page";
+      body = "This is just a test page.";
+    in ''
+      domain_root="${domainRoot}"
+      domain_index="$domain_root/index.html"
+      [ -f "$domain_index" ] && exit 0
+      mkdir -p "$domain_root"
+      echo "${makeHtml title body}" >> "$domain_index"
+      chown -R "${config.services.nginx.user}" "$domain_root"
+    '';
   };
 
 }
