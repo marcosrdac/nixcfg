@@ -41,8 +41,7 @@
 
       #imagemagick
       #ffmpeg
-
-      #openiscsi
     ];
   };
+
 }

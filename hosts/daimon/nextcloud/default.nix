@@ -5,26 +5,16 @@ let
   nextcloudDir = "${baseDir}/root";
   passDir = "/mnt/pass/nextcloud";
   domain = "marcosrdac.com";
-  extraSubdomains = [ "132.226.242.130" "cloud.marcosrdac.com" ];
+  extraSubdomains = [ "cloud.marcosrdac.com" ];
 in {
 
-  services.nginx.virtualHosts = {
-    "nextcloud.${domain}" = {
-      ## Force HTTP redirect to HTTPS
-      forceSSL = true;
-      ## LetsEncrypt
-      enableACME = true;
-      # the rest is done by nextcloud module
-    };
+  #imports = [
+  #  ./collabora.nix
+  #];
 
-    #"collabora.${domain}" = {
-    #  forceSSL = true;
-    #  #forceSSL = false;
-    #  enableACME = true;
-    #  locations."/" = {
-    #    proxyPass = "http://127.0.0.1:9980/";
-    #  };
-    #};
+  services.nginx.virtualHosts."nextcloud.${domain}" = {
+    forceSSL = true;
+    enableACME = true;
   };
 
   services.nextcloud = {
@@ -55,6 +45,13 @@ in {
 
       #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/web-apps/nextcloud.nix
     };
+
+    #objetctstorage.s3 = {
+    #  enable = true;
+    #  bucket = "marcosrdac-daimon-nextcloud";
+    #  autocreate = false;
+    #  key = "KEY";
+    #};
 
     extraAppsEnable = true;
     extraApps = {
