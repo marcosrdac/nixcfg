@@ -17,6 +17,16 @@
     #./nextcloud
   ];
 
+  booting = {
+    enable = true;
+    tmpOnTmpfs = false;
+  };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 20 ];
+  };
+
   variables.enable = true;
 
   permissions = {
