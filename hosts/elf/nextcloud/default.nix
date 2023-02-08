@@ -1,11 +1,13 @@
 { config, pkgs, ... }:
 
+# mkdir -p /var/secret (+adding secrets)
+# mkdir -p /mnt/nextcloud
+
 let
-  baseDir = "/mnt/nextcloud";
-  nextcloudDir = "${baseDir}/root";
-  passDir = "/mnt/pass/nextcloud";
+  nextcloudDir = "/mnt/nextcloud/data";
+  secretDir = "/var/secret";
   domain = "marcosrdac.com";
-  extraSubdomains = [ "cloud.marcosrdac.com" ];
+  nextcloudSubdomain = "cloud.${domain}";
 in {
 
   #imports = [
@@ -22,36 +24,44 @@ in {
     package = pkgs.nextcloud24;
     #package = pkgs.nextcloud25;  # TODO
 
-    #nginx.enable = true;
-    #hostName = "localhost";
-    hostName = "nextcloud.${domain}";
+    hostName = "${nextcloudSubdomain}";
 
     home = nextcloudDir;
     #datadir = nextcloudDir;
 
     config = {
       adminuser = "admin";
-      adminpassFile = "${passDir}/admin";
+      adminpassFile = "${secretDir}/nextcloud-admin-user-secret";
 
       dbtype = "pgsql";
       dbname = "nextcloud";
       dbuser = "nextcloud";
       dbhost = "/run/postgresql"; # nextcloud will add /.s.PGSQL.5432 by itself
-      dbpassFile = "${passDir}/db";
+      dbpassFile = "${secretDir}/nextcloud-db-secret";
       #dbpassFile = "/var/nextcloud-db-pass";
 
-      extraTrustedDomains = extraSubdomains;
+      extraTrustedDomains = [ ];
       overwriteProtocol = "https";
 
       #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/web-apps/nextcloud.nix
     };
 
-    objetctstorage.s3 = {
+    objectstore.s3 = {
       enable = true;
-      bucket = "marcosrdac-daimon-nextcloud";
+      bucket = "marcosrdac-elf-nextcloud";
       autocreate = false;
-      key = "KEY";
+      key = "AKIASFIEOOH5Z2NDDP7C";
+      secretFile = "${secretDir}/nextcloud-s3-bucket-secret";
+      # below are needed in some S3 implementations
+      hostname = null;
+      port = null;
+      useSsl = null;
+      region = null;
+      usePathStyle = false;
     };
+
+    enableImagemagick = false;
+    extraOptions = { };
 
     extraAppsEnable = true;
     extraApps = {
@@ -77,6 +87,11 @@ in {
 
   };
 
+  systemd.services."nextcloud-setup" = {
+    requires = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
+  };
+
   services.postgresql = {
     enable = true;
     # Ensure the database, user and permissions always exist
@@ -89,33 +104,4 @@ in {
     ];
   };
 
-  systemd.services."nextcloud-setup" = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
-  };
-
-  #virtualisation.oci-containers = {
-  #  backend = "docker";
-  #  containers = {
-  #    collabora = {
-  #      image = "collabora/code:22.05.10.1.1";
-  #      #image = "collabora/code:latest";
-  #      #host_port:container_port
-  #      #ports = [ "443:9980" ];
-  #      #ports = [ "9980:9980" ];
-  #      ports = [ "9980:9980" ];
-  #      environment = {
-  #        username = "admin";
-  #        password = "${passDir}/collabora";
-  #        dictionaries = "en_US,pt-br";
-  #        domain = "collabora.${domain}";
-  #        extra_params = "--o:ssl.enable=false";
-  #      };
-  #    };
-  #    #onlyoffice = {
-  #    #  image = "onlyoffice/documentserver";
-  #    #  ports = [ "9981:80" ];
-  #    #};
-  #  };
-  #};
 }
