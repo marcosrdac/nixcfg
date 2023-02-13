@@ -67,7 +67,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/home-manager
 ### <a name="user-install"/> Install
 
 ```sh
-home-manager switch --flake "$HOME/.config/home-manager#$(hostname)-$USER"
+home-manager switch --flake "$HOME/.config/home-manager#$(hostname)-$(whoami)"
 # i.e.: if my hostname is `adam` and my username is `marcosrdac`:
 home-manager switch --flake "$HOME/.config/home-manager#adam-marcosrdac"
 ```
@@ -115,7 +115,7 @@ ln -s /etc/nixos /home/$USER/.config/home-manager
 Now, as a normal user, you can now run similar commands to [user install section](#user-install) section's to configure your home space, except that `$HOME/.config/home-manager` will become its original configuration directory (`/etc/nixos`):
 
 ```sh
-home-manager switch --flake "/etc/nixos#$(hostname)-$USER"
+home-manager switch --flake "/etc/nixos#$(hostname)-$(whoami)"
 # i.e.: if my hostname is `adam` and my username is `marcosrdac`:
 home-manager switch --flake "/etc/nixos#adam-marcosrdac"
 ```
@@ -173,7 +173,7 @@ You probably don't have enought RAM. Do the following to swap on file before sys
 
 ```sh
 SWAP_SIZE_MB=2048
-sudo dd -if=/dev/zero of=/swapfile bs=1M count=$SWAP_SIZE_MB status=progress
+sudo dd if=/dev/zero of=/swapfile bs=1M count=$SWAP_SIZE_MB status=progress
 sudo chmod 0600 /swapfile
 sudo mkswap -U clear /swapfile
 # if above does not work, give partition UUID as argument to -U
@@ -205,6 +205,7 @@ sudo growpart /dev/nvme0n1 $PARTITION_NUMBER
 
 ## TODO
 
+- [ ] Do not install fonts unless needed
 - [ ] Make options in my `home-manager` modules (xorg vs wayland, etc).
 - [ ] Default python env should be easily accessable for data analysis stuff.
 - [ ] I want to be able to install and use my WM configuration from any computer (use xinit and stuff, instead of xinit-hm).

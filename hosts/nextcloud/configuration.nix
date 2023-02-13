@@ -8,12 +8,6 @@
     locale = "en_US.UTF-8";
     system = "aarch64-linux";
     nixos = "22.05";
-  } {
-    name = "nextcloud";
-    zone = "US/Eastern";
-    locale = "en_US.UTF-8";
-    system = "aarch64-linux";
-    nixos = "22.05";
   };
 
   ec2.hvm = true;

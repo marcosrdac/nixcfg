@@ -65,8 +65,8 @@
     steam = true;
   };
 
-  #typeface = {
-  #  enable = true;
+  typeface = {
+    enable = true;
   #  default = {
   #    gui = {
   #      general = "...";
@@ -74,7 +74,7 @@
   #    };
   #    tty = "Lat2-Terminus16";
   #  };
-  #};
+  };
 
   # TODO make default user module with 'mkForce'd options (of just this kind of settings set used)
   # this would be useful for non-servers

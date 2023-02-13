@@ -5,6 +5,8 @@ let
   cfg = config.typeface;
 in {
 
+  options.typeface.enable = mkEnableOption "Enable default font configuration";
+
   options.typeface.packages = mkOption {
     description = "Base fonts that will be installed";
     type = with types; listOf package;
@@ -65,10 +67,12 @@ in {
     };
   };
 
-  config = if nixos then {
-    fonts.fonts = cfg.packages;
-  } else {
-    home.packages = cfg.packages;
-  };
+  config = mkIf cfg.enable (
+    if nixos then {
+      fonts.fonts = cfg.packages;
+    } else {
+      home.packages = cfg.packages;
+    }
+  );
 
 }
