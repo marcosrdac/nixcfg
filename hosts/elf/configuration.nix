@@ -14,7 +14,7 @@
   imports = [
     "${modulesPath}/virtualisation/amazon-image.nix" 
     ./nginx
-    #./nextcloud
+    ./nextcloud
   ];
 
   booting = {
