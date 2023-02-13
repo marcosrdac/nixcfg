@@ -101,8 +101,6 @@ Then to build the machine for the first time:
 
 ```sh
 nixos-rebuild switch --flake "/etc/nixos#$(hostname)"
-# ...or directly specifying the hostname and folder with
-nixos-rebuild switch
 ```
 
 
