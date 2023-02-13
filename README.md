@@ -166,10 +166,34 @@ nix-collect-garbage -d
 sudo nix-store --optimise
 ```
 
-### Remove unused packages (home-manager)
+
+## Troubleshoot
+
+### `nixos-rebuild swith` does nothing
+
+You probably don't have enought RAM. Do the following to swap on file before system build:
 
 ```sh
-TODO
+SWAP_SIZE_MB=2048
+sudo dd -if=/dev/zero of=/swapfile bs=1M count=$SWAP_SIZE_MB status=progress
+sudo chmod 0600 /swapfile
+sudo mkswap -U clear /swapfile
+# if above does not work, give partition UUID as argument to -U
+#lsblk -f
+# copy UUID and run command, i.e.:
+#sudo mkswap -U 892b1061-772e-4b48-a2dc-e67cb5b7ebc7 clear /swapfile
+sudo swapon /swapfile
+```
+
+### Grow partition
+
+#### AWS
+
+```sh
+nix-shell -p cloud-utils
+lsblk
+PARTITION_NUMBER=1
+sudo growpart /dev/nvme0n1 $PARTITION_NUMBER
 ```
 
 

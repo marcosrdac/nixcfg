@@ -2,7 +2,13 @@
 
 {
 
-  host = {
+  host = builtins.trace {
+    name = "nextcloud";
+    zone = "US/Eastern";
+    locale = "en_US.UTF-8";
+    system = "aarch64-linux";
+    nixos = "22.05";
+  } {
     name = "nextcloud";
     zone = "US/Eastern";
     locale = "en_US.UTF-8";
@@ -11,16 +17,22 @@
   };
 
   ec2.hvm = true;
+  ec2.efi = true;
   imports = [
-    "${modulesPath}/virtualisation/amazon-image.nix" 
-    ./nginx
-    ./nextcloud
+    "${modulesPath}/virtualisation/amazon-image.nix"
+    #./nginx
+    #./nextcloud
   ];
 
   booting = {
     enable = true;
     tmpOnTmpfs = false;
   };
+
+  services.logind.extraConfig = ''
+    RuntimeDirectorySize=2G
+    RuntimeDirectoryInodesMax=1048576
+  '';
 
   networking.firewall = {
     enable = true;
@@ -29,27 +41,14 @@
 
   variables.enable = true;
 
-  permissions = {
-    #users = {
-    #  marcosrdac = {
-    #    description = "Marcos Conceição";
-    #    isNormalUser = true;
-    #    extraGroups = [ "nixcfg" "wheel" "docker" ];
-    #  };
-    #};
-  };
-
   packages = {
     list = with pkgs; [
-      lf
-      vim
-      wget
-      git
-      screen
-      rclone
-
-      #imagemagick
-      #ffmpeg
+      #lf
+      #vim
+      #builtins.trace wget wget
+      #git
+      #screen
+      #rclone
     ];
   };
 
