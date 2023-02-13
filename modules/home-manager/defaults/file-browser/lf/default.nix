@@ -36,6 +36,8 @@ in
     lf
     #lf-ueberzug
 
+    fzy
+
     ueberzug
     ffmpegthumbnailer
     imagemagick
