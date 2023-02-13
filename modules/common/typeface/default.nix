@@ -67,12 +67,10 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (
-    if nixos then {
-      fonts.fonts = cfg.packages;
+  config = if nixos then {
+      fonts.fonts = mkIf cfg.enable cfg.packages;
     } else {
-      home.packages = cfg.packages;
-    }
-  );
+      home.packages = mkIf cfg.enable cfg.packages;
+    };
 
 }

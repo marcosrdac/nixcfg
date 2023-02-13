@@ -5,14 +5,7 @@ let
   cfg = config.typeface;
 in {
 
-  options.typeface.enable = mkEnableOption "Enable default font configuration";
-
-  options.typeface.console = mkOption {
-    description = "Font for the TTY console";
-    type = with types; str;
-    default = "Lat2-Terminus16";
-    example = "...";  # TODO add example
-  };
+  #options.typeface.enable = mkEnableOption "Enable default font configuration";
 
 #  config = mkIf cfg.enable {
 #    console.font = cfg.console;
