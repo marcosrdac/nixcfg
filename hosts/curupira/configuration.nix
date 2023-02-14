@@ -43,8 +43,8 @@
       git
       screen
 
-      imagemagick
-      ffmpeg
+      #imagemagick
+      #ffmpeg
 
       # 
       #openiscsi
