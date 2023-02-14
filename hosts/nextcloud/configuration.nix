@@ -2,7 +2,7 @@
 
 {
 
-  host = builtins.trace {
+  host = {
     name = "nextcloud";
     zone = "US/Eastern";
     locale = "en_US.UTF-8";
@@ -14,8 +14,9 @@
   ec2.efi = true;
   imports = [
     "${modulesPath}/virtualisation/amazon-image.nix"
-    #./nginx
-    #./nextcloud
+    ./hardware-configuration.nix
+    ./nginx
+    ./nextcloud
   ];
 
   booting = {
@@ -37,12 +38,12 @@
 
   packages = {
     list = with pkgs; [
-      #lf
-      #vim
-      #builtins.trace wget wget
-      #git
-      #screen
-      #rclone
+      lf
+      vim
+      wget
+      git
+      screen
+      rclone
     ];
   };
 

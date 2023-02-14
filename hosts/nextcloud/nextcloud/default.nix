@@ -7,7 +7,7 @@ let
   nextcloudDir = "/mnt/nextcloud";
   secretDir = "${nextcloudDir}/secret";
   domain = "marcosrdac.com";
-  nextcloudDomain = "cloud.${domain}";
+  nextcloudDomain = "c.${domain}";
   nextcloudVersion = "24";
 in {
 
@@ -71,17 +71,31 @@ in {
 
       objectstore.s3 = {
         enable = true;
-        autocreate = false;
-        hostname = "a58550f515b19b9c48df59790ce73215.r2.cloudflarestorage.com";
-        useSsl = true;
-        key = "e716d78ff182bee428e594d7b46f0c87";
-        secretFile = "${secretDir}/cloudflare-secret";
-        region = "auto";
-        bucket = "marcosrdac-nextcloud";
+        autocreate = true;
+        hostname = "s3.us-east-1.wasabisys.com";
+        key = "YEFDWC57DWE7GR3H5PXP";
+        secretFile = "${secretDir}/wasabi-secret";
+        region = "us-east-1";
+        bucket = "marcosrdac-nextcloud-test";
         # below are needed in some S3 implementations
         #port = null;
+        #useSsl = null;
         #usePathStyle = false;
       };
+
+      #objectstore.s3 = {
+      #  enable = true;
+      #  autocreate = false;
+      #  hostname = "a58550f515b19b9c48df59790ce73215.r2.cloudflarestorage.com";
+      #  useSsl = true;
+      #  key = "e716d78ff182bee428e594d7b46f0c87";
+      #  secretFile = "${secretDir}/cloudflare-secret";
+      #  region = "auto";
+      #  bucket = "marcosrdac-nextcloud";
+      #  # below are needed in some S3 implementations
+      #  #port = null;
+      #  #usePathStyle = false;
+      #};
       
     };
 
