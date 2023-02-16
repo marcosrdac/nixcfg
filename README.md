@@ -54,6 +54,14 @@ nix-env -f '<nixpkgs>' -iA nixUnstable
 
 Download DavHau's [Nix Portable](https://github.com/DavHau/nix-portable)). It is a `Nix` executable and is `Flakes` enabled by default. -->
 
+## Requirements software
+
+```sh
+nix-shell -p wget vim git 
+# or use below facilities
+nix-shell -p wget vim git screen lf
+```
+
 
 ## Current user configuration
 
@@ -69,7 +77,7 @@ git clone https://github.com/marcosrdac/nixcfg $HOME/.config/home-manager
 ```sh
 home-manager switch --flake "$HOME/.config/home-manager#$(hostname)-$(whoami)"
 # i.e.: if my hostname is `adam` and my username is `marcosrdac`:
-home-manager switch --flake "$HOME/.config/home-manager#adam-marcosrdac"
+#home-manager switch --flake "$HOME/.config/home-manager#adam-marcosrdac"
 ```
 
 Observation: host is defined in `hosts` and my user configurations are defined in `users/$USER`
