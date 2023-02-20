@@ -24,6 +24,14 @@
 
   variables.enable = true;
 
+  services.openssh = {
+    enable = true;
+    # require public key authentication for better security
+    passwordAuthentication = false;
+    kbdInteractiveAuthentication = false;
+    permitRootLogin = "yes";
+  };
+
   permissions = {
     openssh.defaultAuthorizedKeys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCyE8BXmo1HyfIH7mV1zomaZenHOUrS1kirvkTSN7elr2UZUqFFaYLZO896AiZtagHvR7MI4NVjIkEDQYVOHuzCp86RNE2Q6r8uuPAIzxDTJtvh/m9MYERzyr9FMrpnH4p4MAkVrtZEq28+2jid8ALdChstWwElIYtqvWunvs1nBoMkXanX8pmIt2IVbZ7po5iU/pJBK80OBEPZXuRW013jWiUibAyUWKtMn44HpxQzD/g+MbYDaG3lnB1u+IGXSkzDBlSGJmlPjz0qDF9oe093G//sTtnWqVdgcFrDoGtE2RG8DapNre61Du4HEatWNl0hlSD9yEO8fof4N4tYn1LgxNnVVuWuIN0NlYkPQCZfmPB1i/ye1iILxqMq9MT1U2DDW6PiCycngsa92LzsKF6YvRJ6gv4QF8Ma93Dlo30JBZ1HK5q/P9MxpzOfpkoEkKbGF1nCAF8DUyrVqxoCkANTjb1MVvGScDALQ3vAhT1f5mGAmsNBMrtTZ6Q8xVSobxEslAL3PPdzLimEblZOAQ70dBXMWGRGCsaG/e506dD8x0bDozT5LFUN5Lt5mK5QUYW+OPSeBkkb6VUNk17DkyH/20j/nopGJQTFmciG3xHSQsQfWFMrzotgM9SB0eu9SUpFVa4zunzw46oS1p9mVaOQt9jQ4ImWITdVAX+Q0KTKxQ== marcosrdac@gmail.com"
