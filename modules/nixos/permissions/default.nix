@@ -17,6 +17,7 @@ in
         "marcos" = {
           isNormalUser = true;
           extraGroups = [ "wheel" ];
+          openssh.authorizedKeys = [ "your-ssh-pubkey-here" ];
         };
         "family" = {
           isNormalUser = true;
@@ -30,6 +31,12 @@ in
       default = [ ];
       example = literalExpression ''[ "lp" ]'';
     };
+    openssh.defaultAuthorizedKeys = mkOption {
+      type = with types; listOf string;
+      description = "SSH keys every user can login from";
+      default = [ ];
+      example = literalExpression ''[ "your-ssh-pubkey-here" ]'';
+    };
 
     defaultUserShell = mkOption {
       type = with types; package;
@@ -41,11 +48,13 @@ in
 
   config = let
     allUsers = builtins.attrNames cfg.users;
-    userWithBaseGroups = mapAttrs (username: settings: mkMerge [
-      settings { extraGroups = cfg.defaultGroups; }
-    ]) cfg.users;
+    mergeDefaults = mapAttrs (username: settings: mkMerge [
+      settings
+      { extraGroups = cfg.defaultGroups; }
+      { openssh.authorizedKeys.keys = cfg.openssh.defaultAuthorizedKeys; }
+    ]);
   in mkIf cfg.enable {
-    users.users = userWithBaseGroups;
+    users.users = mergeDefaults cfg.users;
     nix.allowedUsers = allUsers;
     users.defaultUserShell = cfg.defaultUserShell;
     programs.zsh.enable = true;
