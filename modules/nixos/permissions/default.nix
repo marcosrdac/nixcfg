@@ -31,7 +31,8 @@ in
       default = [ ];
       example = literalExpression ''[ "lp" ]'';
     };
-    openssh.defaultAuthorizedKeys = mkOption {
+
+    openssh.defaultAuthorizedKeys.keys = mkOption {
       type = with types; listOf string;
       description = "SSH keys every user can login from";
       default = [ ];
@@ -51,10 +52,10 @@ in
     mergeDefaults = mapAttrs (username: settings: mkMerge [
       settings
       { extraGroups = cfg.defaultGroups; }
-      { openssh.authorizedKeys.keys = cfg.openssh.defaultAuthorizedKeys; }
+      #{ openssh.authorizedKeys.keys = cfg.openssh.defaultAuthorizedKeys.keys; }
     ]);
   in mkIf cfg.enable {
-    users.users = mergeDefaults cfg.users;
+    users.users = builtins.trace (mergeDefaults cfg.users) (mergeDefaults cfg.users);
     nix.allowedUsers = allUsers;
     users.defaultUserShell = cfg.defaultUserShell;
     programs.zsh.enable = true;
@@ -63,7 +64,6 @@ in
     # TODO check if it actually occurs
     # TODO pass this to a common zsh/shell module, but only load it on nixos
     environment.pathsToLink = [ "/share/zsh" ];
-
 
     # make users of nixcfg group to be able to modify configurations
     users.groups.nixcfg.gid = null;

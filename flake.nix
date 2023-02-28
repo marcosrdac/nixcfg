@@ -2,7 +2,7 @@
   description = "NixOS and Home Manager setup";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     nixpkgs-17 = { url = "github:NixOS/nixpkgs/17.09"; flake = false; };
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";

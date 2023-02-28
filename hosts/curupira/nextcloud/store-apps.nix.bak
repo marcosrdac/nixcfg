@@ -1,0 +1,315 @@
+    extraAppsEnable = true;
+    extraApps = {
+       Find them here:
+       https://apps.nextcloud.com/
+
+      apporder = pkgs.fetchNextcloudApp {
+        name = "apporder";
+        version = "0.15.0";
+        url = "https://github.com/juliushaertl/apporder/releases/download/v0.15.0/apporder.tar.gz";
+        sha256 = "sha256-p3VWxTYDCO2NePq6oLM8tBVqYkvoB7itqxp7IZwGDnE=";
+      };
+
+      files_automatedtagging = pkgs.fetchNextcloudApp {
+        name = "files_automatedtagging";
+        version = "1.14.1";
+        url = "https://github.com/nextcloud-releases/files_automatedtagging/releases/download/v1.14.1/files_automatedtagging-v1.14.1.tar.gz";
+        sha256 = "sha256-jIZ/viyhOYtuoSLlqzMcL94VXBzigBM4V39ki6qRHVY=";
+      };
+
+      richdocuments = pkgs.fetchNextcloudApp {
+        name = "richdocuments";
+        version = "6.3.4";
+        url = "https://github.com/nextcloud-releases/richdocuments/releases/download/v6.3.4/richdocuments-v6.3.4.tar.gz";
+        sha256 = "sha256-NZx4364DzJfCMn42+L/8zt/A/2WN9MbVw3gziZMo0fU=";
+      };
+
+      #richdocumentscode = pkgs.fetchNextcloudApp {
+      #  name = "richdocumentscode";
+      #  version = "22.5.802";
+      #  url = "https://github.com/CollaboraOnline/richdocumentscode/releases/download/22.5.802/richdocumentscode_arm64.tar.gz";
+      #  sha256 = "sha256-+ZWXARtxfc3Azwc28jesp/BqKp18+vc0LMn0K9TD/z8=";
+      #};
+
+      files_retention = pkgs.fetchNextcloudApp {
+        name = "files_retention";
+        version = "1.13.2";
+        url = "https://github.com/nextcloud-releases/files_retention/releases/download/v1.13.2/files_retention-v1.13.2.tar.gz";
+        sha256 = "sha256-iZoy9Ln4ajqPVNKH8f1PKNB9wNTIpMuZ8ES9adAThrE=";
+      };
+      
+      files_rightclick = pkgs.fetchNextcloudApp {
+        name = "files_rightclick";
+        version = "0.15.1";
+        url = "https://github.com/nextcloud/files_rightclick/releases/download/v0.15.1/files_rightclick.tar.gz";
+        sha256 = "sha256-XqOR7D+JJRz0yrljs5sXSbWwC/kMr9iTA+yFYJF/7jU=";
+      };
+      
+      twofactor_email = pkgs.fetchNextcloudApp {
+        name = "twofactor_email";
+        version = "2.7.1";
+        url = "https://github.com/nursoda/twofactor_email/releases/download/2.7.1/twofactor_email.tar.gz";
+        sha256 = "sha256-qRZnR44VNPB17MjDjz/mF/hmxE9BuqCK8+6n3AWGjSQ=";
+      };
+      
+      suspicious_login = pkgs.fetchNextcloudApp {
+        name = "suspicious_login";
+        version = "4.2.1";
+        url = "https://github.com/nextcloud-releases/suspicious_login/releases/download/v4.2.1/suspicious_login.tar.gz";
+        sha256 = "sha256-kkDKquarIbGc2LPMKYFN5ChdRjeQ3mO198IRDmZZqoY=";
+      };
+      
+      #files_pdfviewer = pkgs.fetchNextcloudApp {
+      #  name = "files_pdfviewer";
+      #  version = "1.2.1";
+      #  url = "https://github.com/nextcloud/files_pdfviewer/releases/download/v1.2.1/files_pdfviewer-1.2.1.tar.gz";
+      #  sha256 = "";
+      #};
+      
+      files_markdown = pkgs.fetchNextcloudApp {
+        name = "files_markdown";
+        version = "2.3.6";
+        url = "https://github.com/icewind1991/files_markdown/releases/download/v2.3.6/files_markdown.tar.gz";
+        sha256 = "sha256-6vrPNKcPmJ4DuMXN8/oRMr/B/dTlJn2GGi/w4t2wimk=";
+      };
+      
+      transfer = pkgs.fetchNextcloudApp {
+        name = "transfer";
+        version = "0.6.0";
+        url = "https://github.com/danth/transfer/releases/download/v0.6.0/transfer.tar.gz";
+        sha256 = "sha256-Qw8eqF+0P+yHCoUrMX6n4qx+mmHxfqlJJTSISVJAeQc=";
+      };
+      
+      #user_migration = pkgs.fetchNextcloudApp {
+      #  name = "user_migration";
+      #  version = "2.0.1";
+      #  url = "https://github.com/nextcloud-releases/user_migration/releases/download/v2.0.1/user_migration-v2.0.1.tar.gz";
+      #  sha256 = "sha256-ASVZqnE1F9hfP5kETBC2FxgfIpp9E8s2Dwl9B07+elo=";
+      #};
+      #
+      #video_converter = pkgs.fetchNextcloudApp {
+      #  name = "video_converter";
+      #  version = "1.0.5";
+      #  url = "https://github.com/PaulLereverend/NextcloudVideo_Converter/releases/download/1.0.5/video_converter.tar.gz";
+      #  sha256 = "sha256-bl/1wShAz7cZTlaDXiXOE2Y+C5BHp55X8d0shxKzMvs=";
+      #};
+      #
+      #workflow_media_converter = pkgs.fetchNextcloudApp {
+      #  name = "workflow_media_converter";
+      #  version = "1.7.0";
+      #  url = "https://github.com/cwilby/nextcloud-workflow-media-converter/releases/download/v1.7.0/workflow_media_converter.tar.gz";
+      #  sha256 = "sha256-z8ykS+Is6iCGY65Rto4QTXvqfTEolLH4IlyowNF719I=";
+      #};
+      
+      workflow_script = pkgs.fetchNextcloudApp {
+        name = "workflow_script";
+        version = "1.9.0";
+        url = "https://github.com/nextcloud-releases/workflow_script/releases/download/v1.9.0/workflow_script-v1.9.0.tar.gz";
+        sha256 = "sha256-ChJJ87cHhGs54huTWZ+hoNDX/34zjQaC+7Ip/tPKpJQ=";
+      };
+      
+      files_zip = pkgs.fetchNextcloudApp {
+        name = "files_zip";
+        version = "1.1.2";
+        url = "https://github.com/nextcloud-releases/files_zip/releases/download/v1.1.2/files_zip-v1.1.2.tar.gz";
+        sha256 = "sha256-PhQUBWfBh7KaX7vzTwCSvT09E5xscYH8v1KNjE+mMP0=";
+      };
+
+      external = pkgs.fetchNextcloudApp {
+        name = "external";
+        version = "4.0.1";
+        url = "https://github.com/nextcloud-releases/external/releases/download/v4.0.1/external-v4.0.1.tar.gz";
+        sha256 = "sha256-kwYLoduCySaECgma0qSDu4BckbE12UG8PW1gf6s33nY=";
+      };
+
+      # Actually listed
+
+      memories = pkgs.fetchNextcloudApp {
+        name = "memories";
+        version = "3.10.3";
+        url = "https://github.com/pulsejet/memories/releases/download/v3.10.3/memories.tar.gz";
+        sha256 = "sha256-5guRuc7R8xFjeCoqzFbUjImNgQbthEj6UzRzh/I8AIQ=";
+      };
+      
+      notes = pkgs.fetchNextcloudApp {
+        name = "notes";
+        version = "4.5.1";
+        url = "https://github.com/nextcloud/notes/releases/download/v4.5.1/notes.tar.gz";
+        sha256 = "sha256-rd3uVkVtARX4enRAWm1ivV468lboYZnYe7/zsqaHYpk=";
+      };
+
+      deck = pkgs.fetchNextcloudApp {
+        name = "deck";
+        version = "1.7.3";
+        url = "https://github.com/nextcloud-releases/deck/releases/download/v1.7.3/deck-v1.7.3.tar.gz";
+        sha256 = "sha256-Z+zBbO/prI4dbCu8BmVHSCgBE2iQHAmPWyBbWiSHxL8=";
+      };
+
+      mail = pkgs.fetchNextcloudApp {
+        name = "mail";
+        version = "1.15.1";
+        url = "https://github.com/nextcloud-releases/mail/releases/download/v1.15.1/mail-v1.15.1.tar.gz";
+        sha256 = "sha256-6bwkvAekxHYzsTFKl4BmbQrrB4GhDtdBwF9r1G8wiB0=";
+      };
+      
+      keeweb = pkgs.fetchNextcloudApp {
+        name = "keeweb";
+        version = "0.6.10";
+        url = "https://github.com/jhass/nextcloud-keeweb/releases/download/v0.6.10/keeweb-0.6.10.tar.gz";
+        sha256 = "sha256-oygfz9tAWJcaO1yDiHCo1bUzRFyZm46SH7h1iyFtrbw=";
+      };
+
+      calendar = pkgs.fetchNextcloudApp {
+        name = "calendar";
+        version = "3.5.5";
+        url = "https://github.com/nextcloud-releases/calendar/releases/download/v3.5.5/calendar-v3.5.5.tar.gz";
+        sha256 = "sha256-4xboITT1cCYN4uLag/fY69bdOKatzE9iYyq5bVvgQeA=";
+      };
+
+      #talk = pkgs.fetchNextcloudApp {
+      #  name = "Talk";
+      #  version = "14.0.8";
+      #  url = "https://github.com/nextcloud-releases/spreed/releases/download/v14.0.8/spreed-v14.0.8.tar.gz";
+      #  sha256 = "sha256-kO1Q8sLDY8WOZHdFcBOsFkb5n5bmbBbqPF7BY8ZcLSI=";
+      #};
+
+      #element = pkgs.fetchNextcloudApp {
+      #  name = "element";
+      #  version = "0.14.1";
+      #  url = "https://github.com/gary-kim/riotchat/releases/download/v0.14.1/riotchat.tar.gz";
+      #  sha256 = "sha256-JLfilLwulFadIm3tRVFC01NFyRowrdsLHBdrgM3O4r0=";
+      #};
+
+      collectives = pkgs.fetchNextcloudApp {
+        name = "collectives";
+        version = "1.6.3";
+        url = "https://gitlab.com/collectivecloud/collectives/uploads/3915a8d53b2b2241c8a6fad274eaf9ff/collectives-1.6.3.tar.gz";
+        sha256 = "sha256-V3EhvTrKHEPveD3iizJUJTPNnHZdpFBgj17UPcs8oIw=";
+      };
+
+      polls = pkgs.fetchNextcloudApp {
+        name = "polls";
+        version = "3.8.4";
+        url = "https://github.com/nextcloud/polls/releases/download/v3.8.4/polls.tar.gz";
+        sha256 = "sha256-w2sOuHlun7D84cbuppqdhlBNZBj0SXlo0iFL4vRL6/U=";
+      };
+
+      tables = pkgs.fetchNextcloudApp {
+        name = "tables";
+        version = "0.2.1";
+        url = "https://dl.datenangebot.de/nc%20tables/releases/tables%200.2.1.tar.gz";
+        sha256 = "sha256-VcIhgbiksWLKUGgin5vMs3DQzgyN8tI5z00sr3SW8iE=";
+      };
+
+      cospend = pkgs.fetchNextcloudApp {
+        name = "cospend";
+        url = "https://github.com/eneiluj/cospend-nc/releases/download/v1.4.10/cospend-1.4.10.tar.gz";
+        version = "1.4.10";
+        sha256 = "sha256-VyTo7jii40a0m2hLuUH5PFJXzogECTfGq+2oifMtNNI=";
+      };
+
+      appointments = pkgs.fetchNextcloudApp {
+        name = "appointments";
+        version = "1.14.11";
+        url = "https://github.com/SergeyMosin/Appointments/raw/v1.14.11/build/artifacts/appstore/appointments.tar.gz";
+        sha256 = "sha256-F0TZORzEtnQsKTfq0nd6vzkijkQPr8rZpB/FGEMlWM4=";
+      };
+
+      maps = pkgs.fetchNextcloudApp {
+        name = "maps";
+        version = "0.2.2";
+        url = "https://github.com/nextcloud/maps/releases/download/v0.2.2/maps-0.2.2.tar.gz";
+        sha256 = "sha256-+dpkZ489tb6uipJdWiypy+xxTWh2siLiSN10xU24SFA=";
+      };
+
+      ncdownloader = pkgs.fetchNextcloudApp {
+        name = "ncdownloader";
+        version = "1.0.2";
+        url = "https://github.com/shiningw/ncdownloader/releases/download/v1.0.2/ncdownloader-release.tar.gz";
+        sha256 = "sha256-VA0axiv5FYsJ5QNos6WnN2h+ZWrSqU9nPHZhOhHAeVw=";
+      };
+
+      money = pkgs.fetchNextcloudApp {
+        name = "money";
+        version = "0.11.1";
+        url = "https://github.com/powerpaul17/nc_money/releases/download/v0.11.1/money.tar.gz";
+        sha256 = "sha256-9cTACG5PpdofKU+5BOGOFzc9jJCBgcs9Sa8pm20S46k=";
+      };
+
+      tasks = pkgs.fetchNextcloudApp {
+        name = "tasks";
+        version = "0.14.5";
+        url = "https://github.com/nextcloud/tasks/releases/download/v0.14.5/tasks.tar.gz";
+        sha256 = "sha256-/foxaKyA6u8+LeUAnu4Co2msyNNd/YKD0fJUI73zxTI=";
+      };
+
+      #mediadc = pkgs.fetchNextcloudApp {
+      #  name = "mediadc";
+      #  version = "0.1.10";
+      #  url = "https://github.com/andrey18106/mediadc/releases/download/v0.1.10/mediadc.tar.gz";
+      #  sha256 = "sha256-mVFUiw+2w2GhMtsS58hxmOJyOhM0zW0cEAJkq8YQWd4=";
+      #};
+
+      phonetrack = pkgs.fetchNextcloudApp {
+        name = "phonetrack";
+        url = "https://github.com/julien-nc/phonetrack/releases/download/v0.7.4/phonetrack-0.7.4.tar.gz";
+        version = "0.7.4";
+        sha256 = "sha256-/Dmiavo1LQlFwzStv2k3wf9ZTpoZJrjvPIMJ/W4Bfek=";
+      };
+
+      timemanager = pkgs.fetchNextcloudApp {
+        name = "timemanager";
+        version = "0.3.4";
+        url = "https://github.com/te-online/nextcloud-app-releases/raw/main/timemanager/v0.3.4/timemanager.tar.gz";
+        sha256 = "sha256-gQxZOu/RK8Q42qOpaVdrkeHlv50+O/IvpSGmgg1dpuw=";
+      };
+
+      timetracker = pkgs.fetchNextcloudApp {
+        name = "timetracker";
+        version = "0.0.77";
+        url = "https://mtier.org/timetracker/timetracker-0.0.77.tar.gz";
+        sha256 = "sha256-rgQvTA+fSryxqEJ/NNGWJ1L9PQ4Q9XOwaMWeYGXkklU=";
+      };
+
+      duplicatefinder = pkgs.fetchNextcloudApp {
+        name = "duplicatefinder";
+        version = "0.0.15";
+        url = "https://github.com/PaulLereverend/NextcloudDuplicateFinder/releases/download/0.0.15/duplicatefinder.tar.gz";
+        sha256 = "sha256-3LEFbkRU7QpCCx4ziDyiQZVFBjIHwRzAO17FSGcLYBM=";
+      };
+
+      news = pkgs.fetchNextcloudApp {
+        name = "news";
+        version = "20.0.1";
+        url = "https://github.com/nextcloud/news/releases/download/20.0.1/news.tar.gz";
+        sha256 = "sha256-hXpu3p9Wv4iZkH4Min38N1ILDWVK50sDQDKJpjewQ04=";
+      };
+
+       dashboard
+       files
+       memories
+       notes
+       deck
+       mail
+       keeweb
+       calendar  XX
+       talk
+       element
+       collectives
+       polls
+       tables
+       cospend
+       appointments
+       maps
+       ncdownloader
+       money
+       tasks
+       activity
+       mediadc
+       phonetrack
+       timemanager       X
+       timetracker       X
+       Duplicate finder
+       news
+       photos
+    };
