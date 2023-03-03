@@ -11,8 +11,11 @@ with lib; let
   nextcloudSecretDir = "${nextcloudDir}/secret";
   nextcloudDataDir = "${nextcloudDir}/data";
   rcloneConfigFile = "${nextcloudSecretDir}/rclone.conf";
+  # better than wasabi before 1TB data
+  rcloneBucket = "backblaze-crypted:marcosrdac-curupira-nextcloud-data";
   #rcloneBucket = "wasabi-crypted:marcosrdac-curupira-nextcloud-data";
-  rcloneBucket = "storj:marcosrdac-curupira-nextcloud-data";
+  # got me some rcp errors
+  #rcloneBucket = "storj:marcosrdac-curupira-nextcloud-data";
   rcloneCacheDir = "${nextcloudDir}/cache";
   enable = true;
   #enable = false;
@@ -75,8 +78,17 @@ with lib; let
 in {
 
   imports = [
-    #./collabora.nix
     ./module.nix
+  ];
+
+  #nixpkgs.config.allowUnsupportedSystem = true;
+
+  environment.systemPackages = with pkgs; [
+    ffmpeg
+    #intel-media-driver # LIBVA_DRIVER_NAME=iHD
+    #vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+    #vaapiVdpau
+    #libvdpau-va-gl
   ];
 
   services.myNextcloud = {
@@ -115,7 +127,7 @@ in {
       extraTrustedDomains = [ ];
       defaultPhoneRegion = "BR";
       overwriteProtocol = "https";
-      
+
       #objectstore.s3 = {
       #  enable = true;
       #  autocreate = true;  # does not work with cloudflare
@@ -129,7 +141,7 @@ in {
       #  #port = null;
       #  #usePathStyle = false;
       #};
-      
+
     };
 
   };
@@ -166,6 +178,7 @@ in {
 
   systemd.services.nextcloud-data-mount = {
     enable = true;
+    #enable = false;
     #enable = enable;
     description =  "mount nextcloud data dir";
     after = [ "network-online.target" ];
@@ -206,14 +219,15 @@ in {
   };
 
   systemd.services.other-nextcloud-data-mount = {
-    enable = true;
+    #enable = true;
+    enable = false;
     #enable = enable;
     description =  "mount other nextcloud data dir";
     after = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = let
-      rcloneDir = "google-photos:";
-      localDir = "/mnt/google-photos";
+      rcloneDir = "backblaze-crypted:marcosrdac-curupira-nextcloud-data";
+      localDir = "/mnt/tmp";
     in {
       #User = "nextcloud";  # could not run fusermount as user
       Group = "nextcloud";
@@ -249,8 +263,6 @@ in {
     };
   };
 
-  # TODO move data to storj with rclone
-  # TODO use it instead of wasabi
   #systemd.services.test-data-mount = {
   #  #enable = true;
   #  #enable = enable;
@@ -299,14 +311,111 @@ in {
   users.users.nextcloud.isSystemUser = true;
   users.groups.nextcloud.gid = 801;
 
-  services.fail2ban = {
+  #virtualisation.oci-containers = {
+  #  backend = "podman";
+  #  #backend = "docker";
+  #  containers = {
+  #    collabora = {
+  #      image = "collabora/code:22.05.10.1.1";
+  #      #image = "collabora/code:latest";
+  #      #host_port:container_port
+  #      #ports = [ "9980:9980" ];
+  #      ports = [ "127.0.0.1:9980:9980" ];
+  #      environment = {
+  #        username = "admin";
+  #        password = "${nextcloudSecretDir}/collabora-secret";
+  #        dictionaries = "en_US";
+  #        #domain = "collabora.${domain}";
+  #        domain = "${nextcloudDomain}";
+  #        server_name = "collabora.${domain}";
+  #        #extra_params = "--o:ssl.enable=true";
+  #        #extra_params = "--o:ssl.enable=false";
+  #      };
+  #      #extraOptions = [ "--cap-add=MKNOD" ];
+  #      extraOptions = [ "--cap-add=MKNOD" ];
+  #    };
+  #    #onlyoffice = {
+  #    #  image = "onlyoffice/documentserver";
+  #    #  ports = [ "9981:80" ];
+  #    #};
+  #  };
+  #};
+
+  #services.nginx.virtualHosts."collabora.${domain}" = {
+  #  #forceSSL = true;
+  #  addSSL = true;
+  #  enableACME = true;
+
+  #  locations = {
+
+  #    # static files
+  #    "^~ /browser" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+  #    "^~ /loleaftlet" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+
+  #    # WOPI discovery URL
+  #    "^~ /hosting/discovery" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+
+  #    # Capabilities
+  #    "^~ /hosting/capabilities" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      ''; # above line is new
+  #    };
+
+  #    # main websocket
+  #    "~ ^/cool/(.*)/ws$" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Upgrade $http_upgrade;
+  #        proxy_set_header Connection "Upgrade";
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      '';
+  #    };
+
+  #    # download, presentation and image upload
+  #    "~ ^/(c|l)ool" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+
+  #    # Admin Console websocket
+  #    "^~ /cool/adminws" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Upgrade $http_upgrade;
+  #        proxy_set_header Connection "Upgrade";
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      '';
+  #    };
+
+  #  };
+
+  #};
+
+  networking.firewall = {
     enable = true;
-    maxretry = 5;
-    ignoreIP = [
-      "127.0.0.1" 
-      "127.0.0.1" 
-      "8.8.8.8"
-    ];
+    allowedTCPPorts = [ 80 443 ];
   };
 
 }

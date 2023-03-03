@@ -52,6 +52,15 @@
     };
   };
 
+  services.fail2ban = {
+    enable = true;
+    maxretry = 5;
+    ignoreIP = [
+      "127.0.0.1" 
+      "8.8.8.8"
+    ];
+  };
+
   packages = {
     list = with pkgs; [
       lf
@@ -68,4 +77,5 @@
       #openiscsi
     ];
   };
+
 }
