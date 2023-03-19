@@ -5,7 +5,7 @@
     tdesktop  #=: telegram
     discord
     slack 
-    teams
+    #teams
     zoom-us  #=: zoom
   ];
 }

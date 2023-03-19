@@ -55,8 +55,9 @@ in
       #{ openssh.authorizedKeys.keys = cfg.openssh.defaultAuthorizedKeys.keys; }
     ]);
   in mkIf cfg.enable {
-    users.users = builtins.trace (mergeDefaults cfg.users) (mergeDefaults cfg.users);
-    nix.allowedUsers = allUsers;
+    users.users = mergeDefaults cfg.users;
+    #nix.allowedUsers = allUsers;  # TODO delete
+    nix.settings.allowed-users = allUsers;
     users.defaultUserShell = cfg.defaultUserShell;
     programs.zsh.enable = true;
 

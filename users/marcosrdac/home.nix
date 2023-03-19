@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
 {
+
+  home.username = "marcosrdac";
+  home.homeDirectory = "/home/marcosrdac";
+  home.stateVersion = "22.05";
+
   gui = {
     enable = true;
     # X for me
@@ -17,6 +22,11 @@
     # wayland
     #river.enable = true;
     #wofi.enable = true;
+  };
+
+  services.nextcloud-client = {
+    #enable = true;
+    startInBackground = false;
   };
 
   home.keyboard = {
@@ -43,6 +53,7 @@
     design = true;
     list = with pkgs; [
       taskwarrior
+      gnucash
       xournalpp
       lua5_3
 
@@ -76,6 +87,8 @@
       gnome.file-roller
 
       #nur.repos.timjrd.overlays.popcorntime
+      tmsu    # tag based filesystem
+      zotero  # paper organization
     ];
   };
 

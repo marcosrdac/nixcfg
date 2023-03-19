@@ -166,6 +166,8 @@ git config --global user.name "Marcos Conceição"
 ### Remove unused packages (nix)
 
 ```sh
+# remove old home-manager generations
+home-manager expire-generations 1d
 # tip #1
 nix-collect-garbage -d
 # tip #2

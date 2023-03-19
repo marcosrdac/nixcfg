@@ -23,10 +23,6 @@
     ./hardware-configuration.nix
   ];
 
-  gui.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  graphics.nvidia.enable = true;
-
   booting = {
     enable = true;
     efi.enable = true;
@@ -45,6 +41,15 @@
     RuntimeDirectorySize=20G
     RuntimeDirectoryInodesMax=1048576  
   '';
+
+  gui.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  graphics.nvidia.enable = true;
+
+  virtualization = {
+    docker = true;
+    podman = true;
+  };
 
   keyboard = {
     enable = true;
@@ -124,10 +129,6 @@
     #networkmanager-sstp
   #];
 
-  virtualization = {
-    docker = true;
-  };
-
   permissions = {
     enable = true;
     users = {
@@ -143,4 +144,5 @@
     };
     defaultGroups = [ "networkmanager" "lp" ];
   };
+
 }

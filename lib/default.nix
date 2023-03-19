@@ -2,7 +2,8 @@
 
 with inputs.nixpkgs.lib;
 let
-  nixpkgs = import ./nixpkgs.nix { inherit inputs; };
+  nixpkgsConfig = import ./nixpkgs.nix { inherit inputs; };
+
   getHostConfig = { hostname, ... }:
     ../hosts/${hostname}/configuration.nix;
 
@@ -17,7 +18,6 @@ let
     then (import host-config nulls).host.system
     else (import users-host-config nulls).host.system;
 in
-
 rec {
   mkHost = { hostname }@args: inputs.nixpkgs.lib.nixosSystem rec {
     system = getSystem { inherit hostname; };
@@ -25,28 +25,23 @@ rec {
     modules = (import ../modules/common)
       ++ (import ../modules/nixos)
       ++ [
-        { inherit nixpkgs; }
+        { nixpkgs = nixpkgsConfig; }
         ../hosts/${hostname}/configuration.nix
       ];
   };
 
-  mkUser = { username, hostname }@args:
-    inputs.home-manager.lib.homeManagerConfiguration rec {
-      inherit username;
-      system = getSystem args;
-      homeDirectory = if username == "root" then "/root" else "/home/${username}";
+  mkUser = { username, hostname }@args: let
+    system = getSystem args;
+  in inputs.home-manager.lib.homeManagerConfiguration rec {
+      pkgs = inputs.nixpkgs.legacyPackages.${system};
       extraSpecialArgs = { inherit system hostname inputs; nixos = false; };
-      extraModules = (import ../modules/common)
+      modules = (import ../modules/common)
         ++ (import ../modules/home-manager)
         ++ (let c = getUsersHostConfig args; in optional (pathExists c) c)
         ++ [
-          {
-            inherit nixpkgs;
-            programs = {
-              git.enable = true;
-            };
-          }
+          { nixpkgs = nixpkgsConfig; }
+          { programs.git.enable = true; }
+          ../users/${username}/home.nix 
         ];
-      configuration = ../users/${username}/home.nix;
     };
 }

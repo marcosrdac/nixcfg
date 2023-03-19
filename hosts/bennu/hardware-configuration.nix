@@ -3,42 +3,61 @@
 # to /etc/nixos/configuration.nix instead.
 { config, lib, pkgs, modulesPath, ... }:
 
-{
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+let
+  bootFat32Uuid = "8D00-3C46";
+  swapUuid = "957ad7d5-a678-41d2-9f05-296d244fa5fe";
+  nvmeBtrfsUuid = "b88c4b4d-16c2-4ede-8927-66cd954d0799";
+  hddBtrfsUuid = "30e4bc15-cf9d-4e23-8ef7-2db14db18bd1";
+in {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  
 
   # space_cache (?)
   # https://wiki.tnonline.net/w/Btrfs/Space_Cache
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+  fileSystems = {
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/${bootFat32Uuid}";
+      fsType = "vfat";
+    };
+
+    "/" = {
+      device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
       options = [ "subvol=root" "compress=zstd" ];
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/8D00-3C46";
-      fsType = "vfat";
-    };
-
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+    "/nix" = {
+      device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
       options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
+    "/home" = {
+      device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
       options = [ "subvol=home" "compress=zstd" ];
     };
+
+    "/home/marcosrdac/tmp" = {
+      device = "/dev/disk/by-uuid/${hddBtrfsUuid}";
+      fsType = "btrfs";
+      options = [ "subvol=@marcosrdac/@tmp" "compress=zstd" ];
+    };
+
+  };
+
+  swapDevices = [
+    { device = "/dev/disk/by-uuid/${swapUuid}"; }
+  ];
+
 
   #fileSystems."/tmp" =
   #  { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
@@ -52,17 +71,7 @@
   #  options = [ "nosuid" "nodev" "relatime" "size=14G" ];
   #};
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/957ad7d5-a678-41d2-9f05-296d244fa5fe"; } ];
-    # options = [ "noatime" ];
-
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp2s0f1.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp3s0.useDHCP = lib.mkDefault true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

@@ -8,8 +8,10 @@ with inputs.nixpkgs.lib;
     allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
       "nvidia-x11"
       "nvidia-settings"
+      "nvidia-persistenced"
       "cudatoolkit"
       "steam"
+      "steam-run"
       "steam-original"
       "unrar"
       "discord"
@@ -26,6 +28,7 @@ with inputs.nixpkgs.lib;
     ];
     permittedInsecurePackages = [
       "xpdf-4.04"
+      "qtwebkit-5.212.0-alpha4"
     ];
   };
 

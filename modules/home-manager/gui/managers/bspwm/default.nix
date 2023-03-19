@@ -61,7 +61,7 @@ in {
     xdg.configFile."bspwm/colors" = {
       #onChange = "sh ${config.xdg.configHome}/bspwm/colors";
       #onChange = "${pkgs.dash}/bin/dash ${config.xdg.configHome}/bspwm/colors";  # works
-      onChange = builtins.trace "sh ${config.xdg.configHome}/bspwm/colors" "sh ${config.xdg.configHome}/bspwm/colors";
+      onChange = "sh ${config.xdg.configHome}/bspwm/colors";
       text = with config.colorscheme.colors; ''
         #!/usr/bin/env sh
         bspc config focused_border_color '#${base05}'

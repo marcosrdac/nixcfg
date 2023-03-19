@@ -8,5 +8,6 @@
     aliases = {
       s = "status";
     };
+    lfs.enable = true;
   };
 }

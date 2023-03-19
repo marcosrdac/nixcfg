@@ -1,0 +1,81 @@
+{ config, pkgs, ... }:
+
+with pkgs.lib;
+let
+  cfg = config.gui.polybar;
+in {
+
+  options.gui.polybar = {
+    enable = mkEnableOption "Enable default polybar configuration";
+    monitors = [ "eDP-1-1" "HDMI-1-1" ];
+  };
+
+  config = {
+    services.polybar = mkIf cfg.enable {
+      enable = true;
+      package = pkgs.unstable.polybar;
+      script = fileContents ./script;
+      #extraConfig = fileContents ./config;
+
+      settings = {
+        "bar/base" = {
+          monitor = "\${env:MONITOR:}";
+
+          # controling bar from the  outside
+          enable-ipc = true;
+
+          # geometry
+          dpi = "\${xrdb:dpi : 100}";
+          width               = "100%";
+          height              = "\${env:BAR_HEIGHT:22}";
+          padding-left        = 0;
+          padding-right       = 0;
+          module-margin-left  = 1;
+          module-margin-right = 1;
+          fixed-center        = true;
+          # style
+          background = "\${colors.background}";
+          foreground = "\${colors.foreground}";
+          font-0     = "\${xrdb:font:monospace}";
+          font-1     = "\${xrdb:symbol_font:monospace}";
+          # window manager
+          wm-restack = "bspwm";
+          # cursors
+          cursor-click  = "default";
+          cursor-scroll = "default";
+        };
+
+        "bar/only" = {
+          #"inherit" = "bar/base";
+          # modules position
+          modules-left   = "bspwm xkeyboard";
+          modules-center = "mpd";
+          modules-right  = "wlan eth pulseaudio brightness battery date time";
+          #modules-right  = remainder recording wlan eth pulseaudio brightness battery timer date time
+          # tray position
+          tray-position   = left;
+          tray-padding    = 2;
+          tray-background = "\${colors.background}";
+        };
+      };
+
+
+    };
+
+    home.sessionPath = mkIf cfg.enable [ "./bin" ];  # TODO make it like the common/packages modules
+
+    xdg.configFile."polybar/colors" = mkIf cfg.enable {
+      #onChange = "polybar-msg cmd restart";
+      text = with config.colorscheme.colors; ''
+        background     = ${base00}
+        background-alt = ${base01}
+        foreground-alt = ${base03}
+        foreground     = ${base05}
+        primary        = ${base0D}
+        secondary      = ${base08}
+        alert          = ${base0A}
+      '';
+    };
+  };
+
+}
