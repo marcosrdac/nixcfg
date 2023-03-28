@@ -10,12 +10,12 @@ final: prev: {
   neovim = import ./neovim final prev;
   write_stylus = import ./write_stylus final prev;
   #networkmanager-vpnc = import ./networkmanager/plugins/vtnc final prev;
-  networkmanager-pptp = import ./networkmanager/plugins/pptp final prev;
+  #networkmanager-pptp = import ./networkmanager/plugins/pptp final prev;
 
-  discord = prev.discord.overrideAttrs (_: { src = builtins.fetchTarball {
-    url = "https://discord.com/api/download/stable?platform=linux&format=tar.gz";
-    sha256 = "sha256:1pw9q4290yn62xisbkc7a7ckb1sa5acp91plp2mfpg7gp7v60zvz";};
-  });
+  #discord = prev.discord.overrideAttrs (_: { src = builtins.fetchTarball {
+  #  url = "https://discord.com/api/download/stable?platform=linux&format=tar.gz";
+  #  sha256 = "sha256:1pw9q4290yn62xisbkc7a7ckb1sa5acp91plp2mfpg7gp7v60zvz";};
+  #});
 
   #with import <nixpkgs> { };
   swhkd = with prev; rustPlatform.buildRustPackage rec {

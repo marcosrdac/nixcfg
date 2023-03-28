@@ -16,8 +16,7 @@ in
       '';
       device = mkOption {
         type = with types; uniq str;
-        description = 
-        ''
+        description = ''
           Drive device ID (not to be confused with partition ID) in which to install GRUB. Can be gotten from ls TODO
         '';  # TODO
         default = null;

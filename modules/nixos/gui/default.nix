@@ -38,16 +38,37 @@ in
       ];
 
       #displayManager.gdm = {
+      #displayManager.sddm = {
       #  enable = true;
       #};
 
       displayManager.lightdm = {
         enable = true;
+        #background = "#223b54";
+        #background = "#132332";
         #background = ""; TODO lightdm background
         #extraSeatDefaults = "";
-        #extraConfig = ''
-          #greeter-hide-users=false
-        #'';
+        #greeters.slick = {
+        greeters.gtk = {
+          enable = true;
+          #extraConfig = ''
+          #'';
+        };
+        # https://github.com/cboursnell/i3install/blob/master/lightdm-gtk-greeter.conf
+        extraConfig = ''
+          [Greeter]
+          indicators=~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
+          background-color=#223b54
+          background=#223b54
+          hide-user-image=#223b54
+          clock-format = %A %d %B, %H:%M
+          position = 25%,start 50%,center
+          user-background = false
+        '';
+        #background = #2e3436
+        #theme-name = Adwaita-dark
+        #icon-theme-name = Adwaita
+        #font-name = Noto Mono 10
       };
 
       #desktopManager.xfce.enable = true; # TODO create module, not true by default (like below)

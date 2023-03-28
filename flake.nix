@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-    nixpkgs-17 = { url = "github:NixOS/nixpkgs/17.09"; flake = false; };
+    #nixpkgs-17 = { url = "github:NixOS/nixpkgs/17.09"; flake = false; };
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager/release-22.11";

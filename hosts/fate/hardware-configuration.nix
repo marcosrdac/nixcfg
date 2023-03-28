@@ -4,18 +4,19 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 let
-  bootFat32Uuid = "8D00-3C46";
-  swapUuid = "957ad7d5-a678-41d2-9f05-296d244fa5fe";
-  nvmeBtrfsUuid = "b88c4b4d-16c2-4ede-8927-66cd954d0799";
-  hddBtrfsUuid = "30e4bc15-cf9d-4e23-8ef7-2db14db18bd1";
+  bootFat32Uuid = "A036-6953";
+  swapUuid = "85e3a4a6-4258-4f7d-a48f-413210026a3d";
+  nvmeBtrfsUuid = "185d4794-4a12-4ac5-87da-98e15851ded8";
+  #hddBtrfsUuid = "30e4bc15-cf9d-4e23-8ef7-2db14db18bd1";
 in {
+
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "nvme" "ahci" "thunderbolt" "xhci_pci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   # space_cache (?)
@@ -31,26 +32,26 @@ in {
     "/" = {
       device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
-      options = [ "subvol=root" "compress=zstd" ];
+      options = [ "subvol=@root" "compress=zstd" ];
     };
 
     "/nix" = {
       device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
-      options = [ "subvol=nix" "compress=zstd" "noatime" ];
+      options = [ "subvol=@nix" "compress=zstd" "noatime" ];
     };
 
     "/home" = {
       device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
-      options = [ "subvol=home" "compress=zstd" ];
+      options = [ "subvol=@home" "compress=zstd" ];
     };
 
-    "/home/marcosrdac/tmp" = {
-      device = "/dev/disk/by-uuid/${hddBtrfsUuid}";
-      fsType = "btrfs";
-      options = [ "subvol=@marcosrdac/@tmp" "compress=zstd" ];
-    };
+    #"/home/marcosrdac/tmp" = {
+    #  device = "/dev/disk/by-uuid/${hddBtrfsUuid}";
+    #  fsType = "btrfs";
+    #  options = [ "subvol=@marcosrdac/@tmp" "compress=zstd" ];
+    #};
 
   };
 
@@ -58,21 +59,8 @@ in {
     { device = "/dev/disk/by-uuid/${swapUuid}"; }
   ];
 
-
-  #fileSystems."/tmp" =
-  #  { device = "/dev/disk/by-uuid/b88c4b4d-16c2-4ede-8927-66cd954d0799";
-  #    fsType = "btrfs";
-  #    options = [ "subvol=tmp" ];
-  #  };
-
-  #fileSystems."/tmp" = {
-  #  fsType = "tmpfs";
-  #  device = "tmpfs";
-  #  options = [ "nosuid" "nodev" "relatime" "size=14G" ];
-  #};
-
   networking.useDHCP = lib.mkDefault true;
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  #powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

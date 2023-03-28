@@ -30,6 +30,9 @@ in
 
   config = mkIf cfg.enable {
 
+    environment.systemPackages = with pkgs; [ ]
+      ++ lib.optional cfg.sshServer openssh;
+
     services.openssh.enable = cfg.sshServer;
     programs.gnupg.agent.enableSSHSupport = true;
 
