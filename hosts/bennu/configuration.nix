@@ -101,7 +101,7 @@
   network = {
     enable = true;
     #interfaces = [ "enp2s0" "wlp3s0" ];
-    sshServer = true;
+    openssh.enable = true;
   };
 
   bluetooth.enable = true;

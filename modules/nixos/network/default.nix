@@ -21,19 +21,26 @@ in
       default = true;
     };
 
-    sshServer = mkOption {
-      description = "Whether to use OpenSSH or not";
-      type = with types; bool;
-      default = false;
+    openssh = {
+      enable = mkOption {
+        description = "Whether to use OpenSSH or not";
+        type = with types; bool;
+        default = true;
+      };
+      permitRootLogin = "no";
     };
   };
 
   config = mkIf cfg.enable {
 
-    environment.systemPackages = with pkgs; [ ]
-      ++ lib.optional cfg.sshServer openssh;
+    services.openssh = {
+      enable = cfg.openssh.enable;
+      # require public key authentication for better security
+      passwordAuthentication = false;
+      kbdInteractiveAuthentication = false;
+      permitRootLogin = cfg.permitRootLogin;
+    };
 
-    services.openssh.enable = cfg.sshServer;
     programs.gnupg.agent.enableSSHSupport = true;
 
     networking = {
