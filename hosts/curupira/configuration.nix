@@ -16,6 +16,7 @@
     ./nginx
     ./nextcloud
     ./gitea
+    ./jellyfin
   ];
 
   booting = {

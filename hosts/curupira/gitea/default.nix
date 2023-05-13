@@ -1,8 +1,6 @@
 { pkgs, config, lib, ... }:
 
 {
-  services.postgresql.enable = true;
-
   users.users.gitea.uid = 998;
   users.groups.gitea.gid = 492;
 
@@ -20,6 +18,7 @@
     };
   };
 
+  services.postgresql.enable = true;
   services.postgresql = {
     authentication = ''
       local gitea all ident map=gitea-users
