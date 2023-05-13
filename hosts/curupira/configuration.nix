@@ -24,9 +24,12 @@
 
   variables.enable = true;
 
-  openssh = {
+  network = {
     enable = true;
-    permitRootLogin = "yes";
+    openssh = {
+      enable = true;
+      permitRootLogin = "yes";
+    };
   };
 
   permissions = let

@@ -27,7 +27,11 @@ in
         type = with types; bool;
         default = true;
       };
-      permitRootLogin = "no";
+      permitRootLogin = mkOption {
+        description = "Whether to permit root login for incoming sshs";
+        type = with types; str;
+        default = "no";
+      };
     };
   };
 
@@ -38,7 +42,7 @@ in
       # require public key authentication for better security
       passwordAuthentication = false;
       kbdInteractiveAuthentication = false;
-      permitRootLogin = cfg.permitRootLogin;
+      permitRootLogin = cfg.openssh.permitRootLogin;
     };
 
     programs.gnupg.agent.enableSSHSupport = true;

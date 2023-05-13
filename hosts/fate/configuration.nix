@@ -125,7 +125,9 @@
   network = {
     enable = true;
     #interfaces = [ "enp2s0" "wlp3s0" ];
-    sshServer = true;
+    openssh = {
+      enable = true;
+    };
   };
 
   #bluetooth.enable = true;
@@ -186,6 +188,5 @@
   ## This is the actual specification of the secrets.
   #sops.secrets.example-key = {};
   #sops.secrets."myservice/my_subdir/my_secret" = {};
-
 
 }

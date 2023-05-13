@@ -28,7 +28,6 @@ rec {
         { nixpkgs = nixpkgsConfig; }
         inputs.sops-nix.nixosModules.sops
         ../hosts/${hostname}/configuration.nix
-        inputs.sops-nix.nixosModules.sops
       ];
   };
 
@@ -45,7 +44,6 @@ rec {
           { programs.git.enable = true; }
           inputs.sops-nix.homeManagerModules.sops
           ../users/${username}/home.nix 
-          inputs.sops-nix.nixosModules.sops
         ];
     };
 }
