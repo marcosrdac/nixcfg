@@ -38,7 +38,9 @@
       listToAttrs (map (pair: {
         name = "${pair.hostname}-${pair.username}";
         value = lib.mkUser pair;
-      }) user-host-pairs);
+      }) (builtins.trace "./" user-host-pairs));
+
+    repositoryRoot = /.;
     
     aarch64-linux.homeConfigurations = self.homeConfigurations;
   };

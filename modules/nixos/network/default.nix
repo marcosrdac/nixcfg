@@ -15,6 +15,10 @@ in
       example = [ "enp2s0" "wlp3s0" ]; 
     };
 
+    firewall = {
+      enable = mkEnableOption "Whether to use firewall";
+    };
+
     useDHCP = mkOption {
       description = "Whether to use DHCP or not";
       type = with types; bool;
@@ -60,9 +64,9 @@ in
       };
 
       firewall = {
-        connectionTrackingModules = [ "pptp" ];
-        enable = false;
-        #allowedTCPPorts = [ ... ];
+        enable = cfg.firewall.enable;
+        #connectionTrackingModules = [ "pptp" ];
+        #allowedTCPPorts = cfg.firewall.allowedTCPPorts;
         #allowedUDPPorts = [ ... ];
       };
 

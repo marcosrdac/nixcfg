@@ -7,7 +7,7 @@
     zone = "Brazil/East";
     locale = "en_US.UTF-8";
     system = "aarch64-linux";
-    nixos = "22.05";
+    nixos = "22.11";
   };
 
   imports = [
@@ -22,10 +22,13 @@
     tmpOnTmpfs = false;
   };
 
+  sops.age.keyFile = "/secrets/keys.txt";
+
   variables.enable = true;
 
   network = {
     enable = true;
+    firewall.enable = true;
     openssh = {
       enable = true;
       permitRootLogin = "yes";

@@ -4,19 +4,22 @@ with lib; let
   domain = "marcosrdac.com";
   nextcloudDomain = "cloud.${domain}";
   collaboraDomain = "collabora.${domain}";
+  onlyofficeDomain = "office.${domain}";
   nextcloudVersion = "25";
   nextcloudDir = "/mnt/nextcloud";
   nextcloudSecretDir = "${nextcloudDir}/secret";
   nextcloudDataDir = "${nextcloudDir}/data";
   rcloneConfigFile = "${nextcloudSecretDir}/rclone.conf";
   # better than wasabi before 1TB data for personal use
-  rcloneBucket = "backblaze-crypted:marcosrdac-curupira-nextcloud-data";
-  #rcloneBucket = "wasabi-crypted:marcosrdac-curupira-nextcloud-data";
+  #rcloneBucket = "backblaze-crypted:marcosrdac-curupira-nextcloud-data";
+  rcloneBucket = "wasabi-crypted:marcosrdac-curupira-nextcloud-data";
   # got me some rcp errors
   #rcloneBucket = "storj:marcosrdac-curupira-nextcloud-data";
   rcloneCacheDir = "${nextcloudDir}/cache";
+  #enable = false;
   enable = true;
   #enable = false;
+  enableCollabora = false;
 in {
 
   imports = [
@@ -133,9 +136,9 @@ in {
       '';
           #--umask 002 \
           # --log-level INFO --log-file ~/rclone.log
-        ExecStop = ''
-          ${pkgs.fuse}/bin/fusermount -u ${nextcloudDataDir}
-        '';
+      ExecStop = ''
+        ${pkgs.fuse}/bin/fusermount -u ${nextcloudDataDir}
+      '';
       Type = "notify";
       Restart = "always";
       RestartSec = "10s";
@@ -143,109 +146,128 @@ in {
     };
   };
 
+  #services.onlyoffice = {
+    #enable = true;
+    #hostname = onlyofficeDomain;
+  #};
+
   virtualisation.oci-containers = {
     backend = "podman";
     #backend = "docker";
     containers = {
-      collabora = {
-        image = "collabora/code:22.05.10.1.1";
-        #image = "collabora/code:latest";
-        #host_port:container_port
-        #ports = [ "9980:9980" ];
-        ports = [ "127.0.0.1:9980:9980" ];
-        environment = {
-          username = "admin";
-          password = "${nextcloudSecretDir}/collabora-secret";
-          dictionaries = "en_US";
-          #domain = collaboraDomain;
-          domain = nextcloudDomain;
-          server_name = collaboraDomain;
-          #extra_params = "--o:ssl.enable=true";
-          #extra_params = "--o:ssl.enable=false";
-        };
-        #extraOptions = [ "--cap-add=MKNOD" ];
-        extraOptions = [ "--cap-add=MKNOD" ];
+      onlyoffice = {
+        image = "onlyoffice/documentserver";
+        ports = [ "9981:80" ];
       };
-
-      #onlyoffice = {
-      #  image = "onlyoffice/documentserver";
-      #  ports = [ "9981:80" ];
-      #};
-
     };
   };
 
-  services.nginx.virtualHosts."${collaboraDomain}" = {
-    #forceSSL = true;
-    addSSL = true;
-    enableACME = true;
+  services.nginx.virtualHosts.${onlyofficeDomain}.listen = [ { addr = "127.0.0.1"; port = 9981; } ];
 
-    locations = {
+  #virtualisation.oci-containers = mkIf enableCollabora {
+  #  #backend = "podman";
+  #  backend = "docker";
+  #  containers = {
+  #    collabora = {
+  #      image = "collabora/code:22.05.10.1.1";
+  #      #image = "collabora/code:latest";
+  #      #host_port:container_port
+  #      #ports = [ "9980:9980" ];
+  #      ports = [ "127.0.0.1:9980:9980" ];
+  #      environment = {
+  #        username = "admin";
+  #        password = "${nextcloudSecretDir}/collabora-secret";
+  #        dictionaries = "en_US";
+  #        #domain = nextcloudDomain;
+  #        #server_name = collaboraDomain;
+  #        domain = "cloud\\.marcosrdac\\.com";
+  #        server_name = "collabora\\.marcosrdac\\.com";
+  #        #extra_params = "--o:ssl.enable=true";
+  #        #extra_params = "--o:ssl.enable=false";
+  #      };
+  #      #extraOptions = [ "--cap-add=MKNOD" ];
+  #      extraOptions = [ "--cap-add=MKNOD" ];
+  #    };
 
-      # static files
-      "^~ /browser" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Host $host;
-        '';
-      };
-      "^~ /loleaftlet" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Host $host;
-        '';
-      };
+  #    #onlyoffice = {
+  #    #  image = "onlyoffice/documentserver";
+  #    #  ports = [ "9981:80" ];
+  #    #};
 
-      # WOPI discovery URL
-      "^~ /hosting/discovery" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Host $host;
-        '';
-      };
+  #  };
+  #};
 
-      # Capabilities
-      "^~ /hosting/capabilities" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Host $host;
-          proxy_read_timeout 36000s;
-        ''; # above line is new
-      };
+  #services.nginx.virtualHosts."${collaboraDomain}" = mkIf enableCollabora {
+  #  #forceSSL = true;
+  #  addSSL = true;
+  #  enableACME = true;
 
-      # main websocket
-      "~ ^/cool/(.*)/ws$" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "Upgrade";
-          proxy_set_header Host $host;
-          proxy_read_timeout 36000s;
-        '';
-      };
+  #  locations = {
 
-      # download, presentation and image upload
-      "~ ^/(c|l)ool" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Host $host;
-        '';
-      };
+  #    # static files
+  #    "^~ /browser" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+  #    "^~ /loleaftlet" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
 
-      # Admin Console websocket
-      "^~ /cool/adminws" = {
-        "proxyPass" = "https://127.0.0.1:9980";
-        extraConfig = ''
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "Upgrade";
-          proxy_set_header Host $host;
-          proxy_read_timeout 36000s;
-        '';
-      };
+  #    # WOPI discovery URL
+  #    "^~ /hosting/discovery" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
 
-    };
+  #    # Capabilities
+  #    "^~ /hosting/capabilities" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      ''; # above line is new
+  #    };
 
-  };
+  #    # main websocket
+  #    "~ ^/cool/(.*)/ws$" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Upgrade $http_upgrade;
+  #        proxy_set_header Connection "Upgrade";
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      '';
+  #    };
+
+  #    # download, presentation and image upload
+  #    "~ ^/(c|l)ool" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Host $host;
+  #      '';
+  #    };
+
+  #    # Admin Console websocket
+  #    "^~ /cool/adminws" = {
+  #      "proxyPass" = "https://127.0.0.1:9980";
+  #      extraConfig = ''
+  #        proxy_set_header Upgrade $http_upgrade;
+  #        proxy_set_header Connection "Upgrade";
+  #        proxy_set_header Host $host;
+  #        proxy_read_timeout 36000s;
+  #      '';
+  #    };
+
+  #  };
+
+  #};
 
   networking.firewall = {
     enable = true;
