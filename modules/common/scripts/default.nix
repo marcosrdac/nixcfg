@@ -11,7 +11,9 @@ let
 in
 
   if nixos then {
-    environment.systemPackages = scripts;
+    environment.systemPackages = scripts ++ (with pkgs; [
+      maim slurp grim  # screenshot script
+    ]);
   } else {
     home.sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
     home.packages = scripts;

@@ -3,12 +3,17 @@
 with lib;
 let
   cfg = config.graphics.nvidia;
-  nvidiaDriver = pkgs.linuxPackages.nvidia_x11;
 in
 {
   options.graphics.nvidia = {
 
     enable = mkEnableOption "Enable NVidia configuration" ;
+
+    driver = mkOption {
+      description = "NVidia driver to be installed";
+      type = with types; package;
+      default = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
 
     prime = mkOption {
       description = "NVidia PRIME configuration";
@@ -22,20 +27,23 @@ in
     #nixpkgs.config.allowUnfree = true;
 
     environment.systemPackages = with pkgs; [
+      #cfg.driver
       #gnumake  # needed?
       #gcc      # needed?
 
-      cudatoolkit
-      nvidiaDriver
+      # https://github.com/NixOS/nixpkgs/blob/4d5b1d6b273fc4acd5dce966d2e9c0ca197b6df2/pkgs/development/compilers/cudatoolkit/default.nix
+      #cudatoolkit_11  # TODO test removing, see how it went
+      # https://github.com/NixOS/nixpkgs/blob/634141959076a8ab69ca2cca0f266852256d79ee/pkgs/development/libraries/science/math/cudnn/default.nix
+      #cudnn_8_3_cudatoolkit_11  # TODO test removing, see how it went
     ];
 
     # optionally, you may need to select the appropriate driver version for your specific GPU.
-    hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+    hardware.nvidia.package = cfg.driver;
     hardware.opengl.enable = true;
 
     systemd.services.nvidia-control-devices = {
       wantedBy = [ "multi-user.target" ];
-      serviceConfig.ExecStart = "${nvidiaDriver.bin}/bin/nvidia-smi";
+      serviceConfig.ExecStart = "${cfg.driver.bin}/bin/nvidia-smi";
     };
 
     services.xserver = {

@@ -7,16 +7,25 @@ let
   bootFat32Uuid = "A036-6953";
   swapUuid = "85e3a4a6-4258-4f7d-a48f-413210026a3d";
   nvmeBtrfsUuid = "185d4794-4a12-4ac5-87da-98e15851ded8";
-  #hddBtrfsUuid = "30e4bc15-cf9d-4e23-8ef7-2db14db18bd1";
+  hddNtfsUuid = "5FEF4B33100DFCB9";
 in {
 
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "ahci" "thunderbolt" "xhci_pci" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "ahci" "thunderbolt" "xhci_pci" "usbhid" "usb_storage" "sd_mod"
+  ];
+  boot.supportedFilesystems = [ "ntfs" ];
+
+
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-intel" "i2c_dev" "i2c-dev"
+    "i2c-piix4"  # amd MOBO
+    "i2c_piix4"  # amd MOBO
+    "i2c-i801"  # intel MOBO
+    "i2c_i801"  # intel MOBO
+  ];
   boot.extraModulePackages = [ ];
 
   # space_cache (?)
@@ -45,6 +54,14 @@ in {
       device = "/dev/disk/by-uuid/${nvmeBtrfsUuid}";
       fsType = "btrfs";
       options = [ "subvol=@home" "compress=zstd" ];
+    };
+
+    "/mnt/hdd" = {
+      device = "/dev/disk/by-uuid/${hddNtfsUuid}";
+      fsType = "ntfs3";
+      options = [ "rw" "dmask=007" "fmask=117" "uid=${builtins.toString config.users.users.marcosrdac.uid}" "gid=${builtins.toString config.users.groups.hdd.gid}" ]
+        ++ [ "auto" "nofail" ]  # do not mount at boot if any problems happen
+      ;
     };
 
     #"/home/marcosrdac/tmp" = {

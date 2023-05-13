@@ -5,7 +5,7 @@ XDG_SCREENSHOT_DIR=${XDG_SCREENSHOT_DIR:-"$XDG_PICTURES_DIR"}
 
 showhelp () {
   echo "Usage: $0 [OPTIONS]"
-  echo 'Take a screenshot and save it to $XDG_SCREENSHOT_DIR (or defaults to ~/Pictures if variable is not set), copies screenshot to clipboard and its path to primary selection. On wayland, this script is a wrapper for slup, grim and xclip; on xorg, this is a wrapper for scrot.'
+  echo 'Take a screenshot and save it to $XDG_SCREENSHOT_DIR (or defaults to ~/Pictures if variable is not set), copies screenshot to clipboard and its path to primary selection. On wayland, this script is a wrapper for slup, grim and xclip; on xorg, this is a wrapper for maim.'
   echo
   echo "Options"
   echo "  -s or --select  Select area to take screeshot."
@@ -41,13 +41,13 @@ else
       shot="screenshot"
     else
       shot="sliceshot"
-      scrot_args="-s"
+      maim_args="-s"
     fi
     Shot=`echo "$shot" | sed 's/./\U&/'`
 
     filename="`date +'%Y%m%d%H%M%S'`_${shot}"
     filepath="$XDG_SCREENSHOT_DIR/${filename}.png"
-    scrot "$filepath" $scrot_args &&
+    maim -o $maim_args > "$filepath"  &&
     echo "$filepath" | xclip -sel p &&
     xclip -sel c -t image/png -i "$filepath" &&
     notify-send "$Shot taken" "Location: $filepath\n\nImage copied to clipboard."

@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-monitors=`polybar --list-monitors | cut -d":" -f1`
-for monitor in "$monitors"
-do
-  #MONITOR=$monitor polybar --reload 1 &
-  MONITOR=$monitor polybar 1 --config=$HOME/.config/polybar/config.ini &
-done
+#monitors=`polybar --list-monitors | cut -d":" -f1`
+#for monitor in "$monitors"
+#do
+#  #MONITOR=$monitor polybar --reload 1 &
+#  MONITOR=$monitor polybar 1 --config=$HOME/.config/polybar/config.ini &
+#done

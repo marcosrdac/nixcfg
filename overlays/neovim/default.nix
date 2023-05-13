@@ -117,7 +117,8 @@ pkgs.neovim.override {
             vim-flutter      # flutter tools
             julia-vim        # julia syntax highlighting
             #vim-cython       # cython filetype and syntax
-        
+            vim-beancount
+
             # under tests
             vim-which-key
             #vim-quick-scope

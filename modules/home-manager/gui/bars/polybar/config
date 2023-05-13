@@ -103,9 +103,9 @@ modules-right  = remainder recording wlan eth pulseaudio brightness battery time
 [module/bspwm]
 type = internal/bspwm
 format = <label-state> <label-mode>
-label-focused = %index%
-label-occupied = %index%
-label-urgent = %index%
+label-focused = %name%
+label-occupied = %name%
+label-urgent = %name%
 label-empty =
 inline-mode = true
 scroll-up = bspwm-desknext

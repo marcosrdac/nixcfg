@@ -60,14 +60,25 @@ in
           "80:class_g = 'dropdown_music_player' && !focused"
           #"80:class_g = 'qutebrowser' && !focused"
         ];
-        blurExclude = [ ];
-        fadeExclude = [ ];
-        shadowExclude = [ ];
-        noDockShadow = true;
+        #blurBackgroundExclude = [ ];
+        #noDockShadow = true;
         extraOptions = ''
           no-ewmh-fullscreen = true;
 
           #corner-radius = 1
+
+          #blur-background-exclude = [
+          #  "window_type = 'dock'",
+          #  "window_type = 'desktop'",
+          #  "class_g ?= 'xfce4-screenshooter'",
+          #  "_GTK_FRAME_EXTENTS@:c",
+          #];
+
+          shadow-exclude = [
+            "class_g *?= 'slop'"
+          ];
+
+          #fade-exclude = [ ];
         '';
       };
     };

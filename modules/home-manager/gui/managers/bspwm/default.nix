@@ -21,6 +21,14 @@ in {
         default = 3;
       };
     };
+
+    monitors = mkOption {
+        description = "Window border width";
+        type = with types; attrs;
+        default = {
+          "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
+        };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -31,9 +39,7 @@ in {
     xsession.windowManager.bspwm = {
       enable = true;
       #extraConfig = pkgs.lib.fileContents ./bspwmrc;
-      monitors = {  # TODO create activate monitors script and data/config file looker
-        "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
-      };
+      monitors = cfg.monitors;
       settings = {
         split_ratio = 0.6;
         borderless_monocle = true;

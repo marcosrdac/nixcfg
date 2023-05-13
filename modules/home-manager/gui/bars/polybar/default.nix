@@ -7,13 +7,18 @@ in {
 
   options.gui.polybar = {
     enable = mkEnableOption "Enable default polybar configuration";
+    script = mkOption {
+      description = "Polybar startup script";
+      type = with types; str;
+      default = "";
+    };
   };
 
   config = {
     services.polybar = mkIf cfg.enable {
       enable = true;
       package = pkgs.unstable.polybar;
-      script = fileContents ./script;
+      script = cfg.script;
       extraConfig = fileContents ./config;
     };
 
