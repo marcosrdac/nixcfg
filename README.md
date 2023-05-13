@@ -6,6 +6,7 @@ These configurations can be used differently to manage:
 - the system configuration;
 - both system and user configurations at the same time.
 
+This repository is hosted in my [Gitea server](https://git.marcosrdac.com/marcosrdac/nixcfg) and [mirrored to GitHub](https://github.com/marcosrdac/nixcfg).
 
 ## Principles
 
@@ -68,7 +69,7 @@ nix-shell -p wget vim git screen lf
 ### Download
 
 ```sh
-git clone https://github.com/marcosrdac/nixcfg $HOME/.config/home-manager
+git clone https://git.marcosrdac.com/marcosrdac/nixcfg.git $HOME/.config/home-manager
 ```
 
 
@@ -91,7 +92,7 @@ TODO add a placeholder for non-NixOS machines I might use
 As super user:
 
 ```sh
-git clone https://github.com/marcosrdac/nixcfg /etc/nixos
+git clone https://git.marcosrdac.com/marcosrdac/nixcfg.git /etc/nixos
 ```
 
 ### Set the system hostname
@@ -137,7 +138,7 @@ cat ~/.ssh/id_rsa.pub
 
 Copy `cat` output and paste it into a new SSH key with 
 
-[Create a new SSH access key for GitHub](https://github.com/settings/ssh/new) using cat output and entitle it `username@hostname`, where username and hostname are your current ones.
+[Create new SSH access keys](https://git.marcosrdac.com/user/settings/keys) using cat output and entitle it `username@hostname`, where username and hostname are your current ones.
 
 
 ## Moving remote from HTTP to SSH
@@ -151,7 +152,7 @@ git remote -v
 To change to SSH:
 
 ```sh
-git remote set-url origin git@github.com:marcosrdac/nixcfg.git
+git remote set-url origin gitea@git.marcosrdac.com:marcosrdac/nixcfg.git
 ```
 
 ## Configuring git
@@ -179,7 +180,7 @@ sudo nix-store --optimise
 
 ### `nixos-rebuild swith` does nothing
 
-You probably don't have enought RAM. Do the following to swap on file before system build:
+You probably don't have enough RAM. Do the following to swap on file before system build:
 
 ```sh
 SWAP_SIZE_MB=2048
