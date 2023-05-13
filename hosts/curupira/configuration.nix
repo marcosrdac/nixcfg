@@ -15,6 +15,7 @@
     ./hardware-configuration.nix
     ./nginx
     ./nextcloud
+    ./gitea
   ];
 
   booting = {
@@ -22,7 +23,7 @@
     tmpOnTmpfs = false;
   };
 
-  sops.age.keyFile = "/secrets/keys.txt";
+  sops.age.keyFile = "/root/.config/sops/age/keys.txt";
 
   variables.enable = true;
 

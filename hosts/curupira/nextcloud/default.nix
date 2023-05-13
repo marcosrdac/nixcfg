@@ -146,23 +146,23 @@ in {
     };
   };
 
-  #services.onlyoffice = {
-    #enable = true;
-    #hostname = onlyofficeDomain;
+  ##services.onlyoffice = {
+  #  #enable = true;
+  #  #hostname = onlyofficeDomain;
+  ##};
+
+  #virtualisation.oci-containers = {
+  #  backend = "podman";
+  #  #backend = "docker";
+  #  containers = {
+  #    onlyoffice = {
+  #      image = "onlyoffice/documentserver";
+  #      ports = [ "9981:80" ];
+  #    };
+  #  };
   #};
 
-  virtualisation.oci-containers = {
-    backend = "podman";
-    #backend = "docker";
-    containers = {
-      onlyoffice = {
-        image = "onlyoffice/documentserver";
-        ports = [ "9981:80" ];
-      };
-    };
-  };
-
-  services.nginx.virtualHosts.${onlyofficeDomain}.listen = [ { addr = "127.0.0.1"; port = 9981; } ];
+  #services.nginx.virtualHosts.${onlyofficeDomain}.listen = [ { addr = "127.0.0.1"; port = 9981; } ];
 
   #virtualisation.oci-containers = mkIf enableCollabora {
   #  #backend = "podman";
