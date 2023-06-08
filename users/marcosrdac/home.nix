@@ -1,25 +1,28 @@
 { config, pkgs, ... }:
 
-{
+let
+  left-monitor = "HDMI-A-1-1";
+  right-monitor = "DP-1";
+in {
 
   home.username = "marcosrdac";
   home.homeDirectory = "/home/marcosrdac";
   home.stateVersion = "22.05";
 
-  sops = {
-    #age.keyFile = "/home/user/.age-key.txt"; # must have no password!
-    # It's also possible to use a ssh key, but only when it has no password:
-    #age.sshKeyPaths = [ "/home/user/path-to-ssh-key" ];
-    defaultSopsFile = ./secrets.yaml;
-    secrets.password_1 = {
-      # sopsFile = ./secrets.yml.enc; # optionally define per-secret files
+  #sops = {
+  #  #age.keyFile = "/home/user/.age-key.txt"; # must have no password!
+  #  # It's also possible to use a ssh key, but only when it has no password:
+  #  #age.sshKeyPaths = [ "/home/user/path-to-ssh-key" ];
+  #  defaultSopsFile = ./secrets.yaml;
+  #  secrets.password_1 = {
+  #    # sopsFile = ./secrets.yml.enc; # optionally define per-secret files
 
-      # %r gets replaced with a runtime directory, use %% to specify a '%'
-      # sign. Runtime dir is $XDG_RUNTIME_DIR on linux and $(getconf
-      # DARWIN_USER_TEMP_DIR) on darwin.
-      path = "%r/test.txt"; 
-    };
-  };
+  #    # %r gets replaced with a runtime directory, use %% to specify a '%'
+  #    # sign. Runtime dir is $XDG_RUNTIME_DIR on linux and $(getconf
+  #    # DARWIN_USER_TEMP_DIR) on darwin.
+  #    path = "%r/test.txt"; 
+  #  };
+  #};
 
 
   systemd.user.services.autorandr-main = {
@@ -51,7 +54,7 @@
 
     profiles.main = {
       config = {
-        DP-1 = {
+        ${right-monitor} = {
           enable = true;
           primary = true;
           mode = "2560x1080";
@@ -73,7 +76,7 @@
           #position = "0x0";
           #rotate = "normal";
         #};
-        HDMI-A-1-0 = {
+        ${left-monitor} = {
           enable = true;
           mode = "2560x1080";
           position = "0x0";
@@ -104,15 +107,15 @@
     bspwm = {
       enable = true;
       monitors = {
-        HDMI-A-1-0 = [ "1" "2" "3" "4" "5" ];
-        DP-1 = [ "6" "7" "8" "9" "0" ];
+        ${left-monitor} = [ "1" "2" "3" "4" "5" ];
+        ${right-monitor} = [ "6" "7" "8" "9" "0" ];
       };
     };
     polybar = {
       enable = true;
       script = ''
-        MONITOR=HDMI-A-1-0 ${pkgs.polybar}/bin/polybar 21 --config=${config.xdg.configHome}/polybar/config.ini &
-        MONITOR=DP-1 ${pkgs.polybar}/bin/polybar 22 --config=${config.xdg.configHome}/polybar/config.ini &
+        MONITOR=${left-monitor} ${pkgs.polybar}/bin/polybar 21 --config=${config.xdg.configHome}/polybar/config.ini &
+        MONITOR=${right-monitor} ${pkgs.polybar}/bin/polybar 22 --config=${config.xdg.configHome}/polybar/config.ini &
       '';
     };
     rofi.enable = true;
@@ -162,6 +165,7 @@
       fava
       xournalpp
       lua5_3
+      kopia
 
       # test
       #swhkd

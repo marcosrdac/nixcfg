@@ -39,7 +39,6 @@ rec {
       modules = (import ../modules/common)
         ++ (import ../modules/home-manager)
         ++ (let c = getUsersHostConfig args; in optional (pathExists c) c)
-        ++ inputs.sops-nix.nixosModules.sops
         ++ [
           { nixpkgs = nixpkgsConfig; }
           { programs.git.enable = true; }
