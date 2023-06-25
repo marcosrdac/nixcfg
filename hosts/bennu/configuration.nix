@@ -55,7 +55,6 @@
     };
   };
 
-
   virtualization = {
     docker = true;
     podman = true;
@@ -122,11 +121,11 @@
     list = with pkgs; [ ];
   };
 
-  networking.networkmanager.plugins = with pkgs; lib.mkForce [
-    networkmanager-pptp
-    networkmanager-vpnc
-    networkmanager-fortisslvpn
-  ];
+  #networking.networkmanager.plugins = with pkgs; lib.mkForce [
+    #networkmanager-pptp
+    #networkmanager-vpnc
+    #networkmanager-fortisslvpn
+  #];
 
   #networking.networkmanager.plugins = with pkgs; lib.mkForce [
     #networkmanager-pptp

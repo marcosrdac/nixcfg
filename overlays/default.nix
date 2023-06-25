@@ -14,7 +14,7 @@ final: prev: {
 
   discord = prev.discord.overrideAttrs (_: { src = builtins.fetchTarball {
     url = "https://discord.com/api/download/stable?platform=linux&format=tar.gz";
-    sha256 = "sha256:0mr1az32rcfdnqh61jq7jil6ki1dpg7bdld88y2jjfl2bk14vq4s";};
+    sha256 = "sha256:1pw9q4290yn62xisbkc7a7ckb1sa5acp91plp2mfpg7gp7v60zvz";};
   });
 
   #with import <nixpkgs> { };
