@@ -26,14 +26,14 @@ in
     };
 
     defaultGroups = mkOption {
-      type = with types; listOf string;
+      type = with types; listOf str;
       description = "Groups every user belongs to";
       default = [ ];
       example = literalExpression ''[ "lp" ]'';
     };
 
     openssh.defaultAuthorizedKeys.keys = mkOption {
-      type = with types; listOf string;
+      type = with types; listOf str;
       description = "SSH keys every user can login from";
       default = [ ];
       example = literalExpression ''[ "your-ssh-pubkey-here" ]'';

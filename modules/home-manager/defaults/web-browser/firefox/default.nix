@@ -4,11 +4,9 @@
   programs.firefox = {
     enable = true;
 
-    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-      ublock-origin
-    ];
-
-    profiles = {
+    profiles = with pkgs.nur.repos.rycee.firefox-addons; let
+      extensions = [ ublock-origin ];
+    in {
       personal = {
         id = 0;
         name = "Personal";

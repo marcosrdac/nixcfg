@@ -20,7 +20,8 @@ in
   config = with pkgs; let 
     basic-packages = [
       acpi  # TODO useful for notebooks, should be separated from basic
-      ventoy-bin  # TODO bootable flash drive
+      gettext
+      #ventoy-bin  # TODO bootable flash drive  # UNFREE SOFTWARE NOW
       gparted
       pptp
       alacritty  # TODO not useful for servers... another group for this one here
@@ -32,7 +33,7 @@ in
       fzy
       git
       jq
-      keepassx2
+      #keepassx2
       killall
       lf
       libnotify
@@ -53,8 +54,10 @@ in
       wget
       zip  # this is truly basic
 
+      appimage-run
+
       # needed?
-      singularity
+      #singularity
       containerd
     ];
     design-packages = [

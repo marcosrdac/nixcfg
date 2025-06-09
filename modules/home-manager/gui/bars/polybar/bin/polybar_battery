@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Define the PID file
+pidfile=/tmp/$(basename $0).pid
+echo $$ > $pidfile
+
+## Function to show battery status using acpi
+#show_battery ()
+#{
+#    battery_status=$(acpi -b)
+#    echo $battery_status
+#}
+#
+## Setup trap for signals
+#trap "rm -f $pidfile" EXIT KILL
+#trap "show_battery" USR1
+#
+## Main loop to keep the script running
+#while true
+#do
+#    # Wait for a signal to show battery status
+#    sleep infinity &
+#    wait $!
+#done
+
+# Function to get and format the battery status using acpi
+get_battery_status() {
+    # Fetch battery information using acpi
+    battery_info=$(acpi -b)
+
+    # Extract battery percentage and status (Charging/Discharging)
+    battery_percent=$(echo $battery_info | grep -oP '\d+%' | tr -d '%')
+    battery_status=$(echo $battery_info | grep -oP 'Charging|Discharging')
+
+    # Determine the battery icon based on the charge level
+    if [ "$battery_percent" -ge 80 ]; then
+        battery_icon="" # Full
+    elif [ "$battery_percent" -ge 60 ]; then
+        battery_icon="" # 3/4
+    elif [ "$battery_percent" -ge 40 ]; then
+        battery_icon="" # Half
+    elif [ "$battery_percent" -ge 20 ]; then
+        battery_icon="" # 1/4
+    else
+        battery_icon="" # Empty
+    fi
+
+    # Optionally, handle charging status and color changes here
+
+    # Echo the battery status
+    echo "%{T2}$battery_icon%{T-} $battery_percent% ($battery_status)"
+}
+
+# Main loop
+while true; do
+    get_battery_status
+    sleep 5 # Update every 5 seconds
+done

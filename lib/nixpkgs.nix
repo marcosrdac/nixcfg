@@ -27,7 +27,7 @@ with inputs.nixpkgs.lib;
       "vmware-horizon-client"
     ];
     permittedInsecurePackages = [
-      "xpdf-4.04"
+      "xpdf-4.05"
       "qtwebkit-5.212.0-alpha4"
     ];
   };

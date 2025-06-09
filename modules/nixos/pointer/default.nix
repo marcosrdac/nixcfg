@@ -16,6 +16,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.xserver.libinput.enable = cfg.touchPad;
+    services.libinput.enable = cfg.touchPad;
   };
 }

@@ -9,7 +9,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    sound.enable = true;
+    #sound.enable = true;
     services.pipewire = {
       enable = true;
       alsa.enable = true;
@@ -18,7 +18,8 @@ in {
       jack.enable = true;
       #wireplumber.enable = true;
     };
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
+    services.pulseaudio.package = pkgs.pulseaudioFull;
     environment.systemPackages = with pkgs; [
       pavucontrol
     ];

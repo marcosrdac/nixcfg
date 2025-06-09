@@ -23,10 +23,12 @@ in
       # precondition for enableNvidia below (?)
       #hardware.opengl.driSupport32Bit = lib.optionals (cfg.docker && cfg.graphics.nvidia.enable) true;
 
-      virtualisation.docker = mkIf cfg.docker {
-        enable = true;
-        enableNvidia = mkIf gcfg.nvidia.enable true;
-      };
+    hardware.nvidia-container-toolkit.enable = mkIf gcfg.nvidia.enable true;
+
+    virtualisation.docker = mkIf cfg.docker {
+      enable = true;
+      #enableNvidia = true; OBSOLETE
+    };
 
     virtualisation.containers.enable = mkIf cfg.podman true;
   };

@@ -39,15 +39,24 @@ in
         example = "de";
       };
     };
+
+    powerKeyOff = mkEnableOption "Remove power key function";
   };
 
   config = mkIf cfg.enable {
     services.xserver = { 
-      layout = cfg.gui.layout;
-      xkbVariant = cfg.gui.variant;
-      xkbOptions = cfg.gui.options;
+      xkb = {
+        layout = cfg.gui.layout;
+        variant = cfg.gui.variant;
+        options = cfg.gui.options;
+      };
     };
 
     console.keyMap = cfg.tty.layout;
+
+    services.logind.extraConfig = mkIf cfg.powerKeyOff ''
+      HandlePowerKey=ignore
+    '';
+
   };
 }

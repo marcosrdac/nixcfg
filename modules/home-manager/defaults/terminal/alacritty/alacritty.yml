@@ -3,6 +3,10 @@ import:
 
 live_config_reload: true
 
+font:
+  family: "Spleen"
+  size: 10
+
 window:
   opacity: 0.9
   energy: Powersave

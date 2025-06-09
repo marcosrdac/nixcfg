@@ -7,7 +7,13 @@ in
 {
   options.graphics.nvidia = {
 
-    enable = mkEnableOption "Enable NVidia configuration" ;
+    enable = mkEnableOption "Enable NVidia configuration";
+
+    open = mkOption {
+      description = "Use open NVidia drivers";
+      type = with types; bool;
+      default = true;
+    };
 
     driver = mkOption {
       description = "NVidia driver to be installed";
@@ -38,8 +44,9 @@ in
     ];
 
     # optionally, you may need to select the appropriate driver version for your specific GPU.
+    hardware.nvidia.open = cfg.open;
     hardware.nvidia.package = cfg.driver;
-    hardware.opengl.enable = true;
+    hardware.graphics.enable = true;
 
     systemd.services.nvidia-control-devices = {
       wantedBy = [ "multi-user.target" ];
@@ -60,10 +67,6 @@ in
 
     # nvidia prime stuff
     hardware.nvidia.modesetting.enable = true;
-    hardware.nvidia.prime = cfg.prime;
-
-    # maybe needed for tensorflowWithCuda (TODO test)
-    hardware.opengl.setLdLibraryPath = true;
-
+    hardware.nvidia.prime = cfg.prime;  # // { offload.enable = true; offload.enableOffloadCmd = true;  };
   };
 }

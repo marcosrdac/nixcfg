@@ -4,7 +4,7 @@
 
   home.username = "marcosrdac";
   home.homeDirectory = "/home/marcosrdac";
-  home.stateVersion = "22.05";
+  home.stateVersion = "24.05";
 
   #sops = {
   #  #age.keyFile = "/home/user/.age-key.txt"; # must have no password!
@@ -22,34 +22,34 @@
   #};
 
 
-  systemd.user.services.autorandr-main = {
-    Unit = {
-      Description = "Polybar status bar";
-      PartOf = [ "graphical-session.target" ];
-      #X-Restart-Triggers = mkIf (configFile != null) "${configFile}";
-    };
+#  systemd.user.services.autorandr-main = {
+#    Unit = {
+#      Description = "Polybar status bar";
+#      PartOf = [ "graphical-session.target" ];
+#      #X-Restart-Triggers = mkIf (configFile != null) "${configFile}";
+#    };
+#
+#    Service = {
+#      #Type = "forking";
+#      PassEnvironment = "DISPLAY";
+#      #Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
+#      ExecStart = let
+#        scriptPkg = pkgs.writeShellScriptBin "autorandr-set" ''
+#          ${pkgs.autorandr}/bin/autorandr main
+#          ${pkgs.feh}/bin/feh --bg-scale ${config.home.file.wallpaper.target}
+#          #xsetwacom --set 'Wacom One by Wacom S Pen stylus' Rotate half
+#        '';
+#      in "${scriptPkg}/bin/autorandr-set";
+#      #Restart = "on-failure";
+#    };
+#
+#    Install = { WantedBy = [ "graphical-session.target" "multi-user.target" "polybar.target" ]; };
+#  };
 
-    Service = {
-      #Type = "forking";
-      PassEnvironment = "DISPLAY";
-      #Environment = "PATH=${cfg.package}/bin:/run/wrappers/bin";
-      ExecStart = let
-        scriptPkg = pkgs.writeShellScriptBin "autorandr-set" ''
-          ${pkgs.autorandr}/bin/autorandr main
-          ${pkgs.feh}/bin/feh --bg-scale ${config.home.file.wallpaper.target}
-          #xsetwacom --set 'Wacom One by Wacom S Pen stylus' Rotate half
-        '';
-      in "${scriptPkg}/bin/autorandr-set";
-      #Restart = "on-failure";
-    };
-
-    Install = { WantedBy = [ "graphical-session.target" "multi-user.target" "polybar.target" ]; };
-  };
-
-  services.nextcloud-client = {
-    enable = true;
-    startInBackground = true;
-  };
+#  services.nextcloud-client = {
+#    enable = true;
+#    startInBackground = true;
+#  };
 
   home.keyboard = {
     layout = "us";
@@ -58,9 +58,8 @@
   };
   #home.keyboard.layout = "br";
 
-  typeface.enable = true;
-
   services.network-manager-applet.enable = true;
+  services.blueman-applet.enable = true;
 
   #xdg.configFile = let  # TODO pass extra configs to XDG_CONFIG_HOME
   #  mkLink = config.lib.file.mkOutOfStoreSymlink;
@@ -71,15 +70,19 @@
   #  };
   #};
 
+  #xsession.initExtra = ''
+  #  ${pkgs.autorandr}/bin/autorandr mobile
+  #'';
+
   packages = {
-    design = true;
+    #design = true;
     list = with pkgs; [
       taskwarrior
-      gnucash
+      #gnucash
       beancount
       fava
-      xournalpp
-      lua5_3
+      #xournalpp
+      #lua5_3
       kopia
 
       # test
@@ -95,7 +98,7 @@
       rclone
 
       # PETROBRAS
-      vmware-horizon-client
+      #vmware-horizon-client
       #networkmanager-vpnc
       
       scrot          # xorg screenshot  # TODO move to xorg module
@@ -112,8 +115,8 @@
       gnome.file-roller
 
       #nur.repos.timjrd.overlays.popcorntime
-      tmsu    # tag based filesystem
-      zotero  # paper organization
+      #tmsu    # tag based filesystem
+      #zotero  # paper organization
       conda
     ];
   };

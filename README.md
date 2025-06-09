@@ -221,6 +221,11 @@ sudo growpart /dev/nvme0n1 $PARTITION_NUMBER
 - [ ] Default python env should be easily accessable for data analysis stuff.
 - [ ] I want to be able to install and use my WM configuration from any computer (use xinit and stuff, instead of xinit-hm).
 
+- [X] redshift
+- [ ] kopia module
+- [ ] curupira's nextcloud + gitea
+- [ ] appearance module: font families (regular, symbol), size -> terminal, bars, themes, etc.
+- [X] volume module
 
 ### Reading tips
 

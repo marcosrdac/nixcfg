@@ -3,8 +3,8 @@
 {
   programs.git = {
     enable = true;
-    userName = "marcosrdac";
-    userEmail = "marcosrdac@gmail.com";
+    userName = "marcosrdac";  # TODO universalize
+    userEmail = "mail@marcosrdac.com";  # TODO universalize
     aliases = {
       s = "status";
     };

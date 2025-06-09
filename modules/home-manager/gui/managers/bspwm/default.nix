@@ -23,11 +23,18 @@ in {
     };
 
     monitors = mkOption {
-        description = "Window border width";
-        type = with types; attrs;
-        default = {
-          "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
-        };
+      description = "Window border width";
+      type = with types; attrs;
+      default = {
+        "eDP-1" = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
+      };
+    };
+
+    startupPrograms = mkOption {
+      description = "Programs to be started with bspwm";
+      type = with types; listOf str;
+      default = [ ];
+      example = literalString ''[ "${pkgs.polybar}/bin/polybar bar" ]'';
     };
   };
 
@@ -61,7 +68,7 @@ in {
         "$TERMINAL -c dropdown_calculator -e julia --banner no"
         "$TERMINAL -c dropdown_mail -e neomutt"
         "$TERMINAL -c dropdown_music_player -e ncmpcpp"
-      ];
+      ] ++ cfg.startupPrograms;
     };
 
     xdg.configFile."bspwm/colors" = {
