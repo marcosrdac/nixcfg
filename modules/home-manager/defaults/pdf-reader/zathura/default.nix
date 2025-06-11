@@ -7,7 +7,7 @@ in
   programs.zathura = {
     enable = true;
     extraConfig = builtins.concatStringsSep "\n" [
-      (with config.colorscheme.colors; ''
+      (with config.colorScheme.palette; ''
         # color config
         set default-bg "#${base00}"
         set default-fg "#${base05}"

@@ -31,7 +31,7 @@ in
         default = [ "nodev" ];
         example = [ "/dev/disk/by-id/ata-KINGSTON_SA400S37960G_0123456789ABCDEF" ];
       };
-      efiSysMountPoint = mkOption {
+      efiSysMountPoint = mkOption {  # CAREFUL HERE, I CREATED A SIMILAR ONE IN EFI
         description = "Mount point for EFI system";
         type = with types; uniq str;
         default = "/efi";
@@ -43,6 +43,11 @@ in
         Cofigure NixOS for a removable drive (compatible with both MBR and EFI loaders)
         TODO describe partition setup required
       '';
+      efiSysMountPoint = mkOption {
+        description = "Mount point for EFI system. Will actually save at efiSysMountPoint/EFI";
+        type = with types; uniq str;
+        default = "/boot";
+      };
     };
 
     useOSProber = mkEnableOption ''
@@ -83,7 +88,7 @@ in
     { # common
       boot.tmp.useTmpfs = cfg.tmp.useTmpfs;
       boot.tmp.tmpfsSize = cfg.tmp.tmpfsSize;
-      boot.tmp.cleanOnBoot = !config.boot.tmp.cleanOnBoot;
+      #boot.tmp.cleanOnBoot = !config.boot.tmp.cleanOnBoot;  ??? where was my mind ???
       boot.loader.grub.useOSProber = cfg.useOSProber;
 
       services.logind.extraConfig = ''
@@ -91,6 +96,17 @@ in
         RuntimeDirectoryInodesMax=1048576  
       '';
     }
+
+    (mkIf cfg.efi.enable {
+      boot.loader = {
+        efi.efiSysMountPoint = cfg.efi.efiSysMountPoint;
+        grub = {
+          devices = [ "nodev" ];  # not actually used: just passes assertion
+          efiSupport = true;
+          efiInstallAsRemovable = true;
+        };
+      };
+    })
     
     (mkIf cfg.portable.enable {
       boot.loader = {
@@ -100,17 +116,6 @@ in
           efiInstallAsRemovable = true;
         };
         efi.efiSysMountPoint = cfg.portable.efiSysMountPoint;
-      };
-    })
-
-    (mkIf cfg.efi.enable {
-      boot.loader = {
-        efi.efiSysMountPoint = cfg.portable.efiSysMountPoint;
-        grub = {
-          devices = [ "nodev" ];  # not actually used: just passes assertion
-          efiSupport = true;
-          efiInstallAsRemovable = true;
-        };
       };
     })
 

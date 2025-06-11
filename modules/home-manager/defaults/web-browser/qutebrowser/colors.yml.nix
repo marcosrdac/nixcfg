@@ -1,4 +1,4 @@
-colorscheme: with colorscheme.colors;
+colorScheme: with colorScheme.palette;
 ''
 colors:
   statusbar:
@@ -120,7 +120,7 @@ colors:
       bg: "#${base0A}"
   webpage:
     bg: "#${base05}"
-    preferred_color_scheme: "${colorscheme.kind}"
+    preferred_color_scheme: "${colorScheme.variant}"
 hints:
   border: "1px solid #${base05}"
 ''

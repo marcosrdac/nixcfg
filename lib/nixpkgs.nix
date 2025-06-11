@@ -13,6 +13,7 @@ with inputs.nixpkgs.lib;
       "steam"
       "steam-run"
       "steam-original"
+      "steam-unwrapped"
       "unrar"
       "discord"
       "slack"
@@ -25,6 +26,9 @@ with inputs.nixpkgs.lib;
       "google-chrome"
       "dropbox"
       "vmware-horizon-client"
+      "styluslabs-write-bin"
+      "stremio-shell"
+      "stremio-server"
     ];
     permittedInsecurePackages = [
       "xpdf-4.05"
@@ -36,6 +40,7 @@ with inputs.nixpkgs.lib;
     overlay = import ../overlays { inherit inputs; };
 
     sources = final: prev: {
+
       unstable = import inputs.nixpkgs-unstable {
         system = prev.system;
         config = {
@@ -46,6 +51,7 @@ with inputs.nixpkgs.lib;
           ];
         };
       };
+
       nur = import inputs.nur {
         pkgs = prev;
         nurpkgs = prev;
@@ -53,9 +59,28 @@ with inputs.nixpkgs.lib;
           #paul = import paul { pkgs = prev; };
         };
       };
-      #nixos-17 = import inputs.nixpkgs-17 {
-      #  system = prev.system;
-      #};
+
+      nixpkgs-24-05 = import inputs.nixpkgs-24-05 {
+        system = prev.system;
+        config = {
+          allowUnfree = final.config.allowUnfree;
+          allowBroken = final.config.allowBroken;
+          allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+            "write_stylus"
+          ];
+        };
+      };
+
+      nixpkgs-24-11 = import inputs.nixpkgs-24-11 {
+        system = prev.system;
+        config = {
+          allowUnfree = final.config.allowUnfree;
+          allowBroken = final.config.allowBroken;
+          allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+            "write_stylus"
+          ];
+        };
+      };
     };
   in [
     sources

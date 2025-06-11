@@ -75,7 +75,7 @@ in {
       #onChange = "sh ${config.xdg.configHome}/bspwm/colors";
       #onChange = "${pkgs.dash}/bin/dash ${config.xdg.configHome}/bspwm/colors";  # works
       onChange = "sh ${config.xdg.configHome}/bspwm/colors";
-      text = with config.colorscheme.colors; ''
+      text = with config.colorScheme.palette; ''
         #!/usr/bin/env sh
         bspc config focused_border_color '#${base05}'
         bspc config normal_border_color '#${base01}'

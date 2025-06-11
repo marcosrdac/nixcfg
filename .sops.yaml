@@ -1,35 +1,44 @@
 keys:
+  - &pgp
+    - &personal A51DCFAC6DF5EAD1388FD4DDCBFBA5E303C63551
   - &users:
-    - &marcosrdac A51DCFAC6DF5EAD1388FD4DDCBFBA5E303C63551
+    - &marcosrdac age1hjqdpuu3vpuhnjp9rt0fsk3hn5t7yjpjudcwq2u9tmnnaunh5psqgwacfa
   - &hosts:
-    - &adam age10000000000000000000000000000000000000000000000000000000000
-    - &bennu age10000000000000000000000000000000000000000000000000000000000
     - &curupira age1gzyyhw6mkm4mrxxf0cjmvreylmssvtv42unl3unajnve4644efaqmelkp6
     - &fate age15z4qkn0230tynxmx288j847rk8f7dt9uu4dj20raujrkj820350sngrgcs
+    - &goryo age1sm6kh3am3xquhtsyp0s602mhv3gtqzft95vgwhgpltuchwnwsqtqgln6ek
+    - &hydra age12f3uju8radleeylaa88rz5x2n8rfvt3kyjyunf7u7m4ch5w2w99qe6398k
+
 creation_rules:
+  - path_regex: secrets.ya?ml$
+    key_groups:
+    - age:
+      - *marcosrdac
+      - *curupira
+      - *fate
+      - *goryo
+      - *hydra
   - path_regex: hosts/curupira/secrets.ya?ml$
     key_groups:
     - age:
       - *curupira
-      #pgp:
-      #- *marcosrdac
-  #- path_regex: hosts/fate/secrets.ya?ml$
-    #key_groups:
-    #- age:
-      #- *fate
-      #pgp:
-      #- *marcosrdac
-  - path_regex: users/marcosrdac/secrets.ya?ml$
-    key_groups:
-    - pgp:
-      - *marcosrdac
+  ##- path_regex: hosts/fate/secrets.ya?ml$
+  #  #key_groups:
+  #  #- age:
+  #    #- *fate
+  #    #pgp:
+  #    #- *marcosrdac
+  #- path_regex: users/marcosrdac/secrets.ya?ml$
+  #  key_groups:
+  #  - pgp:
+  #    - *marcosrdac
 
-  #- path_regex: hosts/secrets.ya?ml$
-    #key_groups:
-    #- age:
-      #- *adam
-      #- *bennu
-      #- *curupira
-      #- *fate
-      #pgp:
-      #- *marcosrdac
+  ##- path_regex: hosts/secrets.ya?ml$
+  #  #key_groups:
+  #  #- age:
+  #    #- *adam
+  #    #- *bennu
+  #    #- *curupira
+  #    #- *fate
+  #    #pgp:
+  #    #- *marcosrdac

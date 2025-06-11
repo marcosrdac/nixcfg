@@ -1,5 +1,18 @@
 { config, pkgs }:
-with config.colorscheme.colors;
+
+let
+  palette = config.colorScheme.palette;
+  # RGB -> BGR needed (rofi bug???)
+  reverseRGB = s:
+    let
+      rr = builtins.substring 0 2 s;
+      gg = builtins.substring 2 2 s;
+      bb = builtins.substring 4 2 s;
+    in "${bb}${gg}${rr}";
+
+  reversedPalette = builtins.mapAttrs (_: v: reverseRGB v) palette;
+in
+with reversedPalette;
 
 #alternate-normal-background: #${base01};
 # man rofi-theme then /Layout to understand elements

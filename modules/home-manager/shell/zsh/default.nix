@@ -12,7 +12,7 @@
       path = "${config.xdg.dataHome}/shell/history";
     };
 
-    initExtra = ''
+    initContent = ''
       # basic auto tab completion
       autoload -U compinit && compinit
       zstyle ':completion:*' menu select

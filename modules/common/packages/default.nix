@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, nixos, system, ... }:
+{ config, pkgs, inputs, isNixos, system, ... }:
 
 with pkgs.lib;
 let
@@ -72,7 +72,7 @@ in
       ++ (optionals cfg.design design-packages)
     );
   in
-    if nixos then {
+    if isNixos then {
       environment.systemPackages = packages;
       
       programs.neovim = {

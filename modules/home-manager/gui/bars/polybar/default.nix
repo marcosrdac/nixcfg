@@ -53,7 +53,7 @@ in {
       extraConfig = fileContents ./modules.ini;
 
       settings = {
-        "colors" = with config.colorscheme.colors; {
+        "colors" = with config.colorScheme.palette; {
           background = "${base00}";
           background-alt = "${base01}";
           foreground-alt = "${base03}";

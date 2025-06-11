@@ -1,4 +1,4 @@
-{ config, pkgs, nixos, ... }:
+{ config, pkgs, isNixos, ... }:
 
 with pkgs.lib;
 let
@@ -10,7 +10,7 @@ let
     pkgs.lib.flatten (map writeScripts bin-dirs);
 in
 
-  if nixos then {
+  if isNixos then {
     environment.systemPackages = scripts ++ (with pkgs; [
       maim slurp grim  # screenshot script
     ]);

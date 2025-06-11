@@ -12,6 +12,7 @@ in {
   config = mkIf cfg.enable {
 
     programs.rofi = {
+      package = pkgs.rofi;
       enable = true;
       theme = import ./style.css.nix { inherit config pkgs; };
       location = "center";

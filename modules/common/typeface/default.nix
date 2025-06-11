@@ -1,4 +1,4 @@
-{ config, pkgs, nixos, ... }:
+{ config, pkgs, isNixos, ... }:
 
 with pkgs.lib;
 let
@@ -17,7 +17,7 @@ in {
       #ttf-envy-code-r
       #google-fonts  # not basic! (2GB) # TODO create font groups
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       liberation_ttf
       #fira-code
       #fira-code-symbols
@@ -31,9 +31,15 @@ in {
 
       dejavu_fonts
 
-      (pkgs.nerdfonts.override {
-        fonts = [ "FiraCode" "DroidSansMono" ];
-      })
+      iosevka
+      iosevka-comfy.comfy
+      iosevka-comfy.comfy-duo
+      iosevka-comfy.comfy-wide
+      iosevka-comfy.comfy-fixed
+      iosevka-comfy.comfy-motion
+      fira-code
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.hack
 
       # symbol fonts
       font-awesome_5
@@ -67,8 +73,8 @@ in {
     };
   };
 
-  config = if nixos then {
-      fonts.fonts = mkIf cfg.enable cfg.packages;
+  config = if isNixos then {
+      fonts.packages = mkIf cfg.enable cfg.packages;
     } else {
       home.packages = mkIf cfg.enable cfg.packages;
     };

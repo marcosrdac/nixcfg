@@ -15,7 +15,7 @@ in {
 
       configFile = "${config.xdg.configHome}/dunst/dunstrc";
 
-      settings = with config.colorscheme.colors; {
+      settings = with config.colorScheme.palette; {
 
         urgency_low = {
           background = "#${base00}";

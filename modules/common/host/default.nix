@@ -1,4 +1,4 @@
-{ pkgs, config, nixos, ... }:
+{ pkgs, config, isNixos, ... }:
 
 with pkgs.lib;
 let
@@ -41,7 +41,7 @@ in
     };
   };
 
-  config = if nixos then {
+  config = if isNixos then {
     networking.hostName = cfg.name;
     time.timeZone = cfg.zone;
     system.stateVersion = cfg.nixos;

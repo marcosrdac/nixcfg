@@ -7,11 +7,11 @@
   };
 
   xdg.configFile = {
-    "alacritty/alacritty.yml" = {
-      text = pkgs.lib.strings.fileContents ./alacritty.yml;
+    "alacritty/alacritty.toml" = {
+      text = pkgs.lib.strings.fileContents ./alacritty.toml;
     };
-    "alacritty/colors.yml" = {
-      text = import ./colors.yml.nix config.colorscheme;
+    "alacritty/colors.toml" = {
+      text = import ./colors.toml.nix config.colorScheme;
     };
   };
 }

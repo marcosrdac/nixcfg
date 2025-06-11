@@ -1,4 +1,4 @@
-colorscheme: with colorscheme.colors;
+colorScheme: with colorScheme.palette;
 ''
 <!DOCTYPE html>
 <html>

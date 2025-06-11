@@ -105,14 +105,14 @@
       brightnessctl  # light control
       pamixer        # sound control
 
-      julia_16-bin
+      julia-bin
 
       tmatrix
 
       keepassxc
       lxappearance
       #(callPackage (import ./packages/nvim) {})  # maybe move nvim overlay to package?
-      gnome.file-roller
+      file-roller
 
       #nur.repos.timjrd.overlays.popcorntime
       #tmsu    # tag based filesystem

@@ -1,5 +1,5 @@
 { config, pkgs }:
-with config.colorscheme.colors;
+with config.colorScheme.palette;
 
 #alternate-normal-background: #${base01};
 # man rofi-theme then /Layout to understand elements

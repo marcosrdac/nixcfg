@@ -53,6 +53,7 @@ in
       serviceConfig.ExecStart = "${cfg.driver.bin}/bin/nvidia-smi";
     };
 
+    # well I believe this should be in nvidia module or something... It is not at all generic
     services.xserver = {
       videoDrivers = lib.mkForce [ "nvidia" ];
       # manualy setting dpi for nvidia prime sync

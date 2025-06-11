@@ -3,4 +3,5 @@
   ./packages
   ./scripts
   ./typeface
+  ./secrets
 ]

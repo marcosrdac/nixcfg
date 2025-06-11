@@ -1,0 +1,17 @@
+[general]
+import = ["~/.config/alacritty/colors.toml"]
+live_config_reload = true
+
+[font]
+size = 8
+offset = { x = 0, y = 0 }
+normal = { family = "Iosevka Comfy", style = "Regular" }
+#normal = { family = "Iosevka", style = "Comfy" }
+#normal = { family = "Spleen", style = "Regular" }
+#normal = { family = "monospace", style = "Regular" }
+#normal = { family = "hack", style = "Term" }
+
+
+
+[window]
+opacity = 0.9

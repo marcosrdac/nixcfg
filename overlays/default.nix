@@ -5,6 +5,7 @@ final: prev: {
 
   # outer overlays
   polybar = final.unstable.polybar;  # colors = ~/.config/polybar/colors
+  transmission = final.unstable.transmission;
 
   # inner overlays
   neovim = import ./neovim final prev;
@@ -14,7 +15,7 @@ final: prev: {
 
   discord = prev.discord.overrideAttrs (_: { src = builtins.fetchTarball {
     url = "https://discord.com/api/download/stable?platform=linux&format=tar.gz";
-    sha256 = "sha256:1091nv1lwqlcs890vcil8frx6j87n4mig1xdrfxi606cxkfirfbh";};
+    sha256 = "sha256:09rqqs8jgr8c1sh7kiypzy0vz8kyw776zcql09rf14m3frzza1di";};
   });
 
   #with import <nixpkgs> { };

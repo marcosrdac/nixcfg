@@ -1,6 +1,57 @@
 { config, pkgs, ... }:
 
 {
+  secrets = {
+    enable = true;
+  };
+
+  #sops.secrets = {
+  #  "global/test" = {
+  #    sopsFile = ./global.yaml;
+  #    owner = "root";
+  #  };
+  #  #"curupira/api_token" = {
+  #  #  sopsFile = ./hosts/curupira/secrets.yaml;
+  #  #  owner = "root";
+  #  #};
+  #  #"marcosrdac/personal_github_token" = {
+  #  #  sopsFile = ./users/marcosrdac/secrets.yaml;
+  #  #  owner = config.users.users.marcosrdac.name;
+  #  #};
+  #  #"marcosrdac/curupira/wireguard_key" = {
+  #  #  sopsFile = ./users/marcosrdac/hosts/curupira/secrets.yaml;
+  #  #  owner = config.users.users.marcosrdac.name;
+  #  #};
+  #};  
+
+  # ---
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.initrd.kernelModules = [ "i915" ];
+  boot.kernelModules = [ "kvm-intel" ];
+  services.xserver.videoDrivers = [
+    "i915"
+    "intel"
+  ];
+  services.thermald.enable = true;
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      vpl-gpu-rt
+      intel-media-driver
+      intel-vaapi-driver
+      mesa
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
+
+  # ---
 
   boot.loader.systemd-boot.enable = false;
 
@@ -19,8 +70,10 @@
   booting = {
     enable = true;
     efi.enable = true;
-    tmpOnTmpfs = true;
-    tmpOnTmpfsSize = "2G";
+    tmp = {
+      useTmpfs = true;
+      tmpfsSize = "2G";
+    };
     runtimeDirectorySize = "1G";
     useOSProber = false;
   };
@@ -52,7 +105,8 @@
   };
 
   typeface = {
-    enable = true;
+    enable = false;
+  #  enable = true;
   #  default = {
   #    gui = {
   #      general = "...";

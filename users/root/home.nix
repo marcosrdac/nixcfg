@@ -51,7 +51,7 @@
       keepassxc
       lxappearance
       #(callPackage (import ./packages/nvim) {})  # maybe move nvim overlay to package?
-      gnome.file-roller
+      file-roller
     ];
   };
 

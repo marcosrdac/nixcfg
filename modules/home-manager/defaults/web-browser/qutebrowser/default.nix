@@ -44,11 +44,11 @@ in
     '';
   in {
     "qutebrowser/colors.yml" = {
-      text = import ./colors.yml.nix config.colorscheme;
+      text = import ./colors.yml.nix config.colorScheme;
       onChange = reloadQutebrowser;
     };
     "qutebrowser/blank.yml" = {
-      text = import ./blank.html.nix config.colorscheme;
+      text = import ./blank.html.nix config.colorScheme;
       onChange = reloadQutebrowser;
     };
   };

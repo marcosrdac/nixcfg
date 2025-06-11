@@ -2,6 +2,7 @@
 
 with inputs.nixpkgs.lib;
 let
+  flakeDir = ../.;
   nixpkgsConfig = import ./nixpkgs.nix { inherit inputs; };
 
   getHostConfig = { hostname, ... }:
@@ -21,7 +22,7 @@ in
 rec {
   mkHost = { hostname }@args: inputs.nixpkgs.lib.nixosSystem rec {
     system = getSystem { inherit hostname; };
-    specialArgs = { inherit system hostname inputs; nixos = true; };
+    specialArgs = { inherit system hostname inputs flakeDir; isNixos = true;};
     modules = (import ../modules/common)
       ++ (import ../modules/nixos)
       ++ [
@@ -35,7 +36,7 @@ rec {
     system = getSystem args;
   in inputs.home-manager.lib.homeManagerConfiguration rec {
       pkgs = inputs.nixpkgs.legacyPackages.${system};
-      extraSpecialArgs = { inherit system hostname inputs; nixos = false; };
+      extraSpecialArgs = { inherit system hostname inputs flakeDir; isNixos = false; };
       modules = (import ../modules/common)
         ++ (import ../modules/home-manager)
         ++ (let c = getUsersHostConfig args; in optional (pathExists c) c)
@@ -47,3 +48,5 @@ rec {
         ];
     };
 }
+
+# THOUGHT: "isNixos" could be "asSystem"

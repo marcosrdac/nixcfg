@@ -103,7 +103,7 @@ pkgs.neovim.override {
             vim-surround vim-repeat  # changing brackets + dot repetion
             nerdcommenter            # (un)comments text
             # completions
-	    tabnine-vim  # using while deoplete is not working in Nix
+	    #tabnine-vim  # using while deoplete is not working in Nix
 	    #deoplete-nvim  # let g:deoplete#enable_at_startup = 1
             #deoplete-tabnine        # tabnine
             #deoplete-jedi           # python

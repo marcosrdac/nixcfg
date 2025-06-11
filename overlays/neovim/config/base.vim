@@ -36,3 +36,5 @@ set undofile
 " spelling
 "   enabling dictionary search when spell is on
 set complete+=kspell
+" getting system colors, not made up ones
+set notermguicolors
