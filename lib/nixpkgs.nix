@@ -60,27 +60,17 @@ with inputs.nixpkgs.lib;
         };
       };
 
-      nixpkgs-24-05 = import inputs.nixpkgs-24-05 {
-        system = prev.system;
-        config = {
-          allowUnfree = final.config.allowUnfree;
-          allowBroken = final.config.allowBroken;
-          allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
-            "write_stylus"
-          ];
-        };
-      };
+      #nixpkgs-24-05 = import inputs.nixpkgs-24-05 {
+      #  system = prev.system;
+      #  config = {
+      #    allowUnfree = final.config.allowUnfree;
+      #    allowBroken = final.config.allowBroken;
+      #    allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+      #      "write_stylus"
+      #    ];
+      #  };
+      #};
 
-      nixpkgs-24-11 = import inputs.nixpkgs-24-11 {
-        system = prev.system;
-        config = {
-          allowUnfree = final.config.allowUnfree;
-          allowBroken = final.config.allowBroken;
-          allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
-            "write_stylus"
-          ];
-        };
-      };
     };
   in [
     sources

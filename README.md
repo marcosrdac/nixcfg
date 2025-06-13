@@ -8,11 +8,12 @@ These configurations can be used differently to manage:
 
 This repository is hosted in my [Gitea server](https://git.marcosrdac.com/marcosrdac/nixcfg) and [mirrored to GitHub](https://github.com/marcosrdac/nixcfg).
 
+
 ## Principles
 
-- NixOS should be easy to reinstall and be ready to use — so that I no longer feel attached to my machines.
+- NixOS should be easy to reinstall and be ready to use —  so that I no longer feel attached to my machines.
 - Each host should have its own configuration file inside `./hosts`.
-- All frequently used boilerplate should be modularized in `./modules` so that a computer configuration is always clear and easy to be made intuitively.
+- All frequently used boilerplate should be modularized into `./modules` so that a computer configuration is always clear and easy to be made intuitively.
 - A user should not be forced to use `home-manager`. Each user is responsible for using the system as wished (imperatively or declaratively).
 - Each user should be able to configure their own WM/GE without having to contact the system admin.
 
@@ -22,20 +23,24 @@ This repository is hosted in my [Gitea server](https://git.marcosrdac.com/marcos
 - `hosts`
   - `adam`
     - `configuration.nix`
-    - `system.nix`
+    - `system.nix` (TODO better than actual double read?)
     - `hardware-config.nix`
     - `home.nix`: extra home-manager base config for this machine
+    - `secrets.yaml` or `secrets/*.yaml`: machine secrets
 - `users`
   - `marcosrdac`
     - `home.nix`: main home-manager user configuration
     - `hosts`: extra home-manager machine-specific user configurations (for machines that are not mine or are not running NixOS)
+    - `secrets.yaml` or `secrets/*.yaml`: user secrets
   - `guest`
-  - `vim`: just an easy to use neovim setup
-- `overlays`: i.e.: my neovim configs and plugins as an overlay
+  - `vim`: just an easy to use neovim setup (TODO)
+- `overlays`: i.e.: neovim configs and plugins is an overlay
 - `modules`
-  - `common`
   - `nixos`
   - `home-manager`
+  - `common`
+- `.sops.yaml`: sets up encryption rules for passwords
+- `secrets`: common passwords
 
 
 ## Dependencies
@@ -216,6 +221,7 @@ sudo growpart /dev/nvme0n1 $PARTITION_NUMBER
 
 ## TODO
 
+- [ ] ssh agent needed to be turned on???
 - [ ] Do not install fonts unless needed
 - [ ] Make options in my `home-manager` modules (xorg vs wayland, etc).
 - [ ] Default python env should be easily accessable for data analysis stuff.
@@ -226,6 +232,10 @@ sudo growpart /dev/nvme0n1 $PARTITION_NUMBER
 - [ ] curupira's nextcloud + gitea
 - [ ] appearance module: font families (regular, symbol), size -> terminal, bars, themes, etc.
 - [X] volume module
+
+## Future tips
+
+- avoid monolythic sops secrets files (i.e.: `secrets.yaml`)
 
 ### Reading tips
 

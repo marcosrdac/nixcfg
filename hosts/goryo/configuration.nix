@@ -1,9 +1,31 @@
-{ config, pkgs, ... }:
+{ config, pkgs, flakeDir, ... }:
 
 {
   secrets = {
     enable = true;
   };
+
+  sops = {
+    age.keyFile = "/root/.config/sops/age/keys.txt";
+    secrets = {
+      "passwords/marcosrdac" = {
+        sopsFile = "${flakeDir}/secrets/local.yaml";
+        #sopsFile = /secrets/local.yaml;
+        key = "passwords/marcosrdac";
+        #optional = true;
+        neededForUsers = true;
+      };
+      "passwords/test" = {
+        #optional = true;
+        sopsFile = ../../secrets/local.yaml;
+        neededForUsers = true;
+      };
+    };
+  };
+
+  #users.users.marcosrdac.hashedPasswordFile = config.sops.secrets."passwords/marcosrdac".path;
+  users.users.marcosrdac.hashedPasswordFile = "/run/secrets-for-users/passwords/marcosrdac";
+  users.users.test.hashedPasswordFile = "/run/secrets-for-users/passwords/marcosrdac";
 
   #sops.secrets = {
   #  "global/test" = {
@@ -151,6 +173,11 @@
     users = {
       marcosrdac = {
         description = "Marcos Conceição";
+        isNormalUser = true;
+        extraGroups = [ "nixcfg" "wheel" "docker" "vboxusers" ];
+      };
+      test = {
+        description = "Test";
         isNormalUser = true;
         extraGroups = [ "nixcfg" "wheel" "docker" "vboxusers" ];
       };
