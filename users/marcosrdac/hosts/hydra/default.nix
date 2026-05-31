@@ -45,55 +45,58 @@ in {
 
   appearance.redshift.enable = true;
 
-  gui = {
-    enable = true;
-    # X for me
-    bspwm = {
-      enable = true;
-      monitors = {
-        ${monitors.left.name} = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
-      };
-      startupPrograms = [ 
-           "(sleep 2 && ${pkgs.numlockx}/bin/numlockx off)"
-      ]
-        ++ pkgs.lib.optionals config.gui.polybar.enable [
-           "${pkgs.autorandr}/bin/autorandr mobile"
-           #nix-shell -p xorg.xdpyinfo --command 'xdpyinfo | grep resolution'
-          #''MONITOR=${monitors.left.name} DPI=${monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini''
-        ];
-    };
-    polybar = {
-      enable = true;
-      bar.height = "30";
-      font.regular = "spleen:size=20";
-      font.symbols = "Font Awesome 5 Free Solid:size=14";
-      #script = ''
-        #MONITOR=${monitors.left.name} DPI=${toString monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini &
-      #'';
-    };
-    rofi.enable = true;
-    dunst.enable = true;
-    picom.enable = true;
-    #redshift.enable = true;  # does not exist
+  gui.enable = true;
+  gui.river.enable = true;
 
-    # X for people TODO
-    #xfce.enable = true;
-
-    # wayland
-    #river.enable = true;  # this works, just `export WLR_NO_HARDWARE_CURSORS=1`
-    #wofi.enable = true;
-  };
-
-  #systemd.user.services.autorandr = {
-  #  Unit.Description = "AutoRandR Configuration";
-  #  #Install.WantedBy = [ "default.target" ];
-  #  #Unit.After = [ "hm-graphical-session.target" ];
-  #  Unit.Requires = [ "graphical-session.target" ];
-  #  Service = {
-  #    Type = "oneshot";
-  #    ExecStart = "${pkgs.autorandr}/bin/autorandr mobile";
+  #gui = {
+  #  enable = true;
+  #  # X for me
+  #  bspwm = {
+  #    enable = true;
+  #    monitors = {
+  #      ${monitors.left.name} = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
+  #    };
+  #    startupPrograms = [ 
+  #         "(sleep 2 && ${pkgs.numlockx}/bin/numlockx off)"
+  #    ]
+  #      ++ pkgs.lib.optionals config.gui.polybar.enable [
+  #         "${pkgs.autorandr}/bin/autorandr mobile"
+  #         #nix-shell -p xorg.xdpyinfo --command 'xdpyinfo | grep resolution'
+  #        #''MONITOR=${monitors.left.name} DPI=${monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini''
+  #      ];
   #  };
+  #  polybar = {
+  #    enable = true;
+  #    bar.height = "30";
+  #    font.regular = "spleen:size=20";
+  #    font.symbols = "Font Awesome 5 Free Solid:size=14";
+  #    #script = ''
+  #      #MONITOR=${monitors.left.name} DPI=${toString monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini &
+  #    #'';
+  #  };
+  #  rofi.enable = true;
+  #  dunst.enable = true;
+  #  picom.enable = true;
+  #  #redshift.enable = true;  # does not exist
+
+  #  # X for people TODO
+  #  #xfce.enable = true;
+
+  #  # wayland
+  #  #river.enable = true;  # this works, just `export WLR_NO_HARDWARE_CURSORS=1`
+  #  #wofi.enable = true;
   #};
+
+  ##systemd.user.services.autorandr = {
+  ##  Unit.Description = "AutoRandR Configuration";
+  ##  #Install.WantedBy = [ "default.target" ];
+  ##  #Unit.After = [ "hm-graphical-session.target" ];
+  ##  Unit.Requires = [ "graphical-session.target" ];
+  ##  Service = {
+  ##    Type = "oneshot";
+  ##    ExecStart = "${pkgs.autorandr}/bin/autorandr mobile";
+  ##  };
+  ##};
 
   programs.autorandr = {
     enable = true;
@@ -131,6 +134,39 @@ in {
     design = true;
     list = with pkgs; [
       stremio
+
+      # river
+      # river
+      foot
     ];
   };
+
+  #xdg.dataFile."wayland-sessions/river.desktop".text = ''
+  #  [Desktop Entry]
+  #  Name=River
+  #  Comment=River Wayland Compositor
+  #  Exec=env XDG_SESSION_TYPE=wayland river
+  #  Type=Application
+  #  DesktopNames=river
+  #'';
+
+  #xdg.dataFile."share/wayland-sessions/river.desktop".text = ''
+  #  [Desktop Entry]
+  #  Name=River
+  #  Comment=River Wayland Compositor
+  #  Exec=env XDG_SESSION_TYPE=wayland river
+  #  Type=Application
+  #  DesktopNames=river
+  #'';
+
+  #
+  #wayland.windowManager.river = {
+  #  enable = true;
+  #  settings.map.normal = {
+  #    "Super b" = "spawn google-chrome-stable";
+  #    "Super Return" = "spawn alacritty";
+  #    "Super+Shift E" = "exit";
+  #  };
+  #};
+
 }

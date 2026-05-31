@@ -52,6 +52,5 @@ in {
     #  (builtins.toString ./bin)
     #];
 
-
   };
 }

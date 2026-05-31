@@ -14,25 +14,6 @@
       enable = true;
     };
   };
-
-  # boot stuff end
-
-  #booting = {
-  #  enable = true;
-  #  efi.enable = true;
-
-  #  portable.enable = false;
-
-  #  portable.efiSysMountPoint = "/boot";
-  #  #portable.efiSysMountPoint = "/boot/EFI";
-  ##  #tmp.useTmpfs = true;
-  ##  #tmp.tmpfsSize = "2G";
-  ##  runtimeDirectorySize = "1G";
-  ##  useOSProber = false;
-  #};
-
-  #boot.loader.systemd-boot.enable = false;
-
   # add_windows_at flag
   boot.loader.grub.extraEntries = ''
     menuentry "Windows" {
@@ -44,7 +25,21 @@
       chainloader /EFI/Microsoft/Boot/bootmgfw.efi
     }
   '';
-
+  # boot stuff end
+  ###???
+  #booting = {
+  #  enable = true;
+  #  efi.enable = true;
+  #  portable.enable = false;
+  #  portable.efiSysMountPoint = "/boot";
+  #  #portable.efiSysMountPoint = "/boot/EFI";
+  ##  #tmp.useTmpfs = true;
+  ##  #tmp.tmpfsSize = "2G";
+  ##  runtimeDirectorySize = "1G";
+  ##  useOSProber = false;
+  #};
+  #boot.loader.systemd-boot.enable = false;
+  ###???
   host = {
     name = "hydra";
     zone = "Brazil/East";
@@ -52,17 +47,14 @@
     system = "x86_64-linux";
     nixos = "22.05";
   };
-
   imports = [ 
     ./hardware-configuration.nix
   ];
-
   boot.kernelPackages = pkgs.linuxPackages;
   #boot.kernelPackages = pkgs.linuxPackages_latest;
   #boot.kernelPackages = pkgs.linuxPackages_6_13;  # needed for 570.153.02, I believe
   #boot.kernelPackages = pkgs.linuxPackages_6_15;
   #boot.kernelPackages = pkgs.linuxPackages_6_14;
-
   # GeForce RTX 3050 Mobile
   # NVIDIA GeForce RTX 3050 Laptop GPU	
   # NVIDIA GeForce RTX 3050 4GB Laptop GPU	
@@ -76,17 +68,14 @@
     prime = {
       sync.enable = true;
       #offload.enable = true;
-
       # offloading seems to work: new alacritties show no vram usage increase
       #sync.enable = false;
       #offload.enable = true;
       ##offload.enableOffloadCmd = true;
-
       nvidiaBusId = "PCI:1:0:0";
       intelBusId = "PCI:0:2:0";
     };
   };
-
   hardware = {
     graphics = {
       enable = true;
@@ -98,12 +87,10 @@
       ];
     };
   };
-
   boot.kernelParams = [ "i915.force_probe=a7a0" ];
 
-
   gui.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  #services.xserver.desktopManager.gnome.enable = true;
 
   keyboard = {
     enable = true;

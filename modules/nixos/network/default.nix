@@ -48,50 +48,50 @@ in
 
   config = mkIf cfg.enable {
 
-  #  services.openssh = {
-  #    enable = cfg.openssh.enable;
-  #    # require public key authentication for better security
-  #    settings.PasswordAuthentication = false;
-  #    settings.KbdInteractiveAuthentication = false;
-  #    settings.PermitRootLogin = cfg.openssh.settings.PermitRootLogin;
-  #  };
+    services.openssh = {
+      enable = cfg.openssh.enable;
+      # require public key authentication for better security
+      settings.PasswordAuthentication = false;
+      settings.KbdInteractiveAuthentication = false;
+      settings.PermitRootLogin = cfg.openssh.settings.PermitRootLogin;
+    };
 
-  #  programs.gnupg.agent.enableSSHSupport = true;
+    programs.gnupg.agent.enableSSHSupport = true;
 
-  #  environment.etc = mkIf cfg.enableGoogleDNSServers {
-  #    "resolv.conf".text = ''
-  #      nameserver 8.8.8.8
-  #      nameserver 8.8.4.4
-  #    '';
-  #  };
+    environment.etc = mkIf cfg.enableGoogleDNSServers {
+      "resolv.conf".text = ''
+        nameserver 8.8.8.8
+        nameserver 8.8.4.4
+      '';
+    };
 
-  #  networking = {
-  #    networkmanager.enable = true;
+    networking = {
+      networkmanager.enable = true;
 
-  #    interfaces = listToAttrs ( map (
-  #      n: { name = "${n}"; value = { useDHCP = cfg.useDHCP; }; }
-  #    ) cfg.interfaces);
+      interfaces = listToAttrs ( map (
+        n: { name = "${n}"; value = { useDHCP = cfg.useDHCP; }; }
+      ) cfg.interfaces);
 
-  #    proxy = {
-  #      #default = "http://user:password@proxy:port/";
-  #      #noProxy = "127.0.0.1,localhost,internal.domain";
-  #    };
+      proxy = {
+        #default = "http://user:password@proxy:port/";
+        #noProxy = "127.0.0.1,localhost,internal.domain";
+      };
 
-  #    firewall = {
-  #      enable = cfg.firewall.enable;
-  #      #connectionTrackingModules = [ "pptp" ];
-  #      #allowedTCPPorts = cfg.firewall.allowedTCPPorts;
-  #      #allowedUDPPorts = cfg.firewall.allowedUDPPorts;
-  #    };
+      firewall = {
+        enable = cfg.firewall.enable;
+        #connectionTrackingModules = [ "pptp" ];
+        #allowedTCPPorts = cfg.firewall.allowedTCPPorts;
+        #allowedUDPPorts = cfg.firewall.allowedUDPPorts;
+      };
 
-  #    extraHosts = ''
-  #      # Public
-  #      #IP.ADDR hostname
+      extraHosts = ''
+        # Public
+        #IP.ADDR hostname
 
-  #      # VPN protected services
-  #      #IP.ADDR hostname
-  #    '';
-  #  };
+        # VPN protected services
+        #IP.ADDR hostname
+      '';
+    };
 
   };
 }
