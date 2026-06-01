@@ -134,6 +134,23 @@ home-manager switch --flake "/etc/nixos#$(hostname)-$(whoami)"
 home-manager switch --flake "/etc/nixos#adam-marcosrdac"
 ```
 
+## Graphical session architecture
+
+The graphical setup follows the same separation between system and user configuration:
+
+- NixOS provides the graphical infrastructure: display manager, X11 support, Wayland support, DBus, Polkit, XWayland, portals, seat management and generic login sessions.
+- Home Manager defines the user's graphical environment: window manager or compositor, bars, launchers, startup programs, keybindings and user session scripts.
+
+The system should not hardcode a user's preferred WM/DE. Instead, it exposes generic session entries:
+
+```text
+Display manager
+  -> User X11 Session
+     -> /home/<user>/.xsession
+  -> User Wayland Session
+     -> /home/<user>/.wsession
+```
+
 ## Configuring SSH keys
 
 ```sh

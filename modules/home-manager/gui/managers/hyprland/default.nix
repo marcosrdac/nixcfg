@@ -32,13 +32,13 @@ in {
 
     useUWSM = mkOption {
       type = types.bool;
-      default = true;
+      default = false;
       description = "Start Hyprland through UWSM from the user Wayland session.";
     };
 
     waylandSessionPath = mkOption {
       type = types.str;
-      default = ".waylandsession";
+      default = ".wsession";
       description = "Path, relative to HOME, for the user Wayland session script.";
     };
 
@@ -100,6 +100,7 @@ in {
     extraPackages = mkOption {
       type = types.listOf types.package;
       default = with pkgs; [
+        cfg.package
         foot
         wofi
         waybar
@@ -161,7 +162,9 @@ in {
         ${
           if cfg.useUWSM
           then "exec ${pkgs.uwsm}/bin/uwsm start Hyprland"
-          else "exec ${cfg.package}/bin/Hyprland"
+          # works but hyprland complains start-hyprland should be used
+          #else "exec ${cfg.package}/bin/Hyprland"
+          else "exec ${cfg.package}/bin/start-hyprland"
         }
       '';
     };
@@ -171,7 +174,7 @@ in {
       package = cfg.package;
 
       # Important here:
-      # the display manager will start ~/.waylandsession.
+      # the display manager will start ~/.wsession.
       # We do not want Home Manager to create another login session entry.
       xwayland.enable = true;
       systemd.enable = false;
@@ -232,7 +235,7 @@ in {
         };
 
         dwindle = {
-          pseudotile = true;
+          #pseudotile = true;
           preserve_split = true;
         };
 
@@ -309,10 +312,11 @@ in {
           "$mod, mouse:273, resizewindow"
         ];
 
-        windowrulev2 = [
-          "float,class:^(float)$"
-          "float,title:^(popup)$"
-        ];
+      windowrule = [
+        "match:class ^(float)$, float on"
+        "match:title ^(popup)$, float on"
+      ];
+
       };
 
       extraConfig = cfg.extraConfig;

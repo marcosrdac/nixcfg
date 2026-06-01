@@ -9,16 +9,16 @@ let
   #  [Desktop Entry]
   #  Name=River (User Script)
   #  Comment=Start River using user's script
-  #  Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
+  #  Exec=${pkgs.runtimeShell} -c '$HOME/.wsession'
   #  Type=Application
   #  DesktopNames=river-user
   #'';
 
-#Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
-#Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
-#Exec=dbus-run-session -- bash -c '$HOME/.waylandsession > /home/marcosrdac/out'
-#Exec=dbus-run-session -- bash -c '$HOME/.waylandsession' >> /home/marcosrdac/out 2>&1
-#Exec=/bin/sh -c "/home/marcosrdac/.waylandsession"
+#Exec=${pkgs.runtimeShell} -c '$HOME/.wsession'
+#Exec=${pkgs.runtimeShell} -c '$HOME/.wsession'
+#Exec=dbus-run-session -- bash -c '$HOME/.wsession > /home/marcosrdac/out'
+#Exec=dbus-run-session -- bash -c '$HOME/.wsession' >> /home/marcosrdac/out 2>&1
+#Exec=/bin/sh -c "/home/marcosrdac/.wsession"
 #Exec=/bin/sh -c "echo TEST > /tmp/out; sleep 10"
 #Exec=/bin/sh -c "exec > /tmp/river.log 2>&1; set -x; dbus-run-session river"
 #Exec=/bin/sh -c "echo TEST > /tmp/out; sleep 10"
@@ -34,7 +34,7 @@ let
 #[Desktop Entry]
 #Name=River (User Script)
 #Comment=Start River using user's script
-#Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+#Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.wsession'
 #Type=Application
 #DesktopNames=river-user
 #EOF
@@ -45,8 +45,8 @@ let
 #  customSession = pkgs.writeTextDir "share/wayland-sessions/wayland-custom.desktop" ''
 #    [Desktop Entry]
 #    Name=Custom Wayland Session
-#    Comment=Run user-defined session script from ~/.waylandsession
-#    Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+#    Comment=Run user-defined session script from ~/.wsession
+#    Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.wsession'
 #    Type=Application
 #  '' // {
 #    passthru.providedSessions = [ "wayland-custom" ];
@@ -59,8 +59,8 @@ let
       cat > $out/share/wayland-sessions/wayland-custom.desktop <<EOF
       [Desktop Entry]
       Name=Custom Wayland Session
-      Comment=Run user-defined session script from ~/.waylandsession
-      Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+      Comment=Run user-defined session script from ~/.wsession
+      Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.wsession'
       Type=Application
       EOF
     '';
@@ -160,7 +160,7 @@ in
         {
           name = "Wayland-Custom";
           start = ''
-            ${pkgs.runtimeShell} $HOME/.waylandsession &
+            ${pkgs.runtimeShell} $HOME/.wsession &
             waitPID=$!
           '';
         }
@@ -210,7 +210,7 @@ in
       #  #  #numlock = false;
       #  #  #tty = 7;
       #  #  #xinitrc = "";
-      #  #  ##waylandsessions = "":  # ':'-separated directories
+      #  #  #.wsessions = "":  # ':'-separated directories
       #  #  ##xsessions = "":  # ':'-separated directories
       #  #};
       #};

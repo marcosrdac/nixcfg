@@ -6,23 +6,47 @@ with lib;
 let
   cfg = config.gui;
 
-  userWaylandSession = pkgs.stdenv.mkDerivation {
+    userWaylandSession = pkgs.stdenv.mkDerivation {
     name = "user-wayland-session";
 
     buildCommand = ''
+      mkdir -p $out/bin
       mkdir -p $out/share/wayland-sessions
 
+      cat > $out/bin/user-wayland-session <<'EOF'
+  #!${pkgs.runtimeShell}
+  set -eu
+
+  script_path="${cfg.wayland.scriptPath}"
+
+  user_home="$(${pkgs.getent}/bin/getent passwd "$USER" | ${pkgs.coreutils}/bin/cut -d: -f6)"
+
+  if [ -z "$user_home" ] || [ ! -d "$user_home" ]; then
+    echo "Could not determine home directory for user: $USER" >&2
+    exit 1
+  fi
+
+  session_script="$user_home/$script_path"
+
+  if [ ! -f "$session_script" ]; then
+    echo "User Wayland session script not found: $session_script" >&2
+    exit 1
+  fi
+
+  exec ${pkgs.bash}/bin/bash "$session_script"
+  EOF
+
+      chmod +x $out/bin/user-wayland-session
+
       cat > $out/share/wayland-sessions/user-wayland.desktop <<EOF
-[Desktop Entry]
-Name=User Wayland Session
-Comment=Run user's Wayland session script
-Exec=${pkgs.bash}/bin/bash -lc 'exec ${pkgs.bash}/bin/bash "$HOME/${cfg.wayland.scriptPath}"'
-Type=Application
-DesktopNames=user-wayland
-EOF
+  [Desktop Entry]
+  Name=custom:wayland
+  Comment=Run user's Wayland session script
+  Exec=$out/bin/user-wayland-session
+  Type=Application
+  DesktopNames=user-wayland
+  EOF
     '';
-# old Exec not working even though `bash .waylandsession` worked
-# Exec=${pkgs.bash}/bin/bash -lc 'exec ${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.bash}/bin/bash "$HOME/${cfg.wayland.scriptPath}"'
 
     passthru.providedSessions = [ "user-wayland" ];
   };
@@ -38,10 +62,10 @@ in {
         description = "Enable graphical display manager.";
       };
 
-      sddm.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable SDDM display manager.";
+      name = mkOption {
+        type = types.enum [ "sddm" "ly" ];
+        default = "ly";
+        description = "Display manager to use.";
       };
 
       defaultSession = mkOption {
@@ -88,7 +112,7 @@ in {
 
       scriptPath = mkOption {
         type = types.str;
-        default = ".waylandsession";
+        default = ".wsession";
         example = ".config/nixcfg/wayland-session";
         description = "User Wayland session script path, relative to HOME.";
       };
@@ -124,11 +148,26 @@ in {
       services.graphical-desktop.enable = mkDefault true;
 
       services.displayManager = mkIf cfg.displayManager.enable {
-        sddm.enable = mkIf cfg.displayManager.sddm.enable true;
-
         defaultSession =
           mkIf (cfg.displayManager.defaultSession != null)
             cfg.displayManager.defaultSession;
+
+        sddm.enable =
+          mkIf (cfg.displayManager.name == "sddm") true;
+
+        ly = mkIf (cfg.displayManager.name == "ly") {
+          enable = true;
+
+          settings = {
+            save = true;
+            load = true;
+            default_input = "password";
+            animation = "none";
+            clock = "%Y-%m-%d %H:%M";
+            hide_version_string = true;
+            initial_info_text = config.networking.hostName or "nixos";
+          };
+        };
       };
     }
 
@@ -144,7 +183,7 @@ in {
 
           session = mkIf cfg.x11.userSession.enable [
             {
-              name = "X11-User";
+              name = "custom:x11";
               start = ''
                 ${pkgs.runtimeShell} "$HOME/${cfg.x11.scriptPath}" &
                 waitPID=$!

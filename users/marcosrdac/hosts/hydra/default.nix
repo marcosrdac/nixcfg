@@ -54,14 +54,10 @@ in {
 
     hyprland = {
       enable = true;
-      useUWSM = true;
-
       modifier = "ALT";
-
-      terminal = "foot";
-      browser = "firefox";
+      #terminal = "foot";
+      #browser = "firefox";
       menu = "wofi --show drun";
-
       startupPrograms = [
         "waybar"
         "dunst"
