@@ -73,7 +73,7 @@ in {
     gaps = {
       inner = mkOption {
         type = types.int;
-        default = 11;
+        default = 6;
         description = "Inner window gaps.";
       };
 
@@ -236,6 +236,7 @@ in {
 
         dwindle = {
           #pseudotile = true;
+          split_width_multiplier = 0.6;
           preserve_split = true;
         };
 
@@ -262,10 +263,8 @@ in {
           "$mod, K, movefocus, u"
           "$mod, L, movefocus, r"
 
-          "$mod SHIFT, H, movewindow, l"
-          "$mod SHIFT, J, movewindow, d"
-          "$mod SHIFT, K, movewindow, u"
-          "$mod SHIFT, L, movewindow, r"
+          "$mod, P, cyclenext, prev"
+          "$mod, N, cyclenext"
 
           "$mod, 1, workspace, 1"
           "$mod, 2, workspace, 2"
@@ -291,6 +290,18 @@ in {
 
           ", Print, exec, grim - | wl-copy"
           "SHIFT, Print, exec, grim -g \"$(slurp)\" - | wl-copy"
+        ];
+        
+        binde = [
+          "$mod SHIFT, H, movewindow, l"
+          "$mod SHIFT, J, movewindow, d"
+          "$mod SHIFT, K, movewindow, u"
+          "$mod SHIFT, L, movewindow, r"
+
+          "$mod CTRL, H, resizeactive, -20 0"
+          "$mod CTRL, J, resizeactive, 0 20"
+          "$mod CTRL, K, resizeactive, 0 -20"
+          "$mod CTRL, L, resizeactive, 20 0"
         ];
 
         bindel = [
