@@ -91,10 +91,11 @@ in
       #boot.tmp.cleanOnBoot = !config.boot.tmp.cleanOnBoot;  ??? where was my mind ???
       boot.loader.grub.useOSProber = cfg.useOSProber;
 
-      services.logind.extraConfig = ''
-        RuntimeDirectorySize=${cfg.runtimeDirectorySize}
-        RuntimeDirectoryInodesMax=1048576  
-      '';
+      services.logind.settings.Login = {
+        RuntimeDirectorySize = cfg.runtimeDirectorySize;
+        RuntimeDirectoryInodesMax = 1048576;
+      };
+
     }
 
     (mkIf cfg.efi.enable {

@@ -82,7 +82,7 @@
       enable32Bit = true;
       extraPackages = with pkgs; [
         intel-media-driver
-        vaapiVdpau
+        libva-vdpau-driver
         libvdpau-va-gl
       ];
     };
@@ -175,7 +175,11 @@
         isNormalUser = true;
       };
     };
-    defaultGroups = [ "networkmanager" "lp" ];
+    defaultGroups = [
+      # 2026-05-30: seat necessário para wayland/riverwm talvez
+      "seat"
+      "networkmanager" "lp"
+    ];
   };
 
   services.udev.extraRules = ''

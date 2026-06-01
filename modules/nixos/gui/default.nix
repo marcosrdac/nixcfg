@@ -132,6 +132,10 @@ in
     xdg.portal.extraPortals = lib.mkIf enableGtkPortal [
       pkgs.xdg-desktop-portal-gtk
     ];
+    xdg.portal.config.common.default = "*";
+
+    # 2026-05-30: trying to make river run from tty
+    services.seatd.enable = true;
 
     # Window manager only sessions (unlike DEs) don't handle XDG
     # autostart files, so force them to run the service

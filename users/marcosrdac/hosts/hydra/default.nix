@@ -133,7 +133,7 @@ in {
   packages = {
     design = true;
     list = with pkgs; [
-      stremio
+      stremio-linux-shell
 
       # river
       # river

@@ -7,11 +7,11 @@
     package = pkgs.google-chrome;
     #package = pkgs.brave;
 
-    extensions =  [  # in URL
-      { 
-        # uBlock Origin
-        id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-      }
-    ];
+    #extensions =  [  # in URL
+    #  { 
+    #    # uBlock Origin
+    #    id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+    #  }
+    #];
   };
 }

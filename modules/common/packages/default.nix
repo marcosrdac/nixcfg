@@ -38,7 +38,7 @@ in
       lf
       libnotify
       ncdu
-      neofetch
+      #neofetch
       neovim
       nix-index
       nixpkgs-fmt

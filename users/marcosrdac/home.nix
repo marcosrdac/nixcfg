@@ -77,7 +77,7 @@
   packages = {
     #design = true;
     list = with pkgs; [
-      taskwarrior
+      taskwarrior2
       #gnucash
       beancount
       fava

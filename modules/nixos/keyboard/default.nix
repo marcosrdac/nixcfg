@@ -54,9 +54,9 @@ in
 
     console.keyMap = cfg.tty.layout;
 
-    services.logind.extraConfig = mkIf cfg.powerKeyOff ''
-      HandlePowerKey=ignore
-    '';
+    services.logind.settings.Login = mkIf cfg.powerKeyOff {
+      HandlePowerKey = "ignore";
+    };
 
   };
 }

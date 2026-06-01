@@ -26,7 +26,7 @@ in {
       #proggyfonts
       source-sans-pro
       source-serif-pro
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       recursive
 
       dejavu_fonts
