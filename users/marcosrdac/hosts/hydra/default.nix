@@ -45,8 +45,32 @@ in {
 
   appearance.redshift.enable = true;
 
-  gui.enable = true;
-  gui.river.enable = true;
+  ### OLD GUI
+  #gui.enable = true;
+  #gui.river.enable = true;
+  ###
+  gui = {
+    enable = true;
+
+    hyprland = {
+      enable = true;
+      useUWSM = true;
+
+      modifier = "ALT";
+
+      terminal = "foot";
+      browser = "firefox";
+      menu = "wofi --show drun";
+
+      startupPrograms = [
+        "waybar"
+        "dunst"
+      ];
+    };
+
+    wofi.enable = true;
+  };
+  ###
 
   #gui = {
   #  enable = true;

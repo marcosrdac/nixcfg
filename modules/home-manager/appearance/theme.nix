@@ -284,12 +284,12 @@ in
   gtk = {
     enable = true;
     font = fonts.iosevka;
-    theme = {
-      name = "${config.colorScheme.slug}";
-      package = gtkThemeFromScheme {
-        scheme = config.colorScheme;
-      };
-    };
+    #theme = {  TODO UNSTABLE on 26.05 update: using nodePackages, which now are to be accessed directly from pkgs.<nodePackageHere>
+    #  name = "${config.colorScheme.slug}";
+    #  package = gtkThemeFromScheme {
+    #    scheme = config.colorScheme;
+    #  };
+    #};
     iconTheme = null;
     #cursorTheme = null;
   };

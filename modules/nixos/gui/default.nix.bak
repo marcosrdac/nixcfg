@@ -1,0 +1,246 @@
+{ lib, pkgs, config, isNixos, ... }:
+
+with lib;
+let
+  cfg = config.gui;
+
+  # wayland session
+  #riverSession = pkgs.writeTextDir "share/wayland-sessions/river-custom.desktop" ''
+  #  [Desktop Entry]
+  #  Name=River (User Script)
+  #  Comment=Start River using user's script
+  #  Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
+  #  Type=Application
+  #  DesktopNames=river-user
+  #'';
+
+#Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
+#Exec=${pkgs.runtimeShell} -c '$HOME/.waylandsession'
+#Exec=dbus-run-session -- bash -c '$HOME/.waylandsession > /home/marcosrdac/out'
+#Exec=dbus-run-session -- bash -c '$HOME/.waylandsession' >> /home/marcosrdac/out 2>&1
+#Exec=/bin/sh -c "/home/marcosrdac/.waylandsession"
+#Exec=/bin/sh -c "echo TEST > /tmp/out; sleep 10"
+#Exec=/bin/sh -c "exec > /tmp/river.log 2>&1; set -x; dbus-run-session river"
+#Exec=/bin/sh -c "echo TEST > /tmp/out; sleep 10"
+#Exec=/bin/sh -c "exec > /tmp/river.log 2>&1; set -x; dbus-run-session river"
+#Exec=/nix/store/$(basename ${pkgs.coreutils})/bin/sleep 10; echo TEST > /tmp/out
+# below works, sleeps 10s
+#Exec=/nix/store/$(basename ${pkgs.coreutils})/bin/sleep 10
+#  riverSession = pkgs.stdenv.mkDerivation {
+#    name = "river-custom-session";
+#    buildCommand = ''
+#      mkdir -p $out/share/wayland-sessions
+#      cat > $out/share/wayland-sessions/river-custom.desktop <<EOF
+#[Desktop Entry]
+#Name=River (User Script)
+#Comment=Start River using user's script
+#Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+#Type=Application
+#DesktopNames=river-user
+#EOF
+#    '';
+#    passthru.providedSessions = [ "river-custom" ];
+#  };
+
+#  customSession = pkgs.writeTextDir "share/wayland-sessions/wayland-custom.desktop" ''
+#    [Desktop Entry]
+#    Name=Custom Wayland Session
+#    Comment=Run user-defined session script from ~/.waylandsession
+#    Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+#    Type=Application
+#  '' // {
+#    passthru.providedSessions = [ "wayland-custom" ];
+#  };
+
+  waylandCustomSession = pkgs.stdenv.mkDerivation {
+    name = "wayland-custom-session";
+    buildCommand = ''
+      mkdir -p $out/share/wayland-sessions
+      cat > $out/share/wayland-sessions/wayland-custom.desktop <<EOF
+      [Desktop Entry]
+      Name=Custom Wayland Session
+      Comment=Run user-defined session script from ~/.waylandsession
+      Exec=${pkgs.bash}/bin/bash -l -c 'exec ${pkgs.dbus}/bin/dbus-run-session -- bash ~/.waylandsession'
+      Type=Application
+      EOF
+    '';
+    passthru.providedSessions = [ "wayland-custom" ];
+  };
+
+
+  # TODO turn to options:
+  enableXWayland = true;
+  enableWlrPortal = true;
+  enableGtkPortal = true;
+in
+{
+  options.gui = {
+    enable = mkEnableOption "Enable default gui configuration";
+
+    allowWayland = mkOption {
+      description = "Script that runs the user's graphical interface";
+      type = with types; bool;
+      default = true;
+      example = false;
+    };
+
+    scriptPath = mkOption {  # TODO rename: X11 start scriptPath
+      description = "Script that runs the user's graphical interface";
+      type = with types; str;
+      default = ".xsession";
+      example = ".hm-xsession";
+    };
+
+  };
+
+  config = mkIf cfg.enable {
+    programs.dconf.enable = true;
+
+    #programs.river.enable = true;
+
+    services.displayManager.sessionPackages = [
+      waylandCustomSession
+    ];
+    services.displayManager.defaultSession = "wayland-custom";
+
+    # wayland test
+    # removing homed load
+    #security.pam.services.sddm.text = ''
+    #  auth      required pam_env.so
+    #  auth      required pam_unix.so
+    #  account   required pam_unix.so
+    #  session   required pam_env.so
+    #  session   required pam_unix.so
+    #'';
+
+
+    # ---
+    # https://github.com/NixOS/nixpkgs/blob/fe51d34885f7b5e3e7b59572796e1bcb427eccb1/nixos/modules/programs/wayland/wayland-session.nix
+    security = {
+      polkit.enable = true;
+      pam.services.swaylock = { };
+    };
+
+    programs = {
+      #dconf.enable = lib.mkDefault true;  # already defined... See how to make it better
+      xwayland.enable = lib.mkIf enableXWayland (lib.mkDefault true);
+    };
+
+    services.graphical-desktop.enable = true;
+
+    xdg.portal.wlr.enable = lib.mkIf enableWlrPortal true;
+    xdg.portal.extraPortals = lib.mkIf enableGtkPortal [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    xdg.portal.config.common.default = "*";
+
+    # 2026-05-30: trying to make river run from tty
+    services.seatd.enable = true;
+
+    # Window manager only sessions (unlike DEs) don't handle XDG
+    # autostart files, so force them to run the service
+    services.xserver.desktopManager.runXdgAutostartIfNone = lib.mkDefault true;
+    # end wayland setup
+    # ---
+
+    services.xserver = {
+      enable = true;
+      autorun = true;
+      exportConfiguration = true;
+      updateDbusEnvironment = true;  # TODO dbus needed (to test)
+      desktopManager.session = [
+        {
+          name = "X11-Custom";
+          start = ''
+            ${pkgs.runtimeShell} $HOME/${cfg.scriptPath} &
+            waitPID=$!
+          '';
+        }
+        # does not work :(
+        {
+          name = "Wayland-Custom";
+          start = ''
+            ${pkgs.runtimeShell} $HOME/.waylandsession &
+            waitPID=$!
+          '';
+        }
+      ];
+    };
+
+    #services.greetd = {
+    #  enable = true;
+    #  vt = 6;
+    #};
+
+    services.displayManager = {
+      sddm.enable = true;
+      #ly.enable = true;
+    };
+  };
+}
+
+
+      #ly = {
+      #  enable = true;
+      #  #x11Support = true;
+      #  #package = pkgs.ly.override { x11Support = true; };
+      #  #settings = {
+      #  #  ## https://github.com/fairyglade/ly/blob/master/res/config.ini
+      #  #  #default_input = "login";
+      #  #  #error_bg = "0x00000000";
+      #  #  #error_fg = "0x01FF0000";
+      #  #  ##fg = "0x00FFFFFF";
+      #  #  ##bg = "0x00000000";
+      #  #  ##bigclock = "en";
+      #  #  #clock = "%H:%m";
+      #  #  #blank_box = true;
+      #  #  #hide_borders = true;
+      #  #  #border_fg = "0x00FFFFFF";
+      #  #  #animation = "matrix";
+      #  #  #cmatrix_fg = "0x0000FF00";
+      #  #  #cmatrix_min_codepoint = "0x21";
+      #  #  #cmatrix_max_codepoint = "0x7B";
+      #  #  #box_title = "box title";
+      #  #  #hide_version_string = false;
+      #  #  #initial_info_text = "initial info text";  # defaults to hostname
+      #  #  #input_len = 34;
+      #  #  #save = true;
+      #  #  #load = true;
+      #  #  #lang = "en";
+      #  #  #numlock = false;
+      #  #  #tty = 7;
+      #  #  #xinitrc = "";
+      #  #  ##waylandsessions = "":  # ':'-separated directories
+      #  #  ##xsessions = "":  # ':'-separated directories
+      #  #};
+      #};
+
+      # below was under services.xserver.displayManager
+      #lightdm = {
+      #  enable = true;
+      #  #background = "#223b54";
+      #  #background = "#132332";
+      #  #background = ""; TODO lightdm background
+      #  #extraSeatDefaults = "";
+      #  #greeters.slick = {
+      #  greeters.gtk = {
+      #    enable = true;
+      #    #extraConfig = ''
+      #    #'';
+      #  };
+      #  # https://github.com/cboursnell/i3install/blob/master/lightdm-gtk-greeter.conf
+      #  extraConfig = ''
+      #    [Greeter]
+      #    indicators=~host;~spacer;~clock;~spacer;~session;~language;~a11y;~power
+      #    background-color=#223b54
+      #    background=#223b54
+      #    hide-user-image=#223b54
+      #    clock-format = %A %d %B, %H:%M
+      #    position = 25%,start 50%,center
+      #    user-background = false
+      #  '';
+      #  #background = #2e3436
+      #  #theme-name = Adwaita-dark
+      #  #icon-theme-name = Adwaita
+      #  #font-name = Noto Mono 10
+      #};

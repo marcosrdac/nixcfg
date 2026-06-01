@@ -9,7 +9,7 @@ final: prev: {
 
   # inner overlays
   neovim = import ./neovim final prev;
-  write_stylus = import ./write_stylus final prev;
+  styluslabs-write-bin = import ./styluslabs-write-bin final prev;
   #networkmanager-vpnc = import ./networkmanager/plugins/vtnc final prev;
   #networkmanager-pptp = import ./networkmanager/plugins/pptp final prev;
 

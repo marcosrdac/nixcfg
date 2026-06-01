@@ -29,9 +29,10 @@ with inputs.nixpkgs.lib;
       "styluslabs-write-bin"
       "stremio-shell"
       "stremio-server"
+      "stremio-linux-shell"
     ];
     permittedInsecurePackages = [
-      "xpdf-4.05"
+      #"xpdf-4.05"
       "qtwebkit-5.212.0-alpha4"
     ];
   };

@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    transmission
+    transmission_4
     tremc
   ];
 

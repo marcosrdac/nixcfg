@@ -5,10 +5,10 @@
     libreoffice-still
     texlive.combined.scheme-full
     pandoc
-    xpdf  #=: pdftotext, pdfimages - tagged insecure (?)
+    #xpdf  #=: pdftotext, pdfimages - tagged insecure (?)
     imagemagick
     inkscape gimp
-    write_stylus
+    styluslabs-write-bin
     aegisub
   ];  
 

@@ -191,6 +191,22 @@
         "type": "github"
       }
     },
+    "river-next": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780249122,
+        "narHash": "sha256-VH8YgC/FD5ApL6hyY9u/aYbl7CuWg3DDDtsBCuCMees=",
+        "owner": "dmkhitaryan",
+        "repo": "river-next-nix-module",
+        "rev": "ea75b3604ec1aa889d86c5bc621157a4661c53af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dmkhitaryan",
+        "repo": "river-next-nix-module",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
@@ -200,6 +216,7 @@
         "nixpkgs-24-11": "nixpkgs-24-11",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
+        "river-next": "river-next",
         "sops-nix": "sops-nix"
       }
     },

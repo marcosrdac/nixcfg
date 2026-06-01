@@ -2,7 +2,7 @@ final: prev:
 
 with prev;
 
-write_stylus.overrideAttrs (
+styluslabs-write-bin.overrideAttrs (
   old: rec {
     version = "-latest";
     src = fetchurl {

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs,  ... }:
 
 with lib;
 let
@@ -9,14 +9,25 @@ in {
   };
 
   config = mkIf cfg.enable {
+
+    #programs.river-next = {
+    #  enable = true;
+    #  xwayland.enable = true;
+    #  windowManagers = [ "kwm" ];
+    #};
+
     home.packages = with pkgs; [
       #unstable.river
-      river
+      #inputs.river-next
+      #river
       foot
       slurp grim
       waybar
       xwayland
+      wideriver
     ];
+
+
 
     #xsession.windowManager.command = "${pkgs.river}/bin/river";
 

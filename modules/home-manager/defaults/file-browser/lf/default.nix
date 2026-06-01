@@ -55,8 +55,8 @@ in
     gnumeric
     exiftool
     #iso-info
-    transmission
-    mcomix3
+    transmission_4
+    mcomix
   ];
 
   home.sessionPath = [ "${builtins.toString ./bin}" ];

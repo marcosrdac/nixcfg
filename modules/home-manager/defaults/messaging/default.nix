@@ -2,8 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    tdesktop  #=: telegram
-    discord
+    telegram-desktop
+    #discord
     slack 
     #teams
     zoom-us  #=: zoom
