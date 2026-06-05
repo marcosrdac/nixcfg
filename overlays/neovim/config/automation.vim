@@ -34,3 +34,9 @@ autocmd BufWritePost root.cron !st -e sudo crontab %
 "    let &t_SR = "\e[4 q"
 "    let &t_EI = "\e[2 q"
 "endif
+
+" hyprland autoreload neovim backup disable
+augroup lua_inplace_save
+  autocmd!
+  autocmd BufEnter *.lua setlocal backupcopy=yes
+augroup END

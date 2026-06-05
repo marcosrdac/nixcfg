@@ -4,22 +4,7 @@ with lib;
 
 let
   cfg = config.gui.hyprland;
-
-  terminalCmd =
-    if cfg.terminal == null
-    then "$TERMINAL"
-    else cfg.terminal;
-
-  browserCmd =
-    if cfg.browser == null
-    then "$BROWSER"
-    else cfg.browser;
-
-  menuCmd =
-    if cfg.menu == null
-    then "$MENURUN"
-    else cfg.menu;
-
+  menuCmd = if cfg.menu == null then "$MENURUN" else cfg.menu;
 in {
   options.gui.hyprland = {
     enable = mkEnableOption "Enable Hyprland Wayland compositor";
@@ -28,6 +13,18 @@ in {
       type = types.package;
       default = pkgs.hyprland;
       description = "Hyprland package to use.";
+    };
+
+    extraConfigFiles = mkOption {
+      type = types.listOf types.path;
+      default = [ ];
+      description = "Extra Hyprland config files to source.";
+    };
+
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = "Extra text appended to hyprland.conf.";
     };
 
     useUWSM = mkOption {
@@ -41,21 +38,7 @@ in {
       default = ".wsession";
       description = "Path, relative to HOME, for the user Wayland session script.";
     };
-
-    terminal = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "foot";
-      description = "Terminal command used by Hyprland bindings.";
-    };
-
-    browser = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "firefox";
-      description = "Browser command used by Hyprland bindings.";
-    };
-
+    
     menu = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -73,7 +56,7 @@ in {
     gaps = {
       inner = mkOption {
         type = types.int;
-        default = 6;
+        default = 11;
         description = "Inner window gaps.";
       };
 
@@ -118,11 +101,6 @@ in {
       description = "Extra user packages useful in a Hyprland session.";
     };
 
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = "Extra text appended to hyprland.conf.";
-    };
   };
 
   config = mkIf cfg.enable {
@@ -162,175 +140,214 @@ in {
         ${
           if cfg.useUWSM
           then "exec ${pkgs.uwsm}/bin/uwsm start Hyprland"
-          # works but hyprland complains start-hyprland should be used
-          #else "exec ${cfg.package}/bin/Hyprland"
           else "exec ${cfg.package}/bin/start-hyprland"
         }
       '';
     };
 
+    xdg.configFile = let
+      mkLink = config.lib.file.mkOutOfStoreSymlink;
+
+      # Nix usa este path puro só para listar os arquivos
+      cfgDirPure = ./config;
+
+      # Home Manager usa este path real para criar symlinks editáveis
+      cfgDirOut =
+        "${config.xdg.configHome}/home-manager/modules/home-manager/gui/managers/hyprland/config";
+
+      cfgFiles =
+        lib.filterAttrs (_name: type: type == "regular")
+          (builtins.readDir cfgDirPure);
+
+      cfgPaths =
+        lib.mapAttrs' (
+          name: _:
+          lib.nameValuePair "hypr/${name}" {
+            source = mkLink "${cfgDirOut}/${name}";
+          }
+        ) cfgFiles;
+    in
+      cfgPaths
+      // {
+        "hypr/hm.lua".text = ''
+          return {
+            mod = "ALT",
+            terminal = "kitty",
+            browser = "firefox",
+          }
+        '';
+      };
+
     wayland.windowManager.hyprland = {
       enable = true;
       package = cfg.package;
-
-      # Important here:
-      # the display manager will start ~/.wsession.
-      # We do not want Home Manager to create another login session entry.
-      xwayland.enable = true;
+      
+      # ! We do not want Home Manager to create another login session entry.
+      # ! the display manager will start ~/.wsession.
       systemd.enable = false;
+      xwayland.enable = true;
 
-      settings = {
-        "$mod" = cfg.modifier;
+      #settings = {
+      #  "$mod" = cfg.modifier;
 
-        env = [
-          "XDG_SESSION_TYPE,wayland"
-          "XDG_CURRENT_DESKTOP,Hyprland"
-          "XDG_SESSION_DESKTOP,Hyprland"
-          "NIXOS_OZONE_WL,1"
-          "QT_QPA_PLATFORM,wayland;xcb"
-          "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
-          "WLR_NO_HARDWARE_CURSORS,1"
-        ];
+      #  env = [
+      #    "XDG_SESSION_TYPE,wayland"
+      #    "XDG_CURRENT_DESKTOP,Hyprland"
+      #    "XDG_SESSION_DESKTOP,Hyprland"
+      #    "NIXOS_OZONE_WL,1"
+      #    "QT_QPA_PLATFORM,wayland;xcb"
+      #    "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+      #    "WLR_NO_HARDWARE_CURSORS,1"
+      #  ];
 
-        exec-once =
-          [
-            "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
-          ]
-          ++ cfg.startupPrograms;
+      #  exec-once =
+      #    [
+      #      "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
+      #    ]
+      #    ++ cfg.startupPrograms;
 
-        input = {
-          kb_layout = "us";
-          kb_variant = "intl";
-          kb_options = "caps:swapescape";
+      #  input = {
+      #    kb_layout = "us";
+      #    kb_variant = "intl";
+      #    kb_options = "caps:swapescape";
 
-          follow_mouse = 1;
+      #    follow_mouse = 1;
 
-          touchpad = {
-            natural_scroll = false;
-            tap-to-click = true;
-          };
-        };
+      #    touchpad = {
+      #      natural_scroll = false;
+      #      tap-to-click = true;
+      #    };
+      #  };
 
-        general = {
-          gaps_in = cfg.gaps.inner;
-          gaps_out = cfg.gaps.outer;
-          border_size = cfg.borderWidth;
-          layout = "dwindle";
-        };
+      #  general = {
+      #    gaps_in = cfg.gaps.inner;
+      #    gaps_out = cfg.gaps.outer;
+      #    border_size = cfg.borderWidth;
+      #    layout = "dwindle";
+      #  };
 
-        decoration = {
-          rounding = 0;
+      #  decoration = {
+      #    rounding = 0;
 
-          blur = {
-            enabled = false;
-          };
+      #    blur = {
+      #      enabled = false;
+      #    };
 
-          shadow = {
-            enabled = false;
-          };
-        };
+      #    shadow = {
+      #      enabled = false;
+      #    };
+      #  };
 
-        animations = {
-          enabled = false;
-        };
+      #  animations = {
+      #    enabled = false;
+      #  };
 
-        dwindle = {
-          #pseudotile = true;
-          split_width_multiplier = 0.6;
-          preserve_split = true;
-        };
+      #  dwindle = {
+      #    #pseudotile = true;
+      #    split_width_multiplier = 0.6;
+      #    preserve_split = true;
+      #  };
 
-        misc = {
-          disable_hyprland_logo = true;
-          disable_splash_rendering = true;
-          force_default_wallpaper = 0;
-        };
+      #  misc = {
+      #    disable_hyprland_logo = true;
+      #    disable_splash_rendering = true;
+      #    force_default_wallpaper = 0;
+      #  };
 
-        bind = [
-          "$mod, Return, exec, ${terminalCmd}"
-          "$mod SHIFT, Return, exec, ${terminalCmd}"
-          "$mod, B, exec, ${browserCmd}"
-          "$mod, O, exec, ${menuCmd}"
+      #  bind = [
+      #    "$mod, Return, exec, $TERMINAL"
+      #    "$mod, B, exec, $BROWSER"
+      #    "$mod, O, exec, wofi --show drun"
 
-          "$mod SHIFT, Q, killactive"
-          "$mod SHIFT, E, exit"
+      #    "$mod SHIFT, Q, killactive"
+      #    "$mod SHIFT, E, exit"
 
-          "$mod, Space, togglefloating"
-          "$mod, F, fullscreen"
+      #    "$mod, Space, togglefloating"
+      #    "$mod, F, fullscreen"
 
-          "$mod, H, movefocus, l"
-          "$mod, J, movefocus, d"
-          "$mod, K, movefocus, u"
-          "$mod, L, movefocus, r"
+      #    "$mod, H, movefocus, l"
+      #    "$mod, J, movefocus, d"
+      #    "$mod, K, movefocus, u"
+      #    "$mod, L, movefocus, r"
 
-          "$mod, P, cyclenext, prev"
-          "$mod, N, cyclenext"
+      #    "$mod, P, cyclenext, prev"
+      #    "$mod, N, cyclenext"
 
-          "$mod, 1, workspace, 1"
-          "$mod, 2, workspace, 2"
-          "$mod, 3, workspace, 3"
-          "$mod, 4, workspace, 4"
-          "$mod, 5, workspace, 5"
-          "$mod, 6, workspace, 6"
-          "$mod, 7, workspace, 7"
-          "$mod, 8, workspace, 8"
-          "$mod, 9, workspace, 9"
-          "$mod, 0, workspace, 10"
+      #    "$mod, 1, workspace, 1"
+      #    "$mod, 2, workspace, 2"
+      #    "$mod, 3, workspace, 3"
+      #    "$mod, 4, workspace, 4"
+      #    "$mod, 5, workspace, 5"
+      #    "$mod, 6, workspace, 6"
+      #    "$mod, 7, workspace, 7"
+      #    "$mod, 8, workspace, 8"
+      #    "$mod, 9, workspace, 9"
+      #    "$mod, 0, workspace, 10"
 
-          "$mod SHIFT, 1, movetoworkspace, 1"
-          "$mod SHIFT, 2, movetoworkspace, 2"
-          "$mod SHIFT, 3, movetoworkspace, 3"
-          "$mod SHIFT, 4, movetoworkspace, 4"
-          "$mod SHIFT, 5, movetoworkspace, 5"
-          "$mod SHIFT, 6, movetoworkspace, 6"
-          "$mod SHIFT, 7, movetoworkspace, 7"
-          "$mod SHIFT, 8, movetoworkspace, 8"
-          "$mod SHIFT, 9, movetoworkspace, 9"
-          "$mod SHIFT, 0, movetoworkspace, 10"
+      #    "$mod SHIFT, 1, movetoworkspace, 1"
+      #    "$mod SHIFT, 2, movetoworkspace, 2"
+      #    "$mod SHIFT, 3, movetoworkspace, 3"
+      #    "$mod SHIFT, 4, movetoworkspace, 4"
+      #    "$mod SHIFT, 5, movetoworkspace, 5"
+      #    "$mod SHIFT, 6, movetoworkspace, 6"
+      #    "$mod SHIFT, 7, movetoworkspace, 7"
+      #    "$mod SHIFT, 8, movetoworkspace, 8"
+      #    "$mod SHIFT, 9, movetoworkspace, 9"
+      #    "$mod SHIFT, 0, movetoworkspace, 10"
 
-          ", Print, exec, grim - | wl-copy"
-          "SHIFT, Print, exec, grim -g \"$(slurp)\" - | wl-copy"
-        ];
-        
-        binde = [
-          "$mod SHIFT, H, movewindow, l"
-          "$mod SHIFT, J, movewindow, d"
-          "$mod SHIFT, K, movewindow, u"
-          "$mod SHIFT, L, movewindow, r"
+      #    ", Print, exec, grim - | wl-copy"
+      #    "SHIFT, Print, exec, grim -g \"$(slurp)\" - | wl-copy"
+      #  ];
+      #  
+      #  binde = [
+      #    "$mod SHIFT, H, movewindow, l"
+      #    "$mod SHIFT, J, movewindow, d"
+      #    "$mod SHIFT, K, movewindow, u"
+      #    "$mod SHIFT, L, movewindow, r"
 
-          "$mod CTRL, H, resizeactive, -20 0"
-          "$mod CTRL, J, resizeactive, 0 20"
-          "$mod CTRL, K, resizeactive, 0 -20"
-          "$mod CTRL, L, resizeactive, 20 0"
-        ];
+      #    "$mod CTRL, H, resizeactive, -20 0"
+      #    "$mod CTRL, J, resizeactive, 0 20"
+      #    "$mod CTRL, K, resizeactive, 0 -20"
+      #    "$mod CTRL, L, resizeactive, 20 0"
+      #  ];
 
-        bindel = [
-          ", XF86AudioRaiseVolume, exec, pamixer -i 5"
-          ", XF86AudioLowerVolume, exec, pamixer -d 5"
-          ", XF86AudioMute, exec, pamixer --toggle-mute"
-          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-        ];
+      #  bindel = [
+      #    ", XF86AudioRaiseVolume, exec, pamixer -i 5"
+      #    ", XF86AudioLowerVolume, exec, pamixer -d 5"
+      #    ", XF86AudioMute, exec, pamixer --toggle-mute"
+      #    ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+      #    ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+      #  ];
 
-        bindl = [
-          ", XF86AudioPlay, exec, playerctl play-pause"
-          ", XF86AudioNext, exec, playerctl next"
-          ", XF86AudioPrev, exec, playerctl previous"
-        ];
+      #  bindl = [
+      #    ", XF86AudioPlay, exec, playerctl play-pause"
+      #    ", XF86AudioNext, exec, playerctl next"
+      #    ", XF86AudioPrev, exec, playerctl previous"
+      #  ];
 
-        bindm = [
-          "$mod, mouse:272, movewindow"
-          "$mod, mouse:273, resizewindow"
-        ];
+      #  bindm = [
+      #    "$mod, mouse:272, movewindow"
+      #    "$mod, mouse:273, resizewindow"
+      #  ];
 
-      windowrule = [
-        "match:class ^(float)$, float on"
-        "match:title ^(popup)$, float on"
-      ];
+      #windowrule = [
+      #  "match:class ^(float)$, float on"
+      #  "match:title ^(popup)$, float on"
+      #];
 
-      };
+      #};
 
-      extraConfig = cfg.extraConfig;
+      #extraConfig = let
+      #  mkLink = config.lib.file.mkOutOfStoreSymlink;
+      #in
+      #  ''
+      #    ${concatMapStringsSep "\n" (file: "source = ${file}") (cfg.extraConfigFiles ++ [ (mkLink ./main.config) ])}
+      #  ''
+      #  + optionalString (cfg.extraConfig != "") ''
+      #    
+      #    ${cfg.extraConfig}
+      #  '';
+
     };
   };
 }
