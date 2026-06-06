@@ -9,6 +9,8 @@ let
     userWaylandSession = pkgs.stdenv.mkDerivation {
     name = "user-wayland-session";
 
+    # DEBUG 
+    # exec ${pkgs.bash}/bin/bash "$session_script" 2>/tmp/sessionOut >/tmp/sessionOut
     buildCommand = ''
       mkdir -p $out/bin
       mkdir -p $out/share/wayland-sessions
@@ -159,8 +161,8 @@ in {
           enable = true;
 
           settings = {
-            save = true;
-            load = true;
+       #     save = true;
+        #    load = true;
             default_input = "password";
             animation = "none";
             clock = "%Y-%m-%d %H:%M";
@@ -218,14 +220,11 @@ in {
         config = {
           common = {
             default = [ "gtk" ];
-
             "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
             "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
           };
-
           hyprland = {
             default = [ "hyprland" "gtk" ];
-
             "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
             "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
           };

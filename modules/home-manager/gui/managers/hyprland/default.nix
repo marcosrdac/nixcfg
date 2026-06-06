@@ -4,7 +4,8 @@ with lib;
 
 let
   cfg = config.gui.hyprland;
-  menuCmd = if cfg.menu == null then "$MENURUN" else cfg.menu;
+  hyprConfigDir =
+    "${config.xdg.configHome}/home-manager/modules/home-manager/gui/managers/hyprland/config";
 in {
   options.gui.hyprland = {
     enable = mkEnableOption "Enable Hyprland Wayland compositor";
@@ -39,13 +40,6 @@ in {
       description = "Path, relative to HOME, for the user Wayland session script.";
     };
     
-    menu = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "wofi --show drun";
-      description = "Application launcher command used by Hyprland bindings.";
-    };
-
     modifier = mkOption {
       type = types.str;
       default = "ALT";
@@ -97,6 +91,11 @@ in {
         hyprpaper
         hyprlock
         hypridle
+        arandr
+        # scripts
+        jq
+        yq
+
       ];
       description = "Extra user packages useful in a Hyprland session.";
     };
@@ -147,28 +146,14 @@ in {
 
     xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
-
-      # Nix usa este path puro só para listar os arquivos
-      cfgDirPure = ./config;
-
-      # Home Manager usa este path real para criar symlinks editáveis
-      cfgDirOut =
-        "${config.xdg.configHome}/home-manager/modules/home-manager/gui/managers/hyprland/config";
-
-      cfgFiles =
-        lib.filterAttrs (_name: type: type == "regular")
-          (builtins.readDir cfgDirPure);
-
       cfgPaths =
         lib.mapAttrs' (
           name: _:
           lib.nameValuePair "hypr/${name}" {
-            source = mkLink "${cfgDirOut}/${name}";
+            source = mkLink "${hyprConfigDir}/${name}";
           }
-        ) cfgFiles;
-    in
-      cfgPaths
-      // {
+        ) (builtins.readDir ./config);
+    in cfgPaths // {  # TODO should be written after as a finish script
         "hypr/hm.lua".text = ''
           return {
             mod = "ALT",
@@ -177,6 +162,10 @@ in {
           }
         '';
       };
+
+    home.sessionPath = [
+      (builtins.toString "${hyprConfigDir}/bin")
+    ];
 
     wayland.windowManager.hyprland = {
       enable = true;

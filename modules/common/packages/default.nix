@@ -33,6 +33,7 @@ in
       fzy
       git
       jq
+      yq-go
       #keepassx2
       killall
       lf
@@ -53,12 +54,16 @@ in
       usbutils
       wget
       zip  # this is truly basic
+      htop
+      btop
+
+      tree
 
       appimage-run
 
       # needed?
       #singularity
-      containerd
+      #containerd
     ];
     design-packages = [
       gimp

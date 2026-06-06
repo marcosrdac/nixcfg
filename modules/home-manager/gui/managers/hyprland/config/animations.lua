@@ -8,6 +8,7 @@
 hl.config({
   animations = {
     enabled = true,
+    workspace_wraparound = false,
   },
 })
 
@@ -93,8 +94,8 @@ hl.animation({
 
 hl.animation({
   leaf = "workspaces",
-  enabled = true,
+  enabled = false,
   speed = 2,
   bezier = "easeOutQuint",
-  style = "slide",
+  style = "fade",
 })

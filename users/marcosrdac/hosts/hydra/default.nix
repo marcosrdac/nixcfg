@@ -57,7 +57,7 @@ in {
       modifier = "ALT";
       #terminal = "foot";
       #browser = "firefox";
-      menu = "wofi --show drun";
+      #menu = "wofi --show drun";
       startupPrograms = [
         "waybar"
         "dunst"
