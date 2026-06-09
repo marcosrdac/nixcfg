@@ -1,8 +1,11 @@
 { config, pkgs, inputs, ... }:
 
-with inputs.nix-colors;
-with inputs.nix-colors.lib;
-with inputs.nix-colors.lib.contrib { inherit pkgs; };
+#with inputs.nix-colors;
+#with inputs.nix-colors.lib;
+#with inputs.nix-colors.lib.contrib { inherit pkgs; };
+with pkgs.nix-colors;
+with pkgs.nix-colors.lib;
+with pkgs.nix-colors.lib.contrib { inherit pkgs; };
 let
   wallpapers = (import ./wallpapers.nix) pkgs;
   fonts = (import ./fonts.nix) pkgs;
@@ -284,12 +287,12 @@ in
   gtk = {
     enable = true;
     font = fonts.iosevka;
-    #theme = {  TODO UNSTABLE on 26.05 update: using nodePackages, which now are to be accessed directly from pkgs.<nodePackageHere>
-    #  name = "${config.colorScheme.slug}";
-    #  package = gtkThemeFromScheme {
-    #    scheme = config.colorScheme;
-    #  };
-    #};
+    theme = {  # TODO UNSTABLE on 26.05 update: using nodePackages, which now are to be accessed directly from pkgs.<nodePackageHere>
+      name = "${config.colorScheme.slug}";
+      package = gtkThemeFromScheme {
+        scheme = config.colorScheme;
+      };
+    };
     iconTheme = null;
     #cursorTheme = null;
   };

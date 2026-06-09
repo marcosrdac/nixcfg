@@ -52,8 +52,8 @@
   boot.initrd.kernelModules = [ "i915" ];
   boot.kernelModules = [ "kvm-intel" ];
   services.xserver.videoDrivers = [
-    "i915"
     "intel"
+    "i915"
   ];
   services.thermald.enable = true;
 
@@ -64,9 +64,9 @@
       vpl-gpu-rt
       intel-media-driver
       intel-vaapi-driver
-      mesa
-      vaapiVdpau
+      libva-vdpau-driver
       libvdpau-va-gl
+      mesa
     ];
   };
   environment.sessionVariables = {
@@ -101,7 +101,7 @@
   };
 
   gui.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  #services.xserver.desktopManager.gnome.enable = true;
 
   keyboard = {
     enable = true;

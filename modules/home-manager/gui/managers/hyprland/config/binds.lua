@@ -162,7 +162,6 @@ seq("ALT w", {
   ["      h"] = [[ $TERMINAL -e btop ]],
   ["      n"] = [[ $TERMINAL -e $FILEBROWSER ]],
   ["SHIFT n"] = [[ thunar ]],  -- change to ALTFILEBROWSER/GUIFILEBROWSER
-  ["      e"] = [[ $TERMINAL -e $EDITOR ]],
   -- ["      j"] = [[ $TERMINAL -e $EDITOR ]], -- JOURNAL!
   -- ["      w"] = [[ $TERMINAL -e $EDITOR ... ]]-- notes wiki (vimwiki)
   -- ["      s"] = [[ $TERMINAL -e $SPOTIFY_NCURSES_LIKE ]],
@@ -175,6 +174,10 @@ seq("ALT w", {
 
   --["      k"] = [[ kpmenu_wal ]],  -- kpmenu like vault app
   --["SHIFT k"] = [[ bitwarden_gui ]],  -- GUI vault app
+})
+--- edit file
+seq("ALT e", {
+  h = [[ $TERMINAL --working-directory $XDG_CONFIG_HOME/hypr -e $EDITOR $XDG_CONFIG_HOME/hypr/binds.lua ]],
 })
 --- execute script
 seq("ALT x", {
@@ -198,7 +201,6 @@ end
 
 -- preselect
 local preselect_border_size = 3
-
 local preselect = {
   left  = { key = "h", tag = "preselect-left",  color = colors.yellow },
   down  = { key = "j", tag = "preselect-down",  color = colors.green  },

@@ -7,6 +7,8 @@ final: prev: {
   polybar = final.unstable.polybar;  # colors = ~/.config/polybar/colors
   transmission = final.unstable.transmission;
 
+  nix-colors = import .nix-colors final prev;
+
   # inner overlays
   neovim = import ./neovim final prev;
   styluslabs-write-bin = import ./styluslabs-write-bin final prev;

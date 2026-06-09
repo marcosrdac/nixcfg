@@ -47,42 +47,60 @@ in {
 
   gui = {
     enable = true;
-    # X for me
-    bspwm = {
-      enable = true;
-      monitors = {
-        ${monitors.left.name} = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
-      };
-      startupPrograms = [ 
-           "(sleep 2 && ${pkgs.numlockx}/bin/numlockx off)"
-      ]
-        ++ pkgs.lib.optionals config.gui.polybar.enable [
-           "${pkgs.autorandr}/bin/autorandr mobile"
-           #nix-shell -p xorg.xdpyinfo --command 'xdpyinfo | grep resolution'
-          #''MONITOR=${monitors.left.name} DPI=${monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini''
-        ];
-    };
-    polybar = {
-      enable = true;
-      bar.height = "30";
-      font.regular = "spleen:size=20";
-      font.symbols = "Font Awesome 5 Free Solid:size=14";
-      #script = ''
-        #MONITOR=${monitors.left.name} DPI=${toString monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini &
-      #'';
-    };
-    rofi.enable = true;
-    dunst.enable = true;
-    picom.enable = true;
-    #redshift.enable = true;  # does not exist
 
-    # X for people TODO
-    #xfce.enable = true;
+    hyprland = {
+      enable = true;
+      modifier = "ALT";
+      #terminal = "foot";
+      #browser = "firefox";
+      #menu = "wofi --show drun";
+      startupPrograms = [
+        "waybar"
+        "dunst"
+      ];
+    };
 
-    # wayland
-    #river.enable = true;  # this works, just `export WLR_NO_HARDWARE_CURSORS=1`
-    #wofi.enable = true;
+    wofi.enable = true;
   };
+
+  #gui = {
+  #  enable = true;
+  #  # X for me
+  #  bspwm = {
+  #    enable = true;
+  #    monitors = {
+  #      ${monitors.left.name} = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
+  #    };
+  #    startupPrograms = [ 
+  #         "(sleep 2 && ${pkgs.numlockx}/bin/numlockx off)"
+  #    ]
+  #      ++ pkgs.lib.optionals config.gui.polybar.enable [
+  #         "${pkgs.autorandr}/bin/autorandr mobile"
+  #         #nix-shell -p xorg.xdpyinfo --command 'xdpyinfo | grep resolution'
+  #        #''MONITOR=${monitors.left.name} DPI=${monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini''
+  #      ];
+  #  };
+  #  polybar = {
+  #    enable = true;
+  #    bar.height = "30";
+  #    font.regular = "spleen:size=20";
+  #    font.symbols = "Font Awesome 5 Free Solid:size=14";
+  #    #script = ''
+  #      #MONITOR=${monitors.left.name} DPI=${toString monitors.left.dpi} ${pkgs.polybar}/bin/polybar 1 --config=${config.xdg.configHome}/polybar/config.ini &
+  #    #'';
+  #  };
+  #  rofi.enable = true;
+  #  dunst.enable = true;
+  #  picom.enable = true;
+  #  #redshift.enable = true;  # does not exist
+
+  #  # X for people TODO
+  #  #xfce.enable = true;
+
+  #  # wayland
+  #  #river.enable = true;  # this works, just `export WLR_NO_HARDWARE_CURSORS=1`
+  #  #wofi.enable = true;
+  #};
 
   #systemd.user.services.autorandr = {
   #  Unit.Description = "AutoRandR Configuration";

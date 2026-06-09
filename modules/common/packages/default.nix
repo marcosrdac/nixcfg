@@ -59,6 +59,9 @@ in
 
       tree
 
+      # deduplication
+      meld jdupes
+
       appimage-run
 
       # needed?

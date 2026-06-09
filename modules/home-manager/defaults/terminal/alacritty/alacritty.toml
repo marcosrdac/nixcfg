@@ -3,7 +3,7 @@ import = ["~/.config/alacritty/colors.toml"]
 live_config_reload = true
 
 [font]
-size = 8
+size = 12
 offset = { x = 0, y = 0 }
 normal = { family = "Iosevka Comfy", style = "Regular" }
 #normal = { family = "Iosevka", style = "Comfy" }
