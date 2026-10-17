@@ -143,8 +143,7 @@ cmd copy_path &{{
     --filename)  path="$(basename "$fx")" && shift ;;
     *) exit 1;
   esac
-  echo -n $path | xclip -i -selection clipboard -f | xclip -i -selection primary
-  if [ $? -eq 0 ]
+  if printf '%s' "$path" | wl-copy
   then
     lf -remote "send $id echo Copied: $path."
   else
