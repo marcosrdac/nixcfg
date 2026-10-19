@@ -46,13 +46,14 @@
     };
   };
 
-  # Allow the normal user to maintain the shared /etc/nixos checkout.
-  users.groups.nixcfg = {};
-
-  users.users.marcosrdac = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "nixcfg" ];
-    openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+  # Reuse the shared user/permissions module (including Zsh as login shell).
+  permissions = {
+    enable = true;
+    users.marcosrdac = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" "nixcfg" ];
+      openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+    };
   };
 
   security.sudo.wheelNeedsPassword = false;
