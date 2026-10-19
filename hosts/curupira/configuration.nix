@@ -58,7 +58,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   # Keep server packages minimal; other hosts retain their defaults.
-  packages.installHomeManager = false;
+  packages.installHomeManager = true;
   packages.enableNeovim = false;
 
   packages.list = with pkgs; [
