@@ -33,6 +33,7 @@ rec {
     specialArgs = { inherit system hostname inputs flakeDir; isNixos = true;};
     modules = (import ../modules/common)
       ++ (import ../modules/nixos)
+      ++ optional (hostname == "curupira") inputs.disko.nixosModules.disko
       ++ [
         { nixpkgs = nixpkgsConfig; }
         inputs.sops-nix.nixosModules.sops
