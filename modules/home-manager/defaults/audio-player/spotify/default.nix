@@ -1,12 +1,8 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  #nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
-  #  "spotify"
-  #  "spotify-unwrapped"
-  #];
-  
-  home.packages = with pkgs; [
-    spotify
-  ];
+  # Spotify provides no aarch64-linux package. Keep it on supported hosts.
+  home.packages = pkgs.lib.optionals
+    (pkgs.stdenv.hostPlatform.system != "aarch64-linux")
+    [ pkgs.spotify ];
 }
