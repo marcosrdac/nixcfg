@@ -45,10 +45,19 @@
         map (username: map (hostname: { inherit hostname username; }) (getUserHosts username)) users
       );
     in
-      listToAttrs (map (pair: {
+      (listToAttrs (map (pair: {
         name = "${pair.hostname}-${pair.username}";
         value = lib.mkUser pair;
-      }) (builtins.trace "./" user-host-pairs));
+      }) (builtins.trace "./" user-host-pairs))) // {
+        curupira-root = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            system = "aarch64-linux";
+            overlays = (import ./lib/nixpkgs.nix { inherit inputs; }).overlays;
+            config = (import ./lib/nixpkgs.nix { inherit inputs; }).config;
+          };
+          modules = [ ./users/root/curupira.nix ];
+        };
+      };
 
     repositoryRoot = /.;
     
