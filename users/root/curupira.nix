@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   home.username = "root";
@@ -18,9 +18,9 @@
   programs.starship.settings = {
     hostname.ssh_only = false;
     character = {
-      success_symbol = "[#](bold red)";
-      error_symbol = "[#](bold red)";
-      vicmd_symbol = "[#](bold red)";
+      success_symbol = lib.mkForce "[#](bold red)";
+      error_symbol = lib.mkForce "[#](bold red)";
+      vicmd_symbol = lib.mkForce "[#](bold red)";
     };
   };
 
