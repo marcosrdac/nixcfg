@@ -17,6 +17,8 @@
     nix-colors.url = "github:misterio77/nix-colors";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
     river-next.url = "github:dmkhitaryan/river-next-nix-module";
     river-next.flake = false;
   };
