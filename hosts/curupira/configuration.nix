@@ -56,6 +56,9 @@
     };
   };
 
+  # Root is not covered by users.defaultUserShell (normal users only).
+  users.users.root.shell = pkgs.zsh;
+
   security.sudo.wheelNeedsPassword = false;
 
   # Keep server packages minimal; other hosts retain their defaults.
