@@ -15,6 +15,16 @@ in
 
     basic = mkEnableOption "Install default basic packages?";
     design = mkEnableOption "Install default design packages?";
+    installHomeManager = mkOption {
+      description = "Install Home Manager CLI?";
+      type = types.bool;
+      default = true;
+    };
+    enableNeovim = mkOption {
+      description = "Enable Neovim integration?";
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = with pkgs; let 
@@ -75,7 +85,7 @@ in
     ];
     packages = (
       cfg.list
-      ++ [ inputs.home-manager.packages.${system}.home-manager ]
+      ++ (optional cfg.installHomeManager inputs.home-manager.packages.${system}.home-manager)
       ++ (optionals cfg.basic basic-packages)
       ++ (optionals cfg.design design-packages)
     );
@@ -84,7 +94,7 @@ in
       environment.systemPackages = packages;
       
       programs.neovim = {
-        enable = true;
+        enable = cfg.enableNeovim;
         #package = pkgs.neovim;
         viAlias = true;
         vimAlias = true;
