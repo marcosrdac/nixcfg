@@ -46,9 +46,12 @@
     };
   };
 
+  # Allow the normal user to maintain the shared /etc/nixos checkout.
+  users.groups.nixcfg = {};
+
   users.users.marcosrdac = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "nixcfg" ];
     openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
   };
 
