@@ -15,7 +15,14 @@
   dconf.enable = false;
 
   # Show hostname in root prompts even after sudo/su drops SSH context.
-  programs.starship.settings.hostname.ssh_only = false;
+  programs.starship.settings = {
+    hostname.ssh_only = false;
+    character = {
+      success_symbol = "[#](bold red)";
+      error_symbol = "[#](bold red)";
+      vicmd_symbol = "[#](bold red)";
+    };
+  };
 
   home.shellAliases = {
     hm = "home-manager --flake /etc/nixos#curupira-root";
