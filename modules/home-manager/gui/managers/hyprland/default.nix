@@ -95,7 +95,11 @@ in {
         # scripts
         jq
         yq
-
+        yad
+        colorthief  # an overlay here
+        #material-theme-image  # an overlay here
+        color-extract  # an overlay here
+        pastel
       ];
       description = "Extra user packages useful in a Hyprland session.";
     };
@@ -146,22 +150,18 @@ in {
 
     xdg.configFile = let
       mkLink = config.lib.file.mkOutOfStoreSymlink;
-      cfgPaths =
-        lib.mapAttrs' (
-          name: _:
-          lib.nameValuePair "hypr/${name}" {
-            source = mkLink "${hyprConfigDir}/${name}";
-          }
-        ) (builtins.readDir ./config);
-    in cfgPaths // {  # TODO should be written after as a finish script
-        "hypr/hm.lua".text = ''
-          return {
-            mod = "ALT",
-            terminal = "kitty",
-            browser = "firefox",
-          }
-        '';
-      };
+    in {
+      "hypr" = { source = mkLink hyprConfigDir; };
+    };
+
+    # TODO should be written after as a finish script
+    #"hypr/hm.lua".text = ''
+    #  return {
+    #    mod = "ALT",
+    #    terminal = "kitty",
+    #    browser = "firefox",
+    #  }
+    #'';
 
     home.sessionPath = [
       (builtins.toString "${hyprConfigDir}/bin")
@@ -176,9 +176,12 @@ in {
       systemd.enable = false;
       xwayland.enable = true;
 
+      # even though I am using lua; I believe this is just for the nix module
+      configType = "hyprlang";
       #settings = {
       #  "$mod" = cfg.modifier;
 
+      # TODO add env vars to uswm config too (if it is being used cfg.useUSWM)
       #  env = [
       #    "XDG_SESSION_TYPE,wayland"
       #    "XDG_CURRENT_DESKTOP,Hyprland"
@@ -189,141 +192,12 @@ in {
       #    "WLR_NO_HARDWARE_CURSORS,1"
       #  ];
 
+      # TODO add exec-one stuff, or open them as services
       #  exec-once =
       #    [
       #      "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
       #    ]
       #    ++ cfg.startupPrograms;
-
-      #  input = {
-      #    kb_layout = "us";
-      #    kb_variant = "intl";
-      #    kb_options = "caps:swapescape";
-
-      #    follow_mouse = 1;
-
-      #    touchpad = {
-      #      natural_scroll = false;
-      #      tap-to-click = true;
-      #    };
-      #  };
-
-      #  general = {
-      #    gaps_in = cfg.gaps.inner;
-      #    gaps_out = cfg.gaps.outer;
-      #    border_size = cfg.borderWidth;
-      #    layout = "dwindle";
-      #  };
-
-      #  decoration = {
-      #    rounding = 0;
-
-      #    blur = {
-      #      enabled = false;
-      #    };
-
-      #    shadow = {
-      #      enabled = false;
-      #    };
-      #  };
-
-      #  animations = {
-      #    enabled = false;
-      #  };
-
-      #  dwindle = {
-      #    #pseudotile = true;
-      #    split_width_multiplier = 0.6;
-      #    preserve_split = true;
-      #  };
-
-      #  misc = {
-      #    disable_hyprland_logo = true;
-      #    disable_splash_rendering = true;
-      #    force_default_wallpaper = 0;
-      #  };
-
-      #  bind = [
-      #    "$mod, Return, exec, $TERMINAL"
-      #    "$mod, B, exec, $BROWSER"
-      #    "$mod, O, exec, wofi --show drun"
-
-      #    "$mod SHIFT, Q, killactive"
-      #    "$mod SHIFT, E, exit"
-
-      #    "$mod, Space, togglefloating"
-      #    "$mod, F, fullscreen"
-
-      #    "$mod, H, movefocus, l"
-      #    "$mod, J, movefocus, d"
-      #    "$mod, K, movefocus, u"
-      #    "$mod, L, movefocus, r"
-
-      #    "$mod, P, cyclenext, prev"
-      #    "$mod, N, cyclenext"
-
-      #    "$mod, 1, workspace, 1"
-      #    "$mod, 2, workspace, 2"
-      #    "$mod, 3, workspace, 3"
-      #    "$mod, 4, workspace, 4"
-      #    "$mod, 5, workspace, 5"
-      #    "$mod, 6, workspace, 6"
-      #    "$mod, 7, workspace, 7"
-      #    "$mod, 8, workspace, 8"
-      #    "$mod, 9, workspace, 9"
-      #    "$mod, 0, workspace, 10"
-
-      #    "$mod SHIFT, 1, movetoworkspace, 1"
-      #    "$mod SHIFT, 2, movetoworkspace, 2"
-      #    "$mod SHIFT, 3, movetoworkspace, 3"
-      #    "$mod SHIFT, 4, movetoworkspace, 4"
-      #    "$mod SHIFT, 5, movetoworkspace, 5"
-      #    "$mod SHIFT, 6, movetoworkspace, 6"
-      #    "$mod SHIFT, 7, movetoworkspace, 7"
-      #    "$mod SHIFT, 8, movetoworkspace, 8"
-      #    "$mod SHIFT, 9, movetoworkspace, 9"
-      #    "$mod SHIFT, 0, movetoworkspace, 10"
-
-      #    ", Print, exec, grim - | wl-copy"
-      #    "SHIFT, Print, exec, grim -g \"$(slurp)\" - | wl-copy"
-      #  ];
-      #  
-      #  binde = [
-      #    "$mod SHIFT, H, movewindow, l"
-      #    "$mod SHIFT, J, movewindow, d"
-      #    "$mod SHIFT, K, movewindow, u"
-      #    "$mod SHIFT, L, movewindow, r"
-
-      #    "$mod CTRL, H, resizeactive, -20 0"
-      #    "$mod CTRL, J, resizeactive, 0 20"
-      #    "$mod CTRL, K, resizeactive, 0 -20"
-      #    "$mod CTRL, L, resizeactive, 20 0"
-      #  ];
-
-      #  bindel = [
-      #    ", XF86AudioRaiseVolume, exec, pamixer -i 5"
-      #    ", XF86AudioLowerVolume, exec, pamixer -d 5"
-      #    ", XF86AudioMute, exec, pamixer --toggle-mute"
-      #    ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
-      #    ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-      #  ];
-
-      #  bindl = [
-      #    ", XF86AudioPlay, exec, playerctl play-pause"
-      #    ", XF86AudioNext, exec, playerctl next"
-      #    ", XF86AudioPrev, exec, playerctl previous"
-      #  ];
-
-      #  bindm = [
-      #    "$mod, mouse:272, movewindow"
-      #    "$mod, mouse:273, resizewindow"
-      #  ];
-
-      #windowrule = [
-      #  "match:class ^(float)$, float on"
-      #  "match:title ^(popup)$, float on"
-      #];
-
       #};
 
       #extraConfig = let

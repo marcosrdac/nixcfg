@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MODEL="gpt-6-luna"
+EFFORT="none"
+OUTPUT="text"
+OUTPUT_EXPLICIT=0
+SYSTEM_PROMPT=""
+CONTEXT=""
+SCHEMA_FILE=""
+SCHEMA_INLINE=""
+SCHEMA_FORMAT=""
+SCHEMA_FORMAT_EXPLICIT=0
+SCHEMA_SOURCE=""
+KEY_FILE="${HOME}/.config/opencode/secrets/openai_key"
+API_KEY="${OPENAI_API_KEY:-}"
+POSITIONAL=()
+
+usage() {
+  cat >&2 <<'EOF'
+Usage:
+  ask [OPTIONS] [CONTEXT ...]
+  cat context.txt | ask [OPTIONS]
+
+Context:
+  Unnamed arguments are joined with spaces and used as the context.
+
+Options:
+  -s, --sys, --system TEXT    System prompt
+      --system-file FILE      Read system prompt from FILE
+  -c, --ctx, --context TEXT   Context prompt
+      --context-file FILE     Read context prompt from FILE
+      --schema STRING         Inline JSON Schema
+      --schema-path FILE      Read JSON Schema from FILE
+      --schema-format FORMAT  Schema format: json or yaml
+      --output FORMAT         Structured output format: json or yaml
+  -m, --model MODEL           Model (default: gpt-6-luna)
+  -e, --effort LEVEL          Reasoning effort: none|minimal|low|medium|high|xhigh
+                              (default: none)
+      --api-key KEY           Explicit API key
+      --api-key-file FILE     API key file (default: ~/.config/opencode/secrets/openai_key)
+  -h, --help
+
+API key precedence: OPENAI_API_KEY, --api-key, --api-key-file.
+Required: bash, curl, jq. YAML requires yq.
+EOF
+}
+
+die() { echo "Error: $*" >&2; exit 1; }
+
+require_command() { command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"; }
+
+read_value() {
+  local option="$1" value="${2:-}"
+  [[ -n "$value" ]] || die "$option requires a value"
+  printf '%s' "$value"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -s|--sys|--system|--system-prompt) SYSTEM_PROMPT="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    --system-file) SYSTEM_PROMPT="$(cat "$(read_value "$1" "${2:-}")")"; shift 2 ;;
+    -c|--ctx|--context) CONTEXT="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    --context-file) CONTEXT="$(cat "$(read_value "$1" "${2:-}")")"; shift 2 ;;
+    --schema) SCHEMA_INLINE="$(read_value "$1" "${2:-}")"; SCHEMA_SOURCE="inline"; shift 2 ;;
+    --schema-path) SCHEMA_FILE="$(read_value "$1" "${2:-}")"; SCHEMA_SOURCE="path"; shift 2 ;;
+    --schema-format) SCHEMA_FORMAT="$(read_value "$1" "${2:-}")"; SCHEMA_FORMAT_EXPLICIT=1; shift 2 ;;
+    --output) OUTPUT="$(read_value "$1" "${2:-}")"; OUTPUT_EXPLICIT=1; shift 2 ;;
+    -m|--model) MODEL="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    -e|--effort) EFFORT="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    --api-key) API_KEY="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    --api-key-file) KEY_FILE="$(read_value "$1" "${2:-}")"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; POSITIONAL+=("$@"); break ;;
+    *) POSITIONAL+=("$1"); shift ;;
+  esac
+done
+
+require_command curl
+require_command jq
+
+if ((${#POSITIONAL[@]} > 0)); then
+  [[ -z "$CONTEXT" ]] || die "do not mix positional context with -c/--context"
+  CONTEXT="${POSITIONAL[*]}"
+fi
+
+if [[ -z "$CONTEXT" && ! -t 0 ]]; then
+  CONTEXT="$(cat)"
+fi
+[[ -n "$CONTEXT" ]] || die "Context needed!"
+
+if [[ -z "$API_KEY" && -f "$KEY_FILE" ]]; then
+  API_KEY="$(tr -d '\r\n' < "$KEY_FILE")"
+fi
+[[ -n "$API_KEY" ]] || die "API key not found; use OPENAI_API_KEY, --api-key, or --api-key-file"
+
+case "$EFFORT" in
+  none|minimal|low|medium|high|xhigh) ;;
+  *) die "--effort must be one of: none, minimal, low, medium, high, xhigh" ;;
+esac
+
+if [[ "$OUTPUT_EXPLICIT" -eq 1 && -z "$SCHEMA_SOURCE" ]]; then
+  die "--output requires --schema or --schema-path"
+fi
+
+if [[ "$SCHEMA_FORMAT_EXPLICIT" -eq 1 && -z "$SCHEMA_SOURCE" ]]; then
+  die "--schema-format requires --schema or --schema-path"
+fi
+
+if [[ -n "$SCHEMA_SOURCE" ]]; then
+  if [[ "$OUTPUT_EXPLICIT" -eq 0 ]]; then
+    OUTPUT="json"
+  fi
+  case "$OUTPUT" in
+    json|yaml) ;;
+    *) die "--output must be json or yaml" ;;
+  esac
+
+  if [[ "$SCHEMA_FORMAT_EXPLICIT" -eq 0 ]]; then
+    if [[ "$SCHEMA_SOURCE" == "path" && "$SCHEMA_FILE" =~ \.ya?ml$ ]]; then
+      SCHEMA_FORMAT="yaml"
+    else
+      SCHEMA_FORMAT="json"
+    fi
+  fi
+
+  case "$SCHEMA_FORMAT" in
+    json) ;;
+    yaml|yml) require_command yq ;;
+    *) die "--schema-format must be json or yaml" ;;
+  esac
+
+  if [[ "$SCHEMA_SOURCE" == "inline" ]]; then
+    SCHEMA_INPUT="$SCHEMA_INLINE"
+    SCHEMA_LABEL="inline schema"
+  else
+    [[ -f "$SCHEMA_FILE" ]] || die "schema file not found: $SCHEMA_FILE"
+    SCHEMA_INPUT="$(cat "$SCHEMA_FILE")"
+    SCHEMA_LABEL="$SCHEMA_FILE"
+  fi
+
+  if [[ "$SCHEMA_FORMAT" == "json" ]]; then
+    SCHEMA_JSON="$SCHEMA_INPUT"
+  else
+    # kislyuk/yq (jq wrapper) emits JSON by default; mikefarah/yq needs -o=json.
+    if yq --help 2>&1 | grep -q -- '--yaml-output'; then
+      SCHEMA_JSON="$(yq '.' <<<"$SCHEMA_INPUT")"
+    else
+      SCHEMA_JSON="$(yq -o=json '.' <<<"$SCHEMA_INPUT")"
+    fi
+  fi
+  jq -e . >/dev/null <<<"$SCHEMA_JSON" || die "invalid schema: $SCHEMA_LABEL"
+fi
+
+REQUEST="$(jq -n \
+  --arg model "$MODEL" \
+  --arg effort "$EFFORT" \
+  --arg instructions "$SYSTEM_PROMPT" \
+  --arg input "$CONTEXT" \
+  '{model:$model, reasoning:{effort:$effort}, store:false, input:$input}
+   | if $instructions != "" then .instructions=$instructions else . end')"
+
+if [[ -n "$SCHEMA_SOURCE" ]]; then
+  SCHEMA_NAME="$(basename "${SCHEMA_FILE:-inline_schema}" | sed 's/[^A-Za-z0-9_-]/_/g' | cut -c1-64)"
+  REQUEST="$(jq --arg name "$SCHEMA_NAME" --argjson schema "$SCHEMA_JSON" \
+    '.text={format:{type:"json_schema",name:$name,strict:true,schema:$schema}}' <<<"$REQUEST")"
+fi
+
+RESPONSE="$(curl --fail-with-body --silent --show-error --max-time 120 \
+  https://api.openai.com/v1/responses \
+  -H "Authorization: Bearer ${API_KEY}" \
+  -H 'Content-Type: application/json' \
+  --data "$REQUEST")" || exit $?
+
+TEXT="$(jq -r '[.output[]?.content[]? | select(.type=="output_text") | .text] | join("")' <<<"$RESPONSE")"
+[[ -n "$TEXT" && "$TEXT" != "null" ]] || die "API returned no output_text: $(jq -c '.error // .' <<<"$RESPONSE")"
+
+if [[ -z "$SCHEMA_SOURCE" ]]; then
+  printf '%s\n' "$TEXT"
+  exit 0
+fi
+
+case "$OUTPUT" in
+  json) jq -e . <<<"$TEXT" ;;
+  yaml)
+    require_command yq
+    if yq --help 2>&1 | grep -q -- '--yaml-output'; then
+      jq -e . <<<"$TEXT" | yq -y '.'
+    else
+      jq -e . <<<"$TEXT" | yq -P '.'
+    fi
+    ;;
+esac

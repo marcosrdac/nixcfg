@@ -1,0 +1,9 @@
+{
+  "name": "material-theme-image",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@material/material-color-utilities": "0.3.0",
+    "jimp": "1.6.0"
+  }
+}

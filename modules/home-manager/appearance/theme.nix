@@ -1,11 +1,8 @@
 { config, pkgs, inputs, ... }:
 
-#with inputs.nix-colors;
-#with inputs.nix-colors.lib;
-#with inputs.nix-colors.lib.contrib { inherit pkgs; };
-with pkgs.nix-colors;
-with pkgs.nix-colors.lib;
-with pkgs.nix-colors.lib.contrib { inherit pkgs; };
+with inputs.nix-colors;
+with inputs.nix-colors.lib;
+with inputs.nix-colors.lib.contrib { inherit pkgs; };
 let
   wallpapers = (import ./wallpapers.nix) pkgs;
   fonts = (import ./fonts.nix) pkgs;
@@ -284,12 +281,16 @@ in
     };
   };
 
-  gtk = {
+  gtk = let
+    genGtkTheme =
+      import ./gen-gtk-theme.nix { inherit pkgs; };
+  in {
     enable = true;
     font = fonts.iosevka;
     theme = {  # TODO UNSTABLE on 26.05 update: using nodePackages, which now are to be accessed directly from pkgs.<nodePackageHere>
       name = "${config.colorScheme.slug}";
-      package = gtkThemeFromScheme {
+      #package = gtkThemeFromScheme {
+      package = genGtkTheme {
         scheme = config.colorScheme;
       };
     };

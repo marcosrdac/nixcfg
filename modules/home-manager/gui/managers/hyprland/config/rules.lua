@@ -1,13 +1,10 @@
+-- General window rules
+
 hl.window_rule({
   match = { class = ".*" },
   sync_fullscreen = false,
+  min_size = { 1, 1 },
 })
-
-
--- for calculator
-
--- ..
-
 
 -- hl.window_rule({
 --   match = {

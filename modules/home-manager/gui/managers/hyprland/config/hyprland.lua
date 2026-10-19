@@ -1,5 +1,5 @@
 HOME_DIR = os.getenv("HOME")
-XDG_CONFIG_HOME = os.getenv("XDG_CONFIG_HOME") or (home_dir .. "/.config")
+XDG_CONFIG_HOME = os.getenv("XDG_CONFIG_HOME") or (HOME_DIR .. "/.config")
 HYPR_DIR = XDG_CONFIG_HOME .. "/hypr"
 
 require("utils")
@@ -11,7 +11,7 @@ require("rules")
 require("start")
 require("animations")
 require("binds")
-require("hm")
+-- require("hm")
 
 -- must work
 hl.config({
@@ -27,12 +27,22 @@ hl.bind("SUPER + Return", hl.dsp.exec_cmd("sh -c '$TERMINAL'"))
 hl.config({
   general = {
     layout = "dwindle",
+    no_focus_fallback = true,
+    snap = {
+      enabled = true,
+      window_gap = 20,
+      border_overlap = true,
+    },
+    -- for gaming latency/jitter reduction
+    -- windowrulev = immediate, class:^(cs2)$
+
+    allow_tearing = false,
   },
   dwindle = {
     force_split                  = 2,
-    smart_split                  = false,
-    preserve_split               = true,
-    smart_resizing               = false,
+    preserve_split               = true,  -- important: false will allow no split axis change, but only direction at current axis
+    smart_split                  = false,  -- also important
+    smart_resizing               = true,
     use_active_for_splits        = true,
     permanent_direction_override = false,
     precise_mouse_move           = false,

@@ -43,7 +43,7 @@ with inputs.nixpkgs.lib;
     sources = final: prev: {
 
       unstable = import inputs.nixpkgs-unstable {
-        system = prev.system;
+        system = prev.stdenv.hostPlatform.system;
         config = {
           allowUnfree = final.config.allowUnfree;
           allowBroken = final.config.allowBroken;
@@ -61,16 +61,16 @@ with inputs.nixpkgs.lib;
         };
       };
 
-      #nixpkgs-24-05 = import inputs.nixpkgs-24-05 {
-      #  system = prev.system;
-      #  config = {
-      #    allowUnfree = final.config.allowUnfree;
-      #    allowBroken = final.config.allowBroken;
-      #    allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
-      #      "write_stylus"
-      #    ];
-      #  };
-      #};
+      nixpkgs-25-05 = import inputs.nixpkgs-25-05 {
+        system = prev.system;
+        config = {
+          allowUnfree = final.config.allowUnfree;
+          allowBroken = final.config.allowBroken;
+          allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+            "write_stylus"
+          ];
+        };
+      };
 
     };
   in [

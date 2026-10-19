@@ -3,7 +3,7 @@
 {
   programs.firefox = {
     enable = true;
-
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
     profiles = with pkgs.nur.repos.rycee.firefox-addons; let
       extensions = [ ublock-origin ];
     in {

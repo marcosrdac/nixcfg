@@ -6,6 +6,12 @@
   home.homeDirectory = "/home/marcosrdac";
   home.stateVersion = "24.05";
 
+  home.sessionVariables = {
+    # temporary while taskwarrior issue is not solved
+    # https://github.com/GothenburgBitFactory/taskwarrior/issues/4129
+    AWS_ENDPOINT_URL_S3 = "https://s3.us-east-1.wasabisys.com";
+  };
+
   #sops = {
   #  #age.keyFile = "/home/user/.age-key.txt"; # must have no password!
   #  # It's also possible to use a ssh key, but only when it has no password:
@@ -77,7 +83,7 @@
   packages = {
     #design = true;
     list = with pkgs; [
-      taskwarrior2
+      taskwarrior3
       #gnucash
       beancount
       fava
@@ -92,6 +98,9 @@
       isync
       msmtp
       oauth2-proxy
+
+      quarto
+      typst
 
       # rclone
       nextcloud-client
@@ -118,6 +127,11 @@
       #tmsu    # tag based filesystem
       #zotero  # paper organization
       conda
+      nodejs
+
+      opencode-v2
+      codex
+      github-cli
     ];
   };
 

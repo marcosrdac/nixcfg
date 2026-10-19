@@ -53,7 +53,7 @@
   boot.kernelModules = [ "kvm-intel" ];
   services.xserver.videoDrivers = [
     "intel"
-    "i915"
+    #"i915"
   ];
   services.thermald.enable = true;
 

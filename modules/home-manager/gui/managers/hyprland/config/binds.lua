@@ -1,6 +1,3 @@
--- TODO bspwm diff s6a2622d6-2e60-83e9-8a30-dedaac7391b0
-local json = require("utils/json")
-local str = require("utils/str")
 local B = require("utils.bindings")
 local cmd, exe, shl, seq = B.cmd, B.exe, B.shl, B.seq
 local d = hl.dsp
@@ -35,10 +32,10 @@ cmd("ALT n", win.cycle_next({ next = true }))
 -- cmd("SUPER tab", focus({ last = true }))
 -- cmd("ALT   tab", focus({ workspace = "previous" }))  -- BELOW
 -- tiled windows movement
-shl("ALT SHIFT H", [[ win-move-or-group.sh l ]], "HOLDS")
-shl("ALT SHIFT J", [[ win-move-or-group.sh d ]], "HOLDS")
-shl("ALT SHIFT K", [[ win-move-or-group.sh u ]], "HOLDS")
-shl("ALT SHIFT L", [[ win-move-or-group.sh r ]], "HOLDS")
+shl("ALT SHIFT h", [[ win-move-or-group.sh l ]], "HOLDS")
+shl("ALT SHIFT j", [[ win-move-or-group.sh d ]], "HOLDS")
+shl("ALT SHIFT k", [[ win-move-or-group.sh u ]], "HOLDS")
+shl("ALT SHIFT l", [[ win-move-or-group.sh r ]], "HOLDS")
 -- TODO make a better window mover
 -- floating window movement
 cmd("SUPER h", win.move({ x = -20, y = 0, relative = true }), "HOLDS")
@@ -46,10 +43,20 @@ cmd("SUPER j", win.move({ x = 0, y = 20, relative = true }), "HOLDS")
 cmd("SUPER k", win.move({ x = 0, y = -20, relative = true }), "HOLDS")
 cmd("SUPER l", win.move({ x = 20, y = 0, relative = true }), "HOLDS")
 --  window resizing
-cmd("CTRL ALT h", win.resize({ x = -20, y = 0, relative = true }), "HOLDS")
-cmd("CTRL ALT j", win.resize({ x = 0, y = 20, relative = true }), "HOLDS")
-cmd("CTRL ALT k", win.resize({ x = 0, y = -20, relative = true }), "HOLDS")
-cmd("CTRL ALT l", win.resize({ x = 20, y = 0, relative = true }), "HOLDS")
+-- cmd("CTRL ALT h", win.resize({ x = -20, y = 0, relative = true }), "HOLDS")
+-- cmd("CTRL ALT j", win.resize({ x = 0, y = 20, relative = true }), "HOLDS")
+-- cmd("CTRL ALT k", win.resize({ x = 0, y = -20, relative = true }), "HOLDS")
+-- cmd("CTRL ALT l", win.resize({ x = 20, y = 0, relative = true }), "HOLDS")
+-- grow
+shl("CTRL ALT h", [[ resize-general.sh --grow --left 40 ]], "HOLDS")
+shl("CTRL ALT j", [[ resize-general.sh --grow --down 40 ]], "HOLDS")
+shl("CTRL ALT k", [[ resize-general.sh --grow --up 40 ]], "HOLDS")
+shl("CTRL ALT l", [[ resize-general.sh --grow --right 40 ]], "HOLDS")
+-- shrink
+shl("CTRL ALT SHIFT h", [[ resize-general.sh --shrink --right 40 ]], "HOLDS")
+shl("CTRL ALT SHIFT j", [[ resize-general.sh --shrink --up 40 ]], "HOLDS")
+shl("CTRL ALT SHIFT k", [[ resize-general.sh --shrink --down 40 ]], "HOLDS")
+shl("CTRL ALT SHIFT l", [[ resize-general.sh --shrink --left 40 ]], "HOLDS")
 -- modes
 cmd("ALT       space", win.float({ action = "toggle" }))
 cmd("ALT SHIFT space", win.pseudo({ action = "toggle" }))  -- not as used as I want it to be
@@ -74,11 +81,11 @@ shl("SHIFT print", [[ grim -g "$(slurp)" - | wl-copy ]])
 
 -- audio
 exe("XF86AudioMute",                              "pamixer --toggle-mute", safe)
-exe({ "XF86AudioRaiseVolume", "ALT SHIFT up" },   "pamixer -i 5", "SAFE:HOLDS")
-exe({ "XF86AudioLowerVolume", "ALT SHIFT down" }, "pamixer -d 5", "SAFE:HOLDS")
+exe({ "ALT SHIFT up",   "XF86AudioRaiseVolume" }, "pamixer -i 5", "SAFE:HOLDS")
+exe({ "ALT SHIFT down", "XF86AudioLowerVolume" }, "pamixer -d 5", "SAFE:HOLDS")
 -- brightness
-exe({"XF86MonBrightnessUp", "ALT SHIFT right"},  "brightnessctl set 5%+", "SAFE:HOLDS")
-exe({"XF86MonBrightnessDown", "ALT SHIFT left"}, "brightnessctl set 5%-", "SAFE:HOLDS")
+exe({"ALT SHIFT right", "XF86MonBrightnessUp"},   "brightnessctl set 5%+", "SAFE:HOLDS")
+exe({"ALT SHIFT left",  "XF86MonBrightnessDown"}, "brightnessctl set 5%-", "SAFE:HOLDS")
 
 exe("XF86AudioPlay", "playerctl play-pause", safe)
 exe("XF86AudioNext", "playerctl next", safe)
@@ -182,75 +189,70 @@ seq("ALT e", {
 --- execute script
 seq("ALT x", {
   x = [[ notify-win-state.sh ]],
-  d = [[ hours.sh ]],
+  c = [[ cursor-color-rgb.sh ]],
 })
-
-
--- colors
-local colors = {
-  yellow = "rgb(FFFF00)",
-  blue   = "rgb(0000FF)",
-  green  = "rgb(00FF00)",
-  red    = "rgb(FF0000)",
-  white  = "rgb(FFFFFF)",
-}
-
-local function border_color(color)
-  return color .. " " .. color
-end
-
--- preselect
-local preselect_border_size = 3
-local preselect = {
-  left  = { key = "h", tag = "preselect-left",  color = colors.yellow },
-  down  = { key = "j", tag = "preselect-down",  color = colors.green  },
-  up    = { key = "k", tag = "preselect-up",    color = colors.blue   },
-  right = { key = "l", tag = "preselect-right", color = colors.red    },
-}
-
-for _, item in pairs(preselect) do
-  hl.window_rule({
-    match = { tag = item.tag },
-    border_color = border_color(item.color),
-    border_size = preselect_border_size,
-  })
-end
-
---- split direction
---seq("ALT s", {
---  h = [[ hyprctl dispatch 'hl.dispatch(hl.dsp.window.tag({ tag = "preselect-left" }))' ]],
---  j = [[ hyprctl dispatch 'hl.dispatch(hl.dsp.window.tag({ tag = "preselect-down" }))' ]],
---  k = [[ hyprctl dispatch 'hl.dispatch(hl.dsp.window.tag({ tag = "preselect-up" }))' ]],
---  l = [[ hyprctl dispatch 'hl.dispatch(hl.dsp.window.tag({ tag = "preselect-right" }))' ]],
---})
-local function hypr_dispatch_lua(code)
-  return [[hyprctl dispatch ]] .. string.format("%q", code)
-end
-
-local function tag_window_lua(tag)
-  return ([[hl.dispatch(hl.dsp.window.tag({ tag = "%s" }))]]):format(tag)
-end
-
-local function untag_window_lua(tag)
-  return ([[hl.dispatch(hl.dsp.window.tag({ tag = "-%s" }))]]):format(tag)
-end
-
-local function only_preselect_tag(dir)
-  local cmds = {}
-
-  for _, item in pairs(preselect) do
-    table.insert(cmds, hypr_dispatch_lua(untag_window_lua(item.tag)))
-  end
-
-  table.insert(cmds, hypr_dispatch_lua(tag_window_lua(preselect[dir].tag)))
-
-  return table.concat(cmds, " ; ")
-end
 
 seq("ALT s", {
-  h = only_preselect_tag("left"),
-  j = only_preselect_tag("down"),
-  k = only_preselect_tag("up"),
-  l = only_preselect_tag("right"),
-  s = [[ preselect-apply.sh ]]
+  h = [[ swallow-window.sh -p l -c white -a 0.15 -t 5 ]],
+  j = [[ swallow-window.sh -p d -c white -a 0.15 -t 5 ]],
+  k = [[ swallow-window.sh -p u -c white -a 0.15 -t 5 ]],
+  l = [[ swallow-window.sh -p r -c white -a 0.15 -t 5 ]],
 })
+shl("ALT SHIFT s", [[ swallow-window.sh -s ]])
+hl.window_rule({
+  match = {
+    title = "window-placeholder",
+  },
+  opacity = "0.0 0.0",
+})
+
+-- resizing and moving floating windows
+seq("ALT d", {
+  -- set position
+  h = [[ move-floating.sh --left --gap 2x ]],
+  j = [[ move-floating.sh --bottom --gap 2x ]],
+  k = [[ move-floating.sh --top --gap 2x ]],
+  l = [[ move-floating.sh --right --gap 2x ]],
+  space = {
+    space = [[ move-floating.sh --center --gap 2x ]],
+    h = [[ move-floating.sh --center --left --gap 2x ]],
+    j = [[ move-floating.sh --center --bottom --gap 2x ]],
+    k = [[ move-floating.sh --center --top --gap 2x ]],
+    l = [[ move-floating.sh --center --right --gap 2x ]],
+  },
+  -- set ratio
+  s = [[ resize-fixed-floating.sh -h -r square ]],
+  d = [[ resize-fixed-floating.sh -h -r classic ]],
+  w = [[ resize-fixed-floating.sh -h -r wide ]],
+  ["SHIFT w"] = [[ resize-fixed-floating.sh -h -r ultrawide ]],
+  v = {
+    d = [[ resize-fixed-floating.sh -h -i -r classic ]],
+    w = [[ resize-fixed-floating.sh -h -i -r wide ]],
+    ["SHIFT w"] = [[ resize-fixed-floating.sh -h -i -r ultrawide ]],
+  },
+  -- set size
+  ["1"] = [[ resize-fixed-floating.sh -h 10% -r constant ]],
+  ["2"] = [[ resize-fixed-floating.sh -h 20% -r constant ]],
+  ["3"] = [[ resize-fixed-floating.sh -h 30% -r constant ]],
+  ["4"] = [[ resize-fixed-floating.sh -h 40% -r constant ]],
+  ["5"] = [[ resize-fixed-floating.sh -h 50% -r constant ]],
+  ["6"] = [[ resize-fixed-floating.sh -h 60% -r constant ]],
+  ["7"] = [[ resize-fixed-floating.sh -h 70% -r constant ]],
+  ["8"] = [[ resize-fixed-floating.sh -h 80% -r constant ]],
+  ["9"] = [[ resize-fixed-floating.sh -h 90% -r constant ]],
+  ["0"] = [[ resize-fixed-floating.sh -h 100% -r constant ]],
+  -- combo
+  z = [[ resize-fixed-floating.sh -h 25% -r constant && move-floating.sh --bottom --left   --gap 1x ]],
+  x = [[ resize-fixed-floating.sh -h 25% -r constant && move-floating.sh --bottom --center --gap 1x ]],
+  c = [[ resize-fixed-floating.sh -h 25% -r constant && move-floating.sh --bottom --right  --gap 1x ]],
+})
+
+
+---- colors
+--local colors = {
+--  yellow = "rgb(FFFF00)",
+--  blue   = "rgb(0000FF)",
+--  green  = "rgb(00FF00)",
+--  red    = "rgb(FF0000)",
+--  white  = "rgb(FFFFFF)",
+--}

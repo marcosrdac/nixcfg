@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";  # quarto
     #nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     #nixpkgs-17 = { url = "github:NixOS/nixpkgs/17.09"; flake = false; };
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";

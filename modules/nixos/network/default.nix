@@ -68,6 +68,10 @@ in
     networking = {
       networkmanager.enable = true;
 
+      networkmanager.plugins = with pkgs; [
+        networkmanager-openvpn
+      ];
+
       interfaces = listToAttrs ( map (
         n: { name = "${n}"; value = { useDHCP = cfg.useDHCP; }; }
       ) cfg.interfaces);

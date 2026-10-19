@@ -77,3 +77,4 @@ context.non-trivial.read=pro.not:slf pro.not:bod pro.not:mnd pro.not:sys pro.not
 # state variables
 news.version=2.6.0
 context=ltrace
+data.location=\/home\/marcosrdac\/.local\/share\/task
