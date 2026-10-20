@@ -72,6 +72,9 @@
     wget
     htop
     btrfs-progs
+    # Local Qwen3 embedding GGUF experiments; no daemon or opened port.
+    llama-cpp
+    python3
   ];
 
   # Legacy Curupira service modules remain in the repository but are
